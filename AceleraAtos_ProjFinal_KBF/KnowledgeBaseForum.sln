@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestKbfSystem", "TestKbfSystem\TestKbfSystem.csproj", "{466BFFA8-A104-4CAC-A822-5DC824A2C080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestKbfSystem", "TestKbfSystem\TestKbfSystem.csproj", "{466BFFA8-A104-4CAC-A822-5DC824A2C080}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeBaseForum.DataAccessLayer", "KnowledgeBaseForum.DataAccessLayer\KnowledgeBaseForum.DataAccessLayer.csproj", "{DA985B84-48B2-44B5-BFD9-42F1BAB6D452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.DataAccessLayer", "KnowledgeBaseForum.DataAccessLayer\KnowledgeBaseForum.DataAccessLayer.csproj", "{DA985B84-48B2-44B5-BFD9-42F1BAB6D452}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeBaseForum.API", "KnowledgeBaseForum.API\KnowledgeBaseForum.API.csproj", "{61F79960-7F9D-45AD-8B65-D0B126E60241}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DA985B84-48B2-44B5-BFD9-42F1BAB6D452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA985B84-48B2-44B5-BFD9-42F1BAB6D452}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA985B84-48B2-44B5-BFD9-42F1BAB6D452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61F79960-7F9D-45AD-8B65-D0B126E60241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61F79960-7F9D-45AD-8B65-D0B126E60241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61F79960-7F9D-45AD-8B65-D0B126E60241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61F79960-7F9D-45AD-8B65-D0B126E60241}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
