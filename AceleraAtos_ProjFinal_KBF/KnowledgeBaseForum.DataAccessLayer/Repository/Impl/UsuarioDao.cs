@@ -20,13 +20,13 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
         public async Task<IEnumerable<Usuario>> All() =>  await context.Usuarios.ToListAsync();
 
-#pragma warning disable CS1998
+#pragma warning disable CS1998 // Unused
         public async Task Delete(Guid id) => throw new NotImplementedException("Not used for this Entity");
 
-#pragma warning disable CS8613
+#pragma warning disable CS8613 // Unused
         public async Task<Usuario> Get(Guid id) => throw new NotImplementedException("Not used for this Entity");
-#pragma warning restore CS8613
-#pragma warning restore CS1998
+#pragma warning restore CS8613 // Unused
+#pragma warning restore CS1998 // Unused
 
         public async Task Delete(string id)
         {
