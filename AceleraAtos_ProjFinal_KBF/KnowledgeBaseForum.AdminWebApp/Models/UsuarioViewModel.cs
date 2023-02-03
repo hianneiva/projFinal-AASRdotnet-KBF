@@ -1,18 +1,24 @@
-﻿using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace KnowledgeBaseForum.DataAccessLayer.Model
+namespace KnowledgeBaseForum.AdminWebApp.Models
 {
-    public class Usuario
+    /// <summary>
+    /// Model that will collect the "Usuario" data from the API and display in the front end views.
+    /// </summary>
+    public class UsuarioViewModel
     {
         /// <summary>
         /// User actual name.
         /// </summary>
+        [Required]
         public string Nome { get; set; } = null!;
 
         /// <summary>
         /// User e-mail.
         /// </summary>
+        [Display(Name = "E-mail")]
+        [Required]
         public string Email { get; set; } = null!;
 
         /// <summary>
@@ -23,7 +29,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Model
         /// <summary>
         /// User password.
         /// </summary>
-        public string? Senha { get; set; } = null!;
+        public string Senha { get; set; } = null!;
 
         /// <summary>
         /// User status (active).
@@ -33,11 +39,14 @@ namespace KnowledgeBaseForum.DataAccessLayer.Model
         /// <summary>
         /// Current user profile.
         /// </summary>
-        public int Perfil { get; set; }
+        [Required]
+        public UsuarioPerfilEnum Perfil { get; set; }
 
         /// <summary>
         /// Creation date-time.
         /// </summary>
+        [Display(Name = "Data de Criação")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataCriacao { get; set; }
 
         /// <summary>
@@ -48,33 +57,11 @@ namespace KnowledgeBaseForum.DataAccessLayer.Model
         /// <summary>
         /// Creation user.
         /// </summary>
-        public string? UsuarioCriacao { get; set; } = null!;
+        public string UsuarioCriacao { get; set; } = null!;
 
         /// <summary>
         /// Update user.
         /// </summary>
         public string? UsuarioModificacao { get; set; }
-
-        // Relational properties.
-
-        /// <summary>
-        /// Topic created by user.
-        /// </summary>
-        public IEnumerable<Topico>? Topicos { get; set; }
-
-        /// <summary>
-        /// User comments.
-        /// </summary>
-        public IEnumerable<Comentario>? Comentarios { get; set; }
-
-        /// <summary>
-        /// Alerts registered to the user.
-        /// </summary>
-        public IEnumerable<Alerta>? Alertas { get; set; }
-
-        /// <summary>
-        /// user-group relation.
-        /// </summary>
-        public IEnumerable<UsuarioGrupo>? UsuarioGrupo { get; set; }
     }
 }

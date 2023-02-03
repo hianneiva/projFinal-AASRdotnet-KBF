@@ -52,7 +52,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
             if (original != null)
             {
-                original.Senha = entity.Senha;
+                original.Senha = entity.Senha ?? original.Senha;
                 original.Perfil = entity.Perfil;
                 original.Email = entity.Email;
                 original.Nome = entity.Nome;
