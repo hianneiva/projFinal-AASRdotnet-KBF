@@ -5,7 +5,12 @@
     /// </summary>
     public static class Constants
     {
-        public static string API_HOST = "ApiHost";
-        public static string API_USUARIO = "ApiUsuario";
+#if DEBUG
+        public static readonly string STUB_MODE = "StubMode";
+#endif
+        public static readonly string API_HOST = "ApiHost";
+        public static readonly string API_TAGS = "ApiTags";
+        public static readonly string API_TOPICO = "ApiTopico";
+        public static readonly string API_USUARIO = "ApiUsuario";
     }
 }

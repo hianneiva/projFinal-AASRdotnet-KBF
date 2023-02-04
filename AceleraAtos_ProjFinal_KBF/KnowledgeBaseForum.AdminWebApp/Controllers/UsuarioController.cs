@@ -7,9 +7,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
     public class UsuarioController : Controller
     {
-        private string apiHost;
-        private string apiUsuarios;
-        private IHttpClientFactory factory;
+        private readonly string apiHost;
+        private readonly string apiUsuarios;
+        private readonly IHttpClientFactory factory;
 
         public UsuarioController(IConfiguration config, IHttpClientFactory factory)
         {
@@ -48,7 +48,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 HttpHelper<UsuarioViewModel, object> httpGetter = new HttpHelper<UsuarioViewModel, object>(factory, apiHost);
-                UsuarioViewModel usuario = await httpGetter.Get($"{apiUsuarios}/{id}");
+                UsuarioViewModel? usuario = await httpGetter.Get($"{apiUsuarios}/{id}");
 
                 return View(usuario);
             }
@@ -64,7 +64,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 HttpHelper<UsuarioViewModel, UsuarioViewModel> httpPutter = new HttpHelper<UsuarioViewModel, UsuarioViewModel>(factory, apiHost);
-                UsuarioViewModel editedUsuario = await httpPutter.Put(apiUsuarios, usuario);
+                UsuarioViewModel? editedUsuario = await httpPutter.Put(apiUsuarios, usuario);
 
                 return RedirectToAction("Index");
             }
@@ -80,17 +80,8 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 bool result = true;
-
-                if (status)
-                {
-                    HttpHelper<bool, object> httpPutter = new HttpHelper<bool, object>(factory, apiHost);
-                    result = await httpPutter.Delete($"{apiUsuarios}/{id}");
-                }
-                else
-                {
-                    HttpHelper<bool, object> httpPutter = new HttpHelper<bool, object>(factory, apiHost);
-                    result = await httpPutter.Put($"{apiUsuarios}/{id}", new { });
-                }
+                HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, apiHost);
+                result = status ? await httpHelper.Delete($"{apiUsuarios}/{id}") : await httpHelper.Put($"{apiUsuarios}/{id}", new { });
 
                 return Json(new { result });
             }
