@@ -44,8 +44,8 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
             if (original != null)
             {
-                original.Conteudo = original.Conteudo;
-                original.Status = original.Status;
+                original.Conteudo = entity.Conteudo;
+                original.Status = entity.Status;
                 original.UsuarioModificacao = entity.UsuarioModificacao;
                 original.DataModificacao = DateTime.Now;
 

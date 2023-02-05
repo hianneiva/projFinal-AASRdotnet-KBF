@@ -1,4 +1,5 @@
 using KnowledgeBaseForum.API.Utils;
+using System.Text.Json.Serialization;
 using static KnowledgeBaseForum.DataAccessLayer.DependencyInjection.DependencyInjectionHelper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,7 @@ var config = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddHttpClient();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => options.AddPolicy(name: Constants.CORS_POLICY_NAME, policy =>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace KnowledgeBaseForum.AdminWebApp.Models
 {
@@ -41,6 +42,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Models
         /// Tags tied to the topic.
         /// </summary>
         [Display(Name = "Tags")]
+        [JsonProperty("TopicoTag")]
         public IEnumerable<TopicoTagLink>? TagLinks { get; set; }
 
         /// <summary>

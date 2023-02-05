@@ -14,7 +14,7 @@
 
         // Relational properties.
 
-        public Topico Topico { get; set; } = null!;
-        public Tag Tag { get; set; } = null!;
+        public Topico? Topico { get; set; } = null!;
+        public Tag? Tag { get; set; } = null!;
     }
 }

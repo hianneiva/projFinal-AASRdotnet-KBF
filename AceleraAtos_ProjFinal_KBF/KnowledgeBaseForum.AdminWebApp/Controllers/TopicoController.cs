@@ -1,5 +1,6 @@
 ﻿using KnowledgeBaseForum.AdminWebApp.Models;
 using KnowledgeBaseForum.AdminWebApp.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static KnowledgeBaseForum.AdminWebApp.Utils.StubApi;
@@ -9,17 +10,19 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
     public class TopicoController : Controller
     {
         private readonly string apiHost;
-        private readonly string apiTopicos;
+        private readonly string apiRelRopicoTags;
         private readonly string apiTags;
+        private readonly string apiTopicos;
         private readonly IHttpClientFactory factory;
         private readonly bool stubMode;
 
         public TopicoController(IConfiguration config, IHttpClientFactory factory)
         {
+            this.factory = factory;
             apiHost = config[Constants.API_HOST];
+            apiRelRopicoTags = config[Constants.API_REL_TOPICO_TAG];
             apiTopicos = config[Constants.API_TOPICO];
             apiTags = config[Constants.API_TAGS];
-            this.factory = factory;
             stubMode = bool.Parse(config[Constants.STUB_MODE]);
         }
 
@@ -88,7 +91,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         public async Task<IActionResult> Edit(TopicoViewModel topico)
         {
             TopicoViewModel? original;
-            IEnumerable<Guid> selectedTags = ((string)this.Request.Form["tags"]).Split(",").Select(s => new Guid(s));
+            IEnumerable<Guid> selectedTags = ((string)this.Request.Form["tags"])?.Split(",")?.Select(s => new Guid(s)) ?? new Guid[] { };
 
             if (stubMode)
             {
@@ -101,16 +104,30 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
-                    HttpHelper<TopicoViewModel, object> httpHelper = new HttpHelper<TopicoViewModel, object>(factory, apiHost);
-                    original = await httpHelper.Get($"{apiTopicos}/{topico.Id}");
+                    original = await new HttpHelper<TopicoViewModel, object>(factory, apiHost).Get($"{apiTopicos}/{topico.Id}");
 
                     if (original == null)
                     {
                         return NotFound();
                     }
 
-                    original.TagLinks = selectedTags?.Select(t => new TopicoTagLink() { TagId = t, TopicoId = original.Id });
-                    TopicoViewModel? edited = await httpHelper.Put($"{apiTopicos}/{topico.Id}", topico);
+                    bool success = true;
+                    List<string?> results = new List<string?>();
+                    HttpHelper<string, object> httpHelper = new HttpHelper<string, object>(factory, apiHost);
+
+                    foreach (Guid tagId in selectedTags.Where(tag => !(original?.TagLinks?.Select(tl => tl.TagId).Contains(tag)).GetValueOrDefault()))
+                    {
+                        string? result = await httpHelper.Post($"{apiRelRopicoTags}?tagId={tagId}&topicId={original?.Id}", new { tagId, topicId = original?.Id });
+                        success &= ProcessRelationOutput(results, result);
+                    }
+
+                    foreach (Guid tagId in (original?.TagLinks?.Where(tl => !selectedTags.Contains(tl.TagId)).Select(tl => tl.TagId) ?? new Guid[] { }))
+                    {
+                        string? result = await httpHelper.Delete($"{apiRelRopicoTags}?tagId={tagId}&topicId={original?.Id}");
+                        success &= ProcessRelationOutput(results, result);
+                    }
+
+                    ViewData["Errors"] = results.Where(res => !(res?.InvariantEquals("true")).GetValueOrDefault());
                 }
                 catch
                 {
@@ -125,10 +142,11 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         public async Task<JsonResult> ToggleActivation(Guid id, bool status)
         {
             bool result = true;
+            TopicoViewModel? original = null;
 
             if (stubMode)
             {
-                TopicoViewModel original = SimulateGetTopico(id)!;
+                original = SimulateGetTopico(id)!;
                 original.Status = !status;
                 SimulateEditTopico(original);
             }
@@ -136,8 +154,26 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
-                    HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, apiHost);
-                    result = status ? await httpHelper.Delete($"{apiTopicos}/{id}") : await httpHelper.Put($"{apiTopicos}/{id}", new { });
+                    if (status)
+                    {
+                        HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, apiHost);
+                        result = await httpHelper.Delete($"{apiTopicos}/{id}");
+                    }
+                    else
+                    {
+                        HttpHelper<TopicoViewModel, object> httpHelper = new HttpHelper<TopicoViewModel, object>(factory, apiHost);
+                        original = await httpHelper.Get($"{apiTopicos}/{id}");
+
+                        if (original != null)
+                        {
+                            original.Status = true;
+                            result = await httpHelper.Put($"{apiTopicos}/{id}", original) != null;
+                        }
+                        else 
+                        {
+                            result = false;
+                        }
+                    }
                 }
                 catch
                 {
@@ -146,6 +182,13 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             }
 
             return Json(new { result });
+        }
+
+        private bool ProcessRelationOutput(List<string?> list, string? result)
+        {
+            list.Add(result);
+            bool.TryParse(result, out bool resBool);
+            return resBool;
         }
     }
 }

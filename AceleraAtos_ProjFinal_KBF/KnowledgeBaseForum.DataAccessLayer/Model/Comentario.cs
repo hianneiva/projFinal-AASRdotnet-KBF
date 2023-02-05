@@ -27,11 +27,11 @@
         /// <summary>
         /// Author user.
         /// </summary>
-        public Usuario Usuario { get; set; } = null!;
+        public Usuario? Usuario { get; set; } = null!;
 
         /// <summary>
         /// Parent topic.
         /// </summary>
-        public Topico Topico { get; set; } = null!;
+        public Topico? Topico { get; set; } = null!;
     }
 }
