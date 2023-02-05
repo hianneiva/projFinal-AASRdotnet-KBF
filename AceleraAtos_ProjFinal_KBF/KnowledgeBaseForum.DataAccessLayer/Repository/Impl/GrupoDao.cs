@@ -38,14 +38,16 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
         public async Task<Grupo?> Get(Guid id) => await context.Grupos.SingleOrDefaultAsync(a => a.Id.Equals(id));
 
+        public async Task<Grupo?> GetDescription(string description) => await context.Grupos.SingleOrDefaultAsync(a => a.Descricao.Equals(description));
+
         public async Task Update(Grupo entity)
         {
             Grupo? original = await context.Grupos.SingleOrDefaultAsync(cmt => cmt.Id == entity.Id);
 
             if (original != null)
             {
-                original.Descricao = original.Descricao;
-                original.Status = original.Status;
+                original.Descricao = entity.Descricao;
+                original.Status = entity.Status;
                 original.UsuarioModificacao = entity.UsuarioModificacao;
                 original.DataModificacao = DateTime.Now;
 
