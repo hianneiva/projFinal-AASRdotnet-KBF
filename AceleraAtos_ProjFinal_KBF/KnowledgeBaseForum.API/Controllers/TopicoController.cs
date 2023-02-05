@@ -9,39 +9,28 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GrupoController : Controller
-    {        
-        private GrupoDao dao;
+    public class TopicoController : Controller
+    {
+        private TopicoDao dao;
 
-        public GrupoController(KbfContext context)
+        public TopicoController(KbfContext context)
         {
-            dao = new GrupoDao(context);
+            dao = new TopicoDao(context);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Grupo>> ReadAll() => await dao.All();
+        public async Task<IEnumerable<Topico>> ReadAll() => await dao.All();
 
-        [HttpGet("{grupo}")]
-        public async Task<Grupo?> Read(Guid grupo) => await dao.Get(grupo);
+        [HttpGet("{topico}")]
+        public async Task<Topico?> Read(Guid topico) => await dao.Get(topico);
 
         [HttpPost]
-        public async Task<IActionResult> Create(Grupo entry)
+        public async Task<IActionResult> Create(Topico entry)
         {
             try
             {
-                Grupo? entryExist = await dao.GetDescription(entry.Descricao);
-
-                if (entryExist == null)
-                {
-                    await dao.Add(entry);
-                    return Created(new Uri(Request.GetEncodedUrl()), entry);
-                }
-                else
-                {
-                    entryExist.Status = true;
-                    await dao.Update(entryExist);
-                    return Ok(entryExist);
-                }
+                await dao.Add(entry);
+                return Created(new Uri(Request.GetEncodedUrl()), entry);
             }
             catch (Exception ex)
             {
@@ -50,7 +39,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpPut("{entry}")]
-        public async Task<IActionResult> Update(Grupo entry)
+        public async Task<IActionResult> Update(Topico entry)
         {
             try
             {
@@ -78,7 +67,7 @@ namespace KnowledgeBaseForum.API.Controllers
         {
             try
             {
-                Grupo? found = await dao.Get(entry);
+                Topico? found = await dao.Get(entry);
 
                 if (found == null)
                 {
