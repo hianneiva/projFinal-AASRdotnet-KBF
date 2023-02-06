@@ -10,7 +10,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
     public class TopicoController : Controller
     {
         private readonly string apiHost;
-        private readonly string apiRelRopicoTags;
+        private readonly string apiRelTopicoTags;
         private readonly string apiTags;
         private readonly string apiTopicos;
         private readonly IHttpClientFactory factory;
@@ -20,7 +20,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         {
             this.factory = factory;
             apiHost = config[Constants.API_HOST];
-            apiRelRopicoTags = config[Constants.API_REL_TOPICO_TAG];
+            apiRelTopicoTags = config[Constants.API_REL_TOPICO_TAG];
             apiTopicos = config[Constants.API_TOPICO];
             apiTags = config[Constants.API_TAGS];
             stubMode = bool.Parse(config[Constants.STUB_MODE]);
@@ -117,13 +117,13 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
 
                     foreach (Guid tagId in selectedTags.Where(tag => !(original?.TagLinks?.Select(tl => tl.TagId).Contains(tag)).GetValueOrDefault()))
                     {
-                        string? result = await httpHelper.Post($"{apiRelRopicoTags}?tagId={tagId}&topicId={original?.Id}", new { tagId, topicId = original?.Id });
+                        string? result = await httpHelper.Post($"{apiRelTopicoTags}?tagId={tagId}&topicId={original?.Id}", new { tagId, topicId = original?.Id });
                         success &= ProcessRelationOutput(results, result);
                     }
 
                     foreach (Guid tagId in (original?.TagLinks?.Where(tl => !selectedTags.Contains(tl.TagId)).Select(tl => tl.TagId) ?? new Guid[] { }))
                     {
-                        string? result = await httpHelper.Delete($"{apiRelRopicoTags}?tagId={tagId}&topicId={original?.Id}");
+                        string? result = await httpHelper.Delete($"{apiRelTopicoTags}?tagId={tagId}&topicId={original?.Id}");
                         success &= ProcessRelationOutput(results, result);
                     }
 

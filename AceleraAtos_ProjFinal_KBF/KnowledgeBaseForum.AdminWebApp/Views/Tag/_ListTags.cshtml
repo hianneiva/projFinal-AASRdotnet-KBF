@@ -1,0 +1,55 @@
+﻿@model IEnumerable<KnowledgeBaseForum.AdminWebApp.Models.TagViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.DataCriacao)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.DataModificacao)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioCriacao)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.UsuarioModificacao)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="align-middle">
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.EditorFor(modelItem => item.Descricao, new { htmlAttributes = new { @class = "form-control", id = $"name_{item.Id.ToString()}" } })
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataCriacao)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.DataModificacao)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioCriacao)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.UsuarioModificacao)
+                </td>*@
+                <td>
+                    <button role="button" class="btn btn-outline-primary" onclick="editTag('@(item.Id)')">Salvar</button>
+                    <button role="button" class="btn btn-outline-danger" onclick="deleteTag('@(item.Id)')">Apagar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

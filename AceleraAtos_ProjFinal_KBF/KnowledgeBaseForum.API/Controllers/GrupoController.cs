@@ -11,7 +11,7 @@ namespace KnowledgeBaseForum.API.Controllers
     [ApiController]
     public class GrupoController : Controller
     {        
-        private GrupoDao dao;
+        private readonly GrupoDao dao;
 
         public GrupoController(KbfContext context)
         {
@@ -21,8 +21,8 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Grupo>> ReadAll() => await dao.All();
 
-        [HttpGet("{grupo}")]
-        public async Task<Grupo?> Read(Guid grupo) => await dao.Get(grupo);
+        [HttpGet("{id}")]
+        public async Task<Grupo?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
         public async Task<IActionResult> Create(Grupo entry)
@@ -49,7 +49,7 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpPut("{entry}")]
+        [HttpPut]
         public async Task<IActionResult> Update(Grupo entry)
         {
             try
@@ -73,12 +73,12 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpDelete("{entry}")]
-        public async Task<IActionResult> Delete(Guid entry)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                Grupo? found = await dao.Get(entry);
+                Grupo? found = await dao.Get(id);
 
                 if (found == null)
                 {

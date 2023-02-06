@@ -11,7 +11,7 @@ namespace KnowledgeBaseForum.API.Controllers
     [ApiController]
     public class TagController : Controller
     {
-        private TagDao dao;
+        private readonly TagDao dao;
 
         public TagController(KbfContext context)
         {
@@ -21,8 +21,8 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Tag>> ReadAll() => await dao.All();
 
-        [HttpGet("{comentario}")]
-        public async Task<Tag?> Read(Guid comentario) => await dao.Get(comentario);
+        [HttpGet("{id}")]
+        public async Task<Tag?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
         public async Task<IActionResult> Create(Tag entry)
@@ -38,7 +38,7 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpPut("{entry}")]
+        [HttpPut]
         public async Task<IActionResult> Update(Tag entry)
         {
             try
@@ -62,12 +62,12 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpDelete("{entry}")]
-        public async Task<IActionResult> Delete(Guid entry)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                Tag? found = await dao.Get(entry);
+                Tag? found = await dao.Get(id);
 
                 if (found == null)
                 {

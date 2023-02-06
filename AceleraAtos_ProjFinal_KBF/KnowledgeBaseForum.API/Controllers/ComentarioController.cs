@@ -11,7 +11,7 @@ namespace KnowledgeBaseForum.API.Controllers
     [ApiController]
     public class ComentarioController : Controller
     {
-        private ComentarioDao dao;
+        private readonly ComentarioDao dao;
 
         public ComentarioController(KbfContext context)
         {
@@ -21,8 +21,8 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Comentario>> ReadAll() => await dao.All();
 
-        [HttpGet("{comentario}")]
-        public async Task<Comentario?> Read(Guid comentario) => await dao.Get(comentario);
+        [HttpGet("{id}")]
+        public async Task<Comentario?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
         public async Task<IActionResult> Create(Comentario entry)
@@ -38,7 +38,7 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpPut("{entry}")]
+        [HttpPut]
         public async Task<IActionResult> Update(Comentario entry)
         {
             try
@@ -62,12 +62,12 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpDelete("{entry}")]
-        public async Task<IActionResult> Delete(Guid entry)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                Comentario? found = await dao.Get(entry);
+                Comentario? found = await dao.Get(id);
 
                 if (found == null)
                 {

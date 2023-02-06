@@ -48,7 +48,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             usuarioBuilder.Property(u => u.UsuarioCriacao).HasMaxLength(20).IsRequired();
             usuarioBuilder.Property(u => u.DataModificacao).HasColumnType(DATETIME_FORMAT);
             usuarioBuilder.Property(u => u.UsuarioModificacao).HasMaxLength(20);
-            usuarioBuilder.HasMany(u => u.UsuarioGrupo)?.WithOne(ug => ug.Usuario).HasForeignKey(u => u.UsuarioId).OnDelete(DeleteBehavior.Restrict);
+            usuarioBuilder.HasMany(u => u.UsuarioGrupo)?.WithOne(ug => ug.Usuario).HasForeignKey(u => u.UsuarioId);
 
             // TBTag
             EntityTypeBuilder<Tag> tagBuilder = modelBuilder.Entity<Tag>();
@@ -58,7 +58,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             tagBuilder.Property(t => t.UsuarioCriacao).HasMaxLength(20).IsRequired();
             tagBuilder.Property(t => t.DataModificacao).HasColumnType(DATETIME_FORMAT);
             tagBuilder.Property(t => t.Descricao).HasMaxLength(20).IsRequired();
-            tagBuilder.HasMany(t => t.TopicoTag).WithOne(tt => tt.Tag).HasForeignKey(t => t.TagId).OnDelete(DeleteBehavior.Restrict);
+            tagBuilder.HasMany(t => t.TopicoTag).WithOne(tt => tt.Tag).HasForeignKey(t => t.TagId);
 
             // TBTopico
             EntityTypeBuilder<Topico> topicoBuilder = modelBuilder.Entity<Topico>();
@@ -73,9 +73,9 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             topicoBuilder.Property(t => t.Conteudo).IsRequired();
             topicoBuilder.Property(t => t.Status).HasDefaultValue(true).IsRequired();
             topicoBuilder.Property(t => t.UsuarioId).HasMaxLength(20).IsRequired();
-            topicoBuilder.HasOne(t => t.Usuario).WithMany(u => u.Topicos).HasForeignKey(t => t.UsuarioId).OnDelete(DeleteBehavior.Restrict);
-            topicoBuilder.HasMany(t => t.TopicoTag).WithOne(tt => tt.Topico).HasForeignKey(t => t.TopicoId).OnDelete(DeleteBehavior.Restrict);
-            topicoBuilder.HasMany(t => t.Comentarios).WithOne(c => c.Topico).HasForeignKey(t => t.TopicoId).OnDelete(DeleteBehavior.Restrict);
+            topicoBuilder.HasOne(t => t.Usuario).WithMany(u => u.Topicos).HasForeignKey(t => t.UsuarioId);
+            topicoBuilder.HasMany(t => t.TopicoTag).WithOne(tt => tt.Topico).HasForeignKey(t => t.TopicoId);
+            topicoBuilder.HasMany(t => t.Comentarios).WithOne(c => c.Topico).HasForeignKey(t => t.TopicoId);
 
             // TBComentario
             EntityTypeBuilder<Comentario> comentarioBuilder = modelBuilder.Entity<Comentario>();
@@ -87,9 +87,9 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             comentarioBuilder.Property(c => c.UsuarioModificacao).HasMaxLength(20);
             comentarioBuilder.Property(c => c.Status).HasDefaultValue(true).IsRequired();
             comentarioBuilder.Property(c => c.UsuarioId).HasMaxLength(20).IsRequired();
-            comentarioBuilder.HasOne(c => c.Usuario).WithMany(u => u.Comentarios).HasForeignKey(c => c.UsuarioId).OnDelete(DeleteBehavior.Restrict);
+            comentarioBuilder.HasOne(c => c.Usuario).WithMany(u => u.Comentarios).HasForeignKey(c => c.UsuarioId);
             comentarioBuilder.Property(c => c.TopicoId).IsRequired();
-            comentarioBuilder.HasOne(c => c.Topico).WithMany(t => t.Comentarios).HasForeignKey(c => c.TopicoId).OnDelete(DeleteBehavior.Restrict);
+            comentarioBuilder.HasOne(c => c.Topico).WithMany(t => t.Comentarios).HasForeignKey(c => c.TopicoId);
             comentarioBuilder.Property(c => c.Conteudo).HasMaxLength(400).IsRequired();
 
             // TBAlerta
@@ -102,9 +102,9 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             alertaBuilder.Property(a => a.UsuarioModificacao).HasMaxLength(20);
             alertaBuilder.Property(a => a.ModoAlerta).IsRequired();
             alertaBuilder.Property(a => a.UsuarioId).HasMaxLength(20).IsRequired();
-            alertaBuilder.HasOne(a => a.Usuario).WithMany(u => u.Alertas).HasForeignKey(a => a.UsuarioId).OnDelete(DeleteBehavior.Restrict);
+            alertaBuilder.HasOne(a => a.Usuario).WithMany(u => u.Alertas).HasForeignKey(a => a.UsuarioId);
             alertaBuilder.Property(a => a.TopicoId).IsRequired();
-            alertaBuilder.HasOne(a => a.Topico).WithMany(t => t.Alertas).HasForeignKey(t => t.TopicoId).OnDelete(DeleteBehavior.Restrict);
+            alertaBuilder.HasOne(a => a.Topico).WithMany(t => t.Alertas).HasForeignKey(t => t.TopicoId);
 
             // TBGrupo
             EntityTypeBuilder<Grupo> grupoBuilder = modelBuilder.Entity<Grupo>();
@@ -116,18 +116,18 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             grupoBuilder.Property(g => g.UsuarioModificacao).HasMaxLength(20);
             grupoBuilder.Property(g => g.Status).HasDefaultValue(true).IsRequired();
             grupoBuilder.Property(g => g.Descricao).HasMaxLength(20).IsRequired();
-            grupoBuilder.HasMany(g => g.UsuarioGrupo)?.WithOne(ug => ug.Grupo).HasForeignKey(u => u.GrupoId).OnDelete(DeleteBehavior.Restrict);
+            grupoBuilder.HasMany(g => g.UsuarioGrupo)?.WithOne(ug => ug.Grupo).HasForeignKey(u => u.GrupoId);
 
             // Association entities
             EntityTypeBuilder <UsuarioGrupo> ugBuilder = modelBuilder.Entity<UsuarioGrupo>();
             ugBuilder.ToTable("TBUsuarioGrupo").HasKey(ug => new { ug.GrupoId, ug.UsuarioId });
-            ugBuilder.HasOne(ug => ug.Grupo).WithMany(g => g.UsuarioGrupo).HasForeignKey(ug => ug.GrupoId).OnDelete(DeleteBehavior.Restrict);
-            ugBuilder.HasOne(ug => ug.Usuario).WithMany(u => u.UsuarioGrupo).HasForeignKey(ug => ug.UsuarioId).OnDelete(DeleteBehavior.Restrict);
+            ugBuilder.HasOne(ug => ug.Grupo).WithMany(g => g.UsuarioGrupo).HasForeignKey(ug => ug.GrupoId);
+            ugBuilder.HasOne(ug => ug.Usuario).WithMany(u => u.UsuarioGrupo).HasForeignKey(ug => ug.UsuarioId);
 
             EntityTypeBuilder<TopicoTag> ttBuilder = modelBuilder.Entity<TopicoTag>();
             ttBuilder.ToTable("TBTopicoTag").HasKey(tt => new { tt.TagId, tt.TopicoId });
-            ttBuilder.HasOne(tt => tt.Tag).WithMany(t => t.TopicoTag).HasForeignKey(tt => tt.TagId).OnDelete(DeleteBehavior.Restrict);
-            ttBuilder.HasOne(tt => tt.Topico).WithMany(t => t.TopicoTag).HasForeignKey(tt => tt.TopicoId).OnDelete(DeleteBehavior.Restrict);
+            ttBuilder.HasOne(tt => tt.Tag).WithMany(t => t.TopicoTag).HasForeignKey(tt => tt.TagId);
+            ttBuilder.HasOne(tt => tt.Topico).WithMany(t => t.TopicoTag).HasForeignKey(tt => tt.TopicoId);
         }
     }
 }

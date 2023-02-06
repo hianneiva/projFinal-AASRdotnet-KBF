@@ -3,6 +3,8 @@ using KnowledgeBaseForum.DataAccessLayer.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association;
+using KnowledgeBaseForum.DataAccessLayer.Model;
+using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
@@ -39,6 +41,20 @@ namespace KnowledgeBaseForum.API.Controllers
             try
             {
                 await ttDao.Delete(topicId, tagId);
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                return $"Failure: {ex.Message}";
+            }
+        }
+
+        [HttpDelete("topicoTag/{tagId}")]
+        public async Task<string> DeleteAllTagsRelation(Guid tagId)
+        {
+            try
+            {
+                await ttDao.DeleteTagAssociations(tagId);
                 return "true";
             }
             catch (Exception ex)

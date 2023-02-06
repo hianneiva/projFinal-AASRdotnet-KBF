@@ -25,6 +25,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Models
         /// <summary>
         /// Creation user name.
         /// </summary>
+        [Display(Name = "Usuário Criador")]
         public string UsuarioCriacao { get; set; } = null!;
 
         /// <summary>
