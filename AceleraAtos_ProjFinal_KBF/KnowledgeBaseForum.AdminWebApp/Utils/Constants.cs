@@ -6,6 +6,7 @@
     public static class Constants
     {
         public static readonly string STUB_MODE = "StubMode";
+        public static readonly string API_COMENTARIO = "ApiComentario";
         public static readonly string API_HOST = "ApiHost";
         public static readonly string API_GRUPOS = "ApiGrupos";
         public static readonly string API_REL_TOPICO_TAG = "ApiRelationalTopicoTag";

@@ -21,5 +21,10 @@
         /// Author (User) Id.
         /// </summary>
         public string UsuarioId { get; set; } = null!;
+
+        /// <summary>
+        /// Author data.
+        /// </summary>
+        public UsuarioViewModel? Usuario { get; set; }
     }
 }

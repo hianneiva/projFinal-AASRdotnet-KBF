@@ -1,5 +1,4 @@
 ﻿@model KnowledgeBaseForum.AdminWebApp.Models.TopicoViewModel
-@*@using KnowledgeBaseForum.AdminWebApp.Models.Enum*@
 
 @{
     ViewData["Title"] = "Edição de Tópico";
@@ -60,23 +59,67 @@
         </form>
     </div>
 </div>
+<hr />
 <div class="row mt-2">
     <div class="col-md-12">
-        <div class="col-sm-12">
-            <strong>
-                <label asp-for="DataCriacao" class="control-label"></label>
-            </strong>
+        <div class="accordion accordion-flush" id="topicAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="commentHeader">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#commentCollapse"
+                            aria-expanded="false"
+                            aria-controls="commentCollapse">
+                        Comentários do Tópico
+                    </button>
+                </h2>
+                <div id="commentCollapse" class="accordion-collapse collapse" aria-labelledby="commentHeader" @*data-bs-parent="#topicAccordion"*@>
+                    <div class="accordion-body" id="ajaxComment"></div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="contentHeader">
+                    <button class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#contentCollapse"
+                            aria-expanded="false"
+                            aria-controls="contentCollapse">
+                        Visualização de Conteúdo do Tópico
+                    </button>
+                </h2>
+                <div id="contentCollapse" class="accordion-collapse collapse" aria-labelledby="contentHeader" @*data-bs-parent="#topicAccordion"*@>
+                    <div class="accordion-body">
+                        @(Model.Conteudo)
+                    </div>
+                </div>
+            </div>
         </div>
-        <p>@(Model.Conteudo)</p>
     </div>
 </div>
 
 @section scripts
-{
+    {
     <script>
-        $(document).ready(function(){
+        const getCommentsForTopic = function () {
+            const topicId = '@(Model.Id)';
+
+            $.post('@Url.Action("ListforTopic", "Comentario")', { topicId: topicId }, function (data, status) {
+                $('#ajaxComment').html(data);
+            });
+        };
+
+        const toggleComment = function (id) {
+            $.post('@Url.Action("ToggleStatus", "Comentario")', { id: id }, function (data, status) {
+                getCommentsForTopic();
+            });
+        };
+
+        $(document).ready(function () {
             const selectedTags = @Html.Raw(selectedTags);
             $('#tags').val(selectedTags);
+            getCommentsForTopic();
         });
     </script>
 }

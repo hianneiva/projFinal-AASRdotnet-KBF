@@ -30,7 +30,7 @@ namespace KnowledgeBaseForum.API.Controllers
             try
             {
                 await dao.Add(entry);
-                return Created(new Uri(Request.GetEncodedUrl()), entry);                
+                return Created(new Uri(Request.GetEncodedUrl()), entry);
             }
             catch (Exception ex)
             {
@@ -82,6 +82,15 @@ namespace KnowledgeBaseForum.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("{topicId}")]
+        public async Task<IEnumerable<Comentario>> GetAllForTopic(Guid topicId)
+        {
+            List<Comentario> all = new List<Comentario>();
+            all.AddRange(await dao.All());
+
+            return all.Where(c => c.TopicoId == topicId);
         }
     }
 }
