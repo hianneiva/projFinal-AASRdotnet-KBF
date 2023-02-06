@@ -7,5 +7,6 @@
     {
         public static string API_HOST = "ApiHost";
         public static string API_USUARIO = "ApiUsuario";
+        public static string API_GRUPOS = "ApiGrupos";
     }
 }
