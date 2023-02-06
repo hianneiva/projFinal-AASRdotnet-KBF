@@ -47,7 +47,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 HttpHelper<GrupoViewModel, object> httpGetter = new HttpHelper<GrupoViewModel, object>(factory, apiHost);
-                GrupoViewModel grupo = await httpGetter.Get($"{apiGrupos}/{id}");
+                GrupoViewModel? grupo = await httpGetter.Get($"{apiGrupos}/{id}");
 
                 return View(grupo);
             }
@@ -64,7 +64,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 HttpHelper<GrupoViewModel, GrupoViewModel> httpPutter = new HttpHelper<GrupoViewModel, GrupoViewModel>(factory, apiHost);
-                GrupoViewModel editedGrupo = await httpPutter.Put(apiGrupos, grupo);
+                GrupoViewModel? editedGrupo = await httpPutter.Put(apiGrupos, grupo);
 
                 return RedirectToAction("Index");
             }
