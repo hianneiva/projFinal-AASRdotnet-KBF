@@ -18,7 +18,9 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Topico>> All() => await context.Topicos.ToListAsync();
+        public async Task<IEnumerable<Topico>> All() => await context.Topicos.Include(t => t.TopicoTag!)
+                                                                             .ThenInclude(tt => tt.Tag)
+                                                                             .ToListAsync();
 
         public async Task Delete(Guid id)
         {
@@ -47,9 +49,9 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
             if (original != null)
             {
-                original.Titulo = original.Titulo;
-                original.Status = original.Status;
-                original.TipoAcesso = original.TipoAcesso;
+                original.Titulo = entity.Titulo;
+                original.Status = entity.Status;
+                original.TipoAcesso = entity.TipoAcesso;
                 original.Conteudo = entity.Conteudo;
                 original.UsuarioModificacao = entity.UsuarioModificacao;
                 original.DataModificacao = DateTime.Now;

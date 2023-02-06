@@ -48,7 +48,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
             if (original != null)
             {
-                original.ModoAlerta = original.ModoAlerta;
+                original.ModoAlerta = entity.ModoAlerta;
                 original.UsuarioModificacao = entity.UsuarioModificacao;
                 original.DataModificacao = DateTime.Now;
 

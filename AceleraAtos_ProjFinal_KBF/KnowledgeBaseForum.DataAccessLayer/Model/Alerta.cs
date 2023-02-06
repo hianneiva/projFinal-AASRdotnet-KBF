@@ -22,11 +22,11 @@
         /// <summary>
         /// Topic to which the alert has been registered.
         /// </summary>
-        public Topico Topico { get; set; } = null!;
+        public Topico? Topico { get; set; } = null!;
 
         /// <summary>
         /// Author user.
         /// </summary>
-        public Usuario Usuario { get; set; } = null!;
+        public Usuario? Usuario { get; set; } = null!;
     }
 }

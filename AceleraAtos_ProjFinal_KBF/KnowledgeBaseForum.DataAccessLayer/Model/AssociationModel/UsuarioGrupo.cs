@@ -14,7 +14,7 @@
 
         // Relational properties.
 
-        public Usuario Usuario { get; set; } = null!;
-        public Grupo Grupo { get; set; } = null!;
+        public Usuario? Usuario { get; set; } = null!;
+        public Grupo? Grupo { get; set; } = null!;
     }
 }

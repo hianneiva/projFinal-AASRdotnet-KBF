@@ -1,0 +1,82 @@
+﻿@model KnowledgeBaseForum.AdminWebApp.Models.TopicoViewModel
+@*@using KnowledgeBaseForum.AdminWebApp.Models.Enum*@
+
+@{
+    ViewData["Title"] = "Edição de Tópico";
+    List<string>? foundTagIds = Model.TagLinks?.Select(tl => tl.TagId.ToString())?.ToList();
+    string? selectedTags = foundTagIds?.Count() > 0 ? $"['{string.Join("', '", foundTagIds)}']" : "null";
+}
+
+<h4>Tópico</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="col-sm-12">
+            <strong>
+                <label asp-for="Titulo" class="control-label"></label>
+            </strong>
+        </div>
+        <div class="mx-3">@(Model.Titulo)</div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-sm-12">
+            <strong>
+                <label asp-for="TipoAcesso" class="control-label col-sm-12"></label>
+            </strong>
+        </div>
+        <div class="mx-3">@(Model.TipoAcesso)</div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-sm-12">
+            <strong>
+                <label asp-for="Usuario" class="control-label col-sm-12"></label>
+            </strong>
+        </div>
+        <div class="mx-3">@(Model.AuthorName)</div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-4">
+        <div class="col-sm-12">
+            <strong>
+                <label asp-for="DataCriacao" class="control-label"></label>
+            </strong>
+        </div>
+        <div class="mx-3">@(Model.DataCriacao)</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 form-group">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" class="form-control" />
+            <input type="hidden" asp-for="Status" class="form-control" />
+            <strong>
+                <label class="control-label col-sm-12">Tags</label>
+            </strong>
+            <select class="form-select multiple" id="tags" name="tags" asp-items="@((SelectList?)ViewData["TagSelect"])" multiple></select>
+            <br />
+            <input type="submit" value="Salvar" class="btn btn-primary mr-2" />
+            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="col-sm-12">
+            <strong>
+                <label asp-for="DataCriacao" class="control-label"></label>
+            </strong>
+        </div>
+        <p>@(Model.Conteudo)</p>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function(){
+            const selectedTags = @Html.Raw(selectedTags);
+            $('#tags').val(selectedTags);
+        });
+    </script>
+}

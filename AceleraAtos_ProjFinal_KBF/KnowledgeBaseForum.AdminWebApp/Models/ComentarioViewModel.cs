@@ -1,6 +1,6 @@
-﻿namespace KnowledgeBaseForum.DataAccessLayer.Model
+﻿namespace KnowledgeBaseForum.AdminWebApp.Models
 {
-    public class Comentario : BaseEntity
+    public class ComentarioViewModel : BaseViewModel
     {
         /// <summary>
         /// Comment content.
@@ -21,17 +21,5 @@
         /// Author (User) Id.
         /// </summary>
         public string UsuarioId { get; set; } = null!;
-
-        // Relational properties.
-
-        /// <summary>
-        /// Author user.
-        /// </summary>
-        public Usuario? Usuario { get; set; } = null!;
-
-        /// <summary>
-        /// Parent topic.
-        /// </summary>
-        public Topico? Topico { get; set; } = null!;
     }
 }
