@@ -5,10 +5,9 @@
     /// </summary>
     public static class Constants
     {
-#if DEBUG
         public static readonly string STUB_MODE = "StubMode";
-#endif
         public static readonly string API_HOST = "ApiHost";
+        public static string API_GRUPOS = "ApiGrupos";
         public static readonly string API_REL_TOPICO_TAG = "ApiRelationalTopicoTag";
         public static readonly string API_REL_USUARIO_GRUPO = "ApiRelationalUsuarioGrupo";
         public static readonly string API_TAGS = "ApiTags";

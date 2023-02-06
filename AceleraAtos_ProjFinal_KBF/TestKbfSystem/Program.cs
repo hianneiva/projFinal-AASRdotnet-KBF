@@ -15,7 +15,7 @@ namespace TestKbfSystem
 
         private static async Task DatabaseTest()
         {
-            DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder().UseSqlServer("Data Source=localhost;Initial Catalog=DB_KBFORUM;Integrated Security=True");
+            DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder().UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=DB_KBFORUM;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             using (KbfContext context = new KbfContext(optionsBuilder.Options)) 
             {
