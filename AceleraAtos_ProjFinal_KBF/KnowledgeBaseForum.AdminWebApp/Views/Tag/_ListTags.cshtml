@@ -47,7 +47,7 @@
                 </td>*@
                 <td>
                     <button role="button" class="btn btn-outline-primary" onclick="editTag('@(item.Id)')">Salvar</button>
-                    <button role="button" class="btn btn-outline-danger" onclick="deleteTag('@(item.Id)')">Apagar</button>
+                    <button role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delModal" onclick="bindDelBehavior('@(item.Id)', '@(item.Descricao)')">Apagar</button>
                 </td>
             </tr>
         }

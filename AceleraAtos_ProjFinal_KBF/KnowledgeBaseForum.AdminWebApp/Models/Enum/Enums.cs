@@ -8,4 +8,11 @@
         Normal = 1,
         Administrador = 2
     }
+
+    public enum TopicoTipoAcessoEnum : int
+    {
+        WIP = 0,
+        Publicado = 1,
+        Finalizado = 2
+    }
 }

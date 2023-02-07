@@ -22,12 +22,12 @@
     </div>
     <div class="form-group col-sm-4">
         <button role="button" class="btn btn-primary mt-4 mr-4" style="width: 100px;" id="searchBtn">Buscar</button>
-        <button role="button" class="btn btn-info mt-4" style="width: 100px;" data-bs-toggle="modal" data-bs-target="#createModal">Criar</button>
+        <button role="button" class="btn btn-secondary mt-4" style="width: 100px;" data-bs-toggle="modal" data-bs-target="#createModal">Criar</button>
     </div>
 </div>
 <hr />
 <div class="row" id="searchResults"></div>
-<!-- Modal -->
+<!-- Modal Create -->
 <div class="modal fade" tabindex="-1" role="dialog" id="createModal" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -48,6 +48,23 @@
             <div class="modal-footer">
                 <button role="button" class="btn btn-primary" id="saveTag" data-bs-dismiss="modal">Salvar</button>
                 <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Delete -->
+<div class="modal fade" tabindex="-1" role="dialog" id="delModal" aria-labelledby="delModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Apagar Tag</div>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja apagar a tag <strong id="tagToDel"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button role="button" class="btn btn-danger" id="delTag" data-bs-dismiss="modal">Sim</button>
+                <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
             </div>
         </div>
     </div>
@@ -99,6 +116,12 @@
         const deleteTag = (id) => postAjax({ id: id }, '@(Url.Action("Delete", "Tag"))', "Tag apagada");
 
         const createTag = () => postAjax({ name: $('#tagName').val() }, '@(Url.Action("Create", "Tag"))', "Tag criada");
+
+        const bindDelBehavior = function (id, name) {
+            $('#tagToDel').html(name);
+            $('#delTag').off('click');
+            $('#delTag').click(() => deleteTag(id));
+        };
 
         $(document).ready(function () {
             getTagData();
