@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association;
 using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RelationalController : ControllerBase
     {
         private readonly TopicoTagDao ttDao;

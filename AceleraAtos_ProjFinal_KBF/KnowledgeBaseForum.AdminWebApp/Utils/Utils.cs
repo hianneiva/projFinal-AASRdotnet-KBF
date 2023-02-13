@@ -1,5 +1,8 @@
 ﻿namespace KnowledgeBaseForum.AdminWebApp.Utils
 {
+    /// <summary>
+    /// Miscellaneous operations to be used app wide.
+    /// </summary>
     public static class Utils
     {
         /// <summary>

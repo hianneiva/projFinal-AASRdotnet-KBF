@@ -7,9 +7,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
     public class GrupoController : Controller
     {
-        private string apiHost;
-        private string apiGrupos;
-        private IHttpClientFactory factory;
+        private readonly string apiHost;
+        private readonly string apiGrupos;
+        private readonly IHttpClientFactory factory;
 
         public GrupoController(IConfiguration config, IHttpClientFactory factory)
         {
