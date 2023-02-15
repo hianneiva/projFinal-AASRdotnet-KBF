@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string CORS_POLICY_NAME = "_DefaultCorsPolicy";
+        public const string CYPHER_SECRET = "Cypher";
         public const string JWT_SECRET = "Jwt:Secret";
         public const string JWT_VALID_AUDIENCE = "Jwt:ValidAudience";
         public const string JWT_VALID_ISSUER = "Jwt:ValidIssuer";

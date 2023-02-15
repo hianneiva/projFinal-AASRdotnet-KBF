@@ -4,6 +4,7 @@ using KnowledgeBaseForum.AdminWebApp.Models;
 using KnowledgeBaseForum.AdminWebApp.Models.API;
 using KnowledgeBaseForum.AdminWebApp.Utils;
 using static KnowledgeBaseForum.AdminWebApp.Utils.Constants;
+using System.Text;
 
 namespace KnowledgeBaseForum.AdminWebApp.Controllers;
 
@@ -14,12 +15,14 @@ public class HomeController : Controller
     private readonly string apiHost;
     private readonly string apiAuthLogin;
     private readonly string apiAuthSignUp;
+    private readonly string cypherKey;
 
     public HomeController(IConfiguration config, IHttpClientFactory factory, ILogger<HomeController> logger)
     {
         apiHost = config[API_HOST];
         apiAuthLogin = config[API_AUTH_LOGIN];
         apiAuthSignUp = config[API_AUTH_SIGNUP];
+        cypherKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(config[CYPHER_SECRET]));
         this.factory = factory;
         _logger = logger;
     }
@@ -44,7 +47,8 @@ public class HomeController : Controller
                 throw new ArgumentNullException("Usuário ou Senha inválidos");
             }
 
-            LoginResponse? response = await new HttpHelper<LoginResponse, Login>(factory, apiHost).Post(apiAuthLogin, new Login(login, password));
+            string encodedPwd = $"{Convert.ToBase64String(Encoding.UTF8.GetBytes(password))}.{cypherKey}";
+            LoginResponse? response = await new HttpHelper<LoginResponse, Login>(factory, apiHost).Post(apiAuthLogin, new Login(login, encodedPwd));
 
             return RedirectToAction("Index");
         }
@@ -71,12 +75,13 @@ public class HomeController : Controller
                 return View();
             }
 
+            string encodedPwd = $"{Convert.ToBase64String(Encoding.UTF8.GetBytes(password))}.{cypherKey}";
             UsuarioViewModel user = new UsuarioViewModel()
             {
                 Email = email,
                 Login = login,
                 Nome = name,
-                Senha = password,
+                Senha = encodedPwd,
                 Status = true,
                 UsuarioCriacao = login
             };

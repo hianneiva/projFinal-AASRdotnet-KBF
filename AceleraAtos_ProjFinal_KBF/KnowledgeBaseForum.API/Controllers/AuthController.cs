@@ -10,6 +10,7 @@ using System.Security.Claims;
 using KnowledgeBaseForum.DataAccessLayer.Model;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using KnowledgeBaseForum.API.Auth;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
@@ -36,10 +37,15 @@ namespace KnowledgeBaseForum.API.Controllers
             }
 
             Usuario? loginUser = await dao.Get(loginData.Username);
+            string semiDecodedPwd = VerifyPassword(loginData.Password, out bool verified);
 
-            if (loginUser == null || !(loginUser?.Senha?.Equals(loginData.Password)).GetValueOrDefault())
+            if (loginUser == null || !(loginUser?.Senha?.Equals(semiDecodedPwd)).GetValueOrDefault())
             {
                 return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Username or password are incorrect." });
+            }
+            else if (!verified)
+            {
+                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Invalid client." });
             }
             else if (!(loginUser?.Status).GetValueOrDefault())
             {
@@ -75,9 +81,17 @@ namespace KnowledgeBaseForum.API.Controllers
                 return BadRequest(new { result = false, message = "Invalid user data sent." });
             }
 
+            string semiDecodedPwd = VerifyPassword(usuario.Senha, out bool verified);
+
+            if (!verified)
+            {
+                return Unauthorized(new { result = false, message = "Invalid client." });
+            }
+
             usuario.Status = true;
             usuario.Perfil = 1;
             usuario.UsuarioCriacao = usuario.Login;
+            usuario.Senha = semiDecodedPwd;
 
             await dao.Add(usuario);
 
@@ -99,6 +113,15 @@ namespace KnowledgeBaseForum.API.Controllers
             string token = new JwtSecurityTokenHandler().WriteToken(tokenData);
 
             return Created(new Uri(Request.GetEncodedUrl()), new JwtTokenResponse() { Result = true, Token = token });
+        }
+
+        private string VerifyPassword(string password, out bool result)
+        {
+            string encodedSecret = Convert.ToBase64String(Encoding.UTF8.GetBytes(config[Constants.CYPHER_SECRET]));
+            string[] passwordParts = password.Split('.');
+            result = !string.IsNullOrEmpty(passwordParts.Last()) && encodedSecret.Equals(passwordParts.Last());
+
+            return passwordParts.First();
         }
     }
 }
