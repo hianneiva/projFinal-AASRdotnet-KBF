@@ -32,12 +32,13 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet("/Login")]
     public IActionResult Login()
     {
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("/Login")]
     public async Task<IActionResult> Login(string login, string password)
     {
         try
@@ -59,19 +60,25 @@ public class HomeController : Controller
         }
     }
 
+    [HttpGet("/Signup")]
     public IActionResult SignUp()
     {
         return View();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> SignUp(string login, string password, string name, string email)
+    [HttpPost("/Signup")]
+    public async Task<IActionResult> SignUp(string login, string password, string passwordConfirm, string name, string email)
     {
         try
         {
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
             {
-                ViewData["Error"] = "Usuário ou Senha inválidos";
+                ViewData["Error"] = "Um ou mais dados fornecidos são inválidos";
+                return View();
+            }
+            else if (!password.Equals(passwordConfirm))
+            {
+                ViewData["Error"] = "Campos \"Senha\" e \"Confirme a Senha\" devem ser iguais";
                 return View();
             }
 

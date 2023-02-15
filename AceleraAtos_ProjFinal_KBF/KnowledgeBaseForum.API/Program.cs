@@ -1,8 +1,5 @@
-using KnowledgeBaseForum.API.Auth;
-using KnowledgeBaseForum.API.JWT;
 using KnowledgeBaseForum.API.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;

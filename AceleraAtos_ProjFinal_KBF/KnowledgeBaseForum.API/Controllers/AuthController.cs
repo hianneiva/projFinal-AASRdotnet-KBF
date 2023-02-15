@@ -52,22 +52,7 @@ namespace KnowledgeBaseForum.API.Controllers
                 return Unauthorized(new JwtTokenResponse() { Result = false, Message = "User is deactivated." });
             }
 
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Constants.JWT_SECRET]));
-            SigningCredentials credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            JwtSecurityToken tokenData = new JwtSecurityToken(
-                issuer: config[Constants.JWT_VALID_ISSUER],
-                audience: config[Constants.JWT_VALID_AUDIENCE],
-                claims: new List<Claim>() 
-                {
-                    new Claim(ClaimTypes.Role, ClaimRoleNames.USER_ROLE_NAMES[loginUser!.Perfil]),
-                    new Claim(ClaimTypes.Email, loginUser.Email),
-                    new Claim(ClaimTypes.GivenName, loginUser.Nome),
-                    new Claim(ClaimTypes.Name, loginUser.Login)
-                },
-                expires: DateTime.Now.AddDays(7),
-                signingCredentials: credentials
-            );
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenData);
+            string token = GenerateJwtToken(loginUser!);
 
             return Ok(new JwtTokenResponse() { Result = true, Token = token });
         }
@@ -95,22 +80,7 @@ namespace KnowledgeBaseForum.API.Controllers
 
             await dao.Add(usuario);
 
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Constants.JWT_SECRET]));
-            SigningCredentials credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            JwtSecurityToken tokenData = new JwtSecurityToken(
-                issuer: config[Constants.JWT_VALID_ISSUER],
-                audience: config[Constants.JWT_VALID_AUDIENCE],
-                claims: new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Role, ClaimRoleNames.USER_ROLE_NAMES[1]),
-                    new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.GivenName, usuario.Nome),
-                    new Claim(ClaimTypes.Name, usuario.Login)
-                },
-                expires: DateTime.Now.AddDays(7),
-                signingCredentials: credentials
-            );
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenData);
+            string token = GenerateJwtToken(usuario!);
 
             return Created(new Uri(Request.GetEncodedUrl()), new JwtTokenResponse() { Result = true, Token = token });
         }
@@ -122,6 +92,26 @@ namespace KnowledgeBaseForum.API.Controllers
             result = !string.IsNullOrEmpty(passwordParts.Last()) && encodedSecret.Equals(passwordParts.Last());
 
             return passwordParts.First();
+        }
+
+        private string GenerateJwtToken(Usuario usuario)
+        {
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Constants.JWT_SECRET]));
+            SigningCredentials credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            JwtSecurityToken tokenData = new JwtSecurityToken(
+                issuer: config[Constants.JWT_VALID_ISSUER],
+                audience: config[Constants.JWT_VALID_AUDIENCE],
+                claims: new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Role, usuario.Perfil < 1 ? ClaimRoleNames.USER_ROLE_NAMES[1] : ClaimRoleNames.USER_ROLE_NAMES[usuario.Perfil]),
+                    new Claim(ClaimTypes.Email, usuario.Email),
+                    new Claim(ClaimTypes.GivenName, usuario.Nome),
+                    new Claim(ClaimTypes.Name, usuario.Login)
+                },
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: credentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(tokenData);
         }
     }
 }
