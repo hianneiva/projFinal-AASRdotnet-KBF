@@ -13,7 +13,6 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
     public class HttpHelper<T, U>
     {
         private const string JSON_MIME_TYPE = "application/json";
-        private readonly string? AuthHeader;
         private readonly HttpClient client;
 
         /// <summary>
