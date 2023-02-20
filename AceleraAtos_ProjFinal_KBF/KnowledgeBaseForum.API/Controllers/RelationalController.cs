@@ -1,13 +1,13 @@
-﻿using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
-using KnowledgeBaseForum.DataAccessLayer.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN,NORMAL")]
     public class RelationalController : ControllerBase
     {
         private readonly TopicoTagDao ttDao;
@@ -32,13 +32,27 @@ namespace KnowledgeBaseForum.API.Controllers
                 return $"Failure: {ex.Message}";
             }
         }
-        
+
         [HttpDelete("topicoTag")]
         public async Task<string> DeleteTTRelation(Guid tagId, Guid topicId)
         {
             try
             {
                 await ttDao.Delete(topicId, tagId);
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                return $"Failure: {ex.Message}";
+            }
+        }
+
+        [HttpDelete("topicoTag/{tagId}")]
+        public async Task<string> DeleteAllTagsRelation(Guid tagId)
+        {
+            try
+            {
+                await ttDao.DeleteTagAssociations(tagId);
                 return "true";
             }
             catch (Exception ex)
@@ -67,6 +81,20 @@ namespace KnowledgeBaseForum.API.Controllers
             try
             {
                 await ugDao.Delete(login, groupId);
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                return $"Failure: {ex.Message}";
+            }
+        }
+
+        [HttpDelete("usuarioGrupo/{tagId}")]
+        public async Task<string> DeleteAllUserRelation(Guid tagId)
+        {
+            try
+            {
+                await ugDao.DeleteGroupAssociations(tagId);
                 return "true";
             }
             catch (Exception ex)

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
-namespace KnowledgeBaseForum.AdminWebApp.Models
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     public abstract class BaseViewModel
     {
@@ -25,6 +24,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Models
         /// <summary>
         /// Creation user name.
         /// </summary>
+        [Display(Name = "Usuário Criador")]
         public string UsuarioCriacao { get; set; } = null!;
 
         /// <summary>

@@ -28,5 +28,22 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association
                 await context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteTagAssociations(Guid tagId)
+        {
+            IEnumerable<TopicoTag> allFound = await context.AssociationTopicoTag.Where(tt => tt.TagId == tagId).ToListAsync();
+
+            if (allFound == null)
+            {
+                return;
+            }
+
+            foreach (TopicoTag entry in allFound)
+            {
+                context.Remove(entry);
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }

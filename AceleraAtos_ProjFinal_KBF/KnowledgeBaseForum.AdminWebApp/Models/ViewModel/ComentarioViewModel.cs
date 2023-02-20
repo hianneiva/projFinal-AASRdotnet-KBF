@@ -1,4 +1,4 @@
-﻿namespace KnowledgeBaseForum.AdminWebApp.Models
+﻿namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     public class ComentarioViewModel : BaseViewModel
     {
@@ -21,5 +21,10 @@
         /// Author (User) Id.
         /// </summary>
         public string UsuarioId { get; set; } = null!;
+
+        /// <summary>
+        /// Author data.
+        /// </summary>
+        public UsuarioViewModel? Usuario { get; set; }
     }
 }

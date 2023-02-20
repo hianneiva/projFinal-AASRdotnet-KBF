@@ -7,7 +7,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
     {
         private KbfContext context;
 
-        public UsuarioDao(KbfContext context) 
+        public UsuarioDao(KbfContext context)
         {
             this.context = context;
         }
@@ -18,7 +18,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Usuario>> All() =>  await context.Usuarios.ToListAsync();
+        public async Task<IEnumerable<Usuario>> All() => await context.Usuarios.ToListAsync();
 
 #pragma warning disable CS1998 // Unused
         public async Task Delete(Guid id) => throw new NotImplementedException("Not used for this Entity");
@@ -44,7 +44,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<Usuario?> Get(string id) => await context.Usuarios.SingleOrDefaultAsync(usr => usr.Login.Equals(id));
+        public async Task<Usuario?> Get(string id) => await context.Usuarios.SingleOrDefaultAsync(usr => usr.Login.ToUpper().Equals(id.ToUpper()));
 
         public async Task Update(Usuario entity)
         {

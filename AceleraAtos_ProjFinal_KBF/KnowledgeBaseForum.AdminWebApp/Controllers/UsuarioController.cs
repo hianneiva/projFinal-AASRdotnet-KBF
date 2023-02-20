@@ -1,20 +1,23 @@
-﻿using KnowledgeBaseForum.AdminWebApp.Models;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Config;
+using KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 using KnowledgeBaseForum.AdminWebApp.Utils;
+using KnowledgeBaseForum.Commons.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using static KnowledgeBaseForum.AdminWebApp.Utils.Utils;
 
 namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class UsuarioController : Controller
     {
-        private readonly string apiHost;
-        private readonly string apiUsuarios;
+        private readonly ApiOptions options;
         private readonly IHttpClientFactory factory;
 
-        public UsuarioController(IConfiguration config, IHttpClientFactory factory)
+        public UsuarioController(IConfiguration config, IHttpClientFactory factory, IOptions<ApiOptions> options)
         {
-            apiHost = config[Constants.API_HOST];
-            apiUsuarios = config[Constants.API_USUARIO];
+            this.options = options.Value;
             this.factory = factory;
         }
 
@@ -24,12 +27,13 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> List(string filter) 
+        public async Task<IActionResult> List(string filter)
         {
             try
             {
-                HttpHelper<IEnumerable<UsuarioViewModel>, object> httpGetter = new HttpHelper<IEnumerable<UsuarioViewModel>, object>(factory, apiHost);
-                IEnumerable<UsuarioViewModel> queried = await httpGetter.Get(apiUsuarios) ?? new List<UsuarioViewModel>();
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<IEnumerable<UsuarioViewModel>, object> httpGetter = new HttpHelper<IEnumerable<UsuarioViewModel>, object>(factory, options.ApiHost, token);
+                IEnumerable<UsuarioViewModel> queried = await httpGetter.Get(options.ApiUsuario) ?? new List<UsuarioViewModel>();
 
                 return PartialView("_ListUsers", queried.Where(u => string.IsNullOrEmpty(filter) ||
                                                                     u.Nome.InvariantContains(filter) ||
@@ -47,8 +51,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         {
             try
             {
-                HttpHelper<UsuarioViewModel, object> httpGetter = new HttpHelper<UsuarioViewModel, object>(factory, apiHost);
-                UsuarioViewModel? usuario = await httpGetter.Get($"{apiUsuarios}/{id}");
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<UsuarioViewModel, object> httpGetter = new HttpHelper<UsuarioViewModel, object>(factory, options.ApiHost, token);
+                UsuarioViewModel? usuario = await httpGetter.Get($"{options.ApiUsuario}/{id}");
 
                 return View(usuario);
             }
@@ -63,8 +68,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         {
             try
             {
-                HttpHelper<UsuarioViewModel, UsuarioViewModel> httpPutter = new HttpHelper<UsuarioViewModel, UsuarioViewModel>(factory, apiHost);
-                UsuarioViewModel? editedUsuario = await httpPutter.Put(apiUsuarios, usuario);
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<UsuarioViewModel, UsuarioViewModel> httpPutter = new HttpHelper<UsuarioViewModel, UsuarioViewModel>(factory, options.ApiHost, token);
+                UsuarioViewModel? editedUsuario = await httpPutter.Put(options.ApiUsuario, usuario);
 
                 return RedirectToAction("Index");
             }
@@ -80,8 +86,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 bool result = true;
-                HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, apiHost);
-                result = status ? await httpHelper.Delete($"{apiUsuarios}/{id}") : await httpHelper.Put($"{apiUsuarios}/{id}", new { });
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, options.ApiHost, token);
+                result = status ? await httpHelper.Delete($"{options.ApiUsuario}/{id}") : await httpHelper.Put($"{options.ApiUsuario}/{id}", new { });
 
                 return Json(new { result });
             }

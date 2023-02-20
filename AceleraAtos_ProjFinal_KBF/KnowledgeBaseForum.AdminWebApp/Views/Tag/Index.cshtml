@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Gerenciamento de Tags";
+}
+
+<h3>Usuários</h3>
+<br />
+<div class="alert" role="alert" id="alertSection" style="display: none;"></div>
+<div class="row">
+    <div class="form-group col-sm-4">
+        @*<label for="countPerPage">N.º de usuários por página</label>
+        <select class="form-select" name="countPerPage" id="countPerPage">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+        </select>*@
+    </div>
+    <div class="form-group col-sm-4">
+        <label for="userFilter">Filtro (Nome)</label>
+        <input type="text" class="form-control" name="tagFilter" id="tagFilter" />
+    </div>
+    <div class="form-group col-sm-4">
+        <button role="button" class="btn btn-primary mt-4 mr-4" style="width: 100px;" id="searchBtn">Buscar</button>
+        <button role="button" class="btn btn-secondary mt-4" style="width: 100px;" data-bs-toggle="modal" data-bs-target="#createModal">Criar</button>
+    </div>
+</div>
+<hr />
+<div class="row" id="searchResults"></div>
+<!-- Modal Create -->
+<div class="modal fade" tabindex="-1" role="dialog" id="createModal" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Nova Tag</div>
+                @*<button type="button" class="close"data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="tagName" class="control-label">Descrição</label>
+                        <input name="tagName" id="tagName" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button role="button" class="btn btn-primary" id="saveTag" data-bs-dismiss="modal">Salvar</button>
+                <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Delete -->
+<div class="modal fade" tabindex="-1" role="dialog" id="delModal" aria-labelledby="delModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Apagar Tag</div>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja apagar a tag <strong id="tagToDel"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button role="button" class="btn btn-danger" id="delTag" data-bs-dismiss="modal">Sim</button>
+                <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script>
+        const getTagData = function () {
+            const filter = $('#userFilter').val();
+            const filterDefined = filter !== '' || filter !== null || filter !== undefined;
+            const jsonData = {
+                filter: (filterDefined ? filter : null)
+            };
+            $.post('@Url.Action("List", "Tag")', jsonData, function (data, status) {
+                $('#searchResults').html(data);
+            });
+        };
+
+        const postAjax = function (content, url, messageSuccess) {
+            $.post(url, content, function(data, status) {
+                getTagData();
+                const alertDiv = $('#alertSection');
+
+                if (data.result === true){
+                    alertDiv.html(messageSuccess);
+                    alertDiv.removeClass('alert-danger');
+                    alertDiv.addClass('alert-success');
+                } else {
+                    alertDiv.html(data.message);
+                    alertDiv.removeClass('alert-success');
+                    alertDiv.addClass('alert-danger');
+                }
+
+                alertDiv.show();
+                setTimeout(() => { alertDiv.hide(); }, 7000);
+            });
+        };
+
+        const editTag = function (id) {
+            const name = $(`#name_${id}`).val();
+            const jsonData = {
+                id: id,
+                name: name
+            };
+            postAjax(jsonData, '@(Url.Action("Edit", "Tag"))', "Tag atualizada");
+        };
+
+        const deleteTag = (id) => postAjax({ id: id }, '@(Url.Action("Delete", "Tag"))', "Tag apagada");
+
+        const createTag = () => postAjax({ name: $('#tagName').val() }, '@(Url.Action("Create", "Tag"))', "Tag criada");
+
+        const bindDelBehavior = function (id, name) {
+            $('#tagToDel').html(name);
+            $('#delTag').off('click');
+            $('#delTag').click(() => deleteTag(id));
+        };
+
+        $(document).ready(function () {
+            getTagData();
+            $('#searchBtn').click(getTagData);
+            $('#saveTag').click(createTag);
+        });
+    </script>
+}

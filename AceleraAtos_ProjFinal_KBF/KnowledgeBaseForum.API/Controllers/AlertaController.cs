@@ -2,6 +2,7 @@
 using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,10 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN,NORMAL")]
     public class AlertaController : Controller
     {
-        private AlertaDao dao;
+        private readonly AlertaDao dao;
 
         public AlertaController(KbfContext context)
         {
@@ -21,16 +23,16 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Alerta>> ReadAll() => await dao.All();
 
-        [HttpGet("{alerta}")]
-        public async Task<Alerta?> Read(Guid alerta) => await dao.Get(alerta);
+        [HttpGet("{id}")]
+        public async Task<Alerta?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
         public async Task<IActionResult> Create(Alerta entry)
         {
             try
-            {                
+            {
                 await dao.Add(entry);
-                return Created(new Uri(Request.GetEncodedUrl()), entry);                
+                return Created(new Uri(Request.GetEncodedUrl()), entry);
             }
             catch (Exception ex)
             {

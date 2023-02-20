@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Enum;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace KnowledgeBaseForum.AdminWebApp.Models
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     public class TopicoViewModel : BaseViewModel
     {
@@ -20,8 +21,8 @@ namespace KnowledgeBaseForum.AdminWebApp.Models
         /// <summary>
         /// Access type (enum).
         /// </summary>
-        [Display(Name = "Tipo de Acesso")]
-        public int TipoAcesso { get; set; }
+        [Display(Name = "Estado Publicação")]
+        public TopicoTipoAcessoEnum TipoAcesso { get; set; }
 
         /// <summary>
         /// Topic status (active).

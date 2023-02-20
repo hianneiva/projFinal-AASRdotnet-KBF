@@ -18,11 +18,11 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Comentario>> All() => await context.Comentarios.ToListAsync();
+        public async Task<IEnumerable<Comentario>> All() => await context.Comentarios.Include(c => c.Usuario).ToListAsync();
 
         public async Task Delete(Guid id)
         {
-            Comentario? entry = await context.Comentarios.SingleOrDefaultAsync(cmt => cmt.Id.Equals(id));
+            Comentario? entry = await context.Comentarios.Include(c => c.Usuario).SingleOrDefaultAsync(cmt => cmt.Id.Equals(id));
 
             if (entry != null)
             {

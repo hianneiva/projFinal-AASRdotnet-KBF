@@ -38,7 +38,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<Topico?> Get(Guid id) => await context.Topicos.Include(tpc => tpc.Comentarios)
+        public async Task<Topico?> Get(Guid id) => await context.Topicos.Include(tpc => tpc.Comentarios!).ThenInclude(c => c.Usuario)
                                                                         .Include(tpc => tpc.Usuario)
                                                                         .Include(tpc => tpc.TopicoTag!).ThenInclude(tt => tt.Tag)
                                                                         .SingleOrDefaultAsync(tpc => tpc.Id.Equals(id));

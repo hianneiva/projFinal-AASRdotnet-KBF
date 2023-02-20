@@ -1,0 +1,82 @@
+﻿@model IEnumerable<KnowledgeBaseForum.AdminWebApp.Models.ViewModel.GrupoViewModel>
+
+<div class="col-sm-12">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descricao)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.DataCriacao)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.DataModificacao)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsuarioCriacao)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UsuarioModificacao)
+                </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descricao)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Status)*@
+                        @if (item.Status)
+                        {
+                            <strong class="text-success">Ativo</strong>
+                        }
+                        else
+                        {
+                            <strong class="text-secondary">Inativo</strong>
+                        }
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataCriacao)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.DataModificacao)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UsuarioCriacao)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UsuarioModificacao)
+                    </td>*@
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        @if (item.Status)
+                        {
+                            <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
+                                Desativar
+                            </button>
+                        }
+                        else
+                        {
+                            <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
+                                Ativar
+                            </button>   
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

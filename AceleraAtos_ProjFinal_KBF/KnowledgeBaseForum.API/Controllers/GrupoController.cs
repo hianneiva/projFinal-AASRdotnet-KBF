@@ -2,6 +2,7 @@
 using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +11,8 @@ namespace KnowledgeBaseForum.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class GrupoController : Controller
-    {        
-        private GrupoDao dao;
+    {
+        private readonly GrupoDao dao;
 
         public GrupoController(KbfContext context)
         {
@@ -19,12 +20,15 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<IEnumerable<Grupo>> ReadAll() => await dao.All();
 
-        [HttpGet("{grupo}")]
-        public async Task<Grupo?> Read(Guid grupo) => await dao.Get(grupo);
+        [HttpGet("{id}")]
+        [Authorize(Roles = "ADMIN,NORMAL")]
+        public async Task<Grupo?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create(Grupo entry)
         {
             try
@@ -49,7 +53,8 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpPut("{entry}")]
+        [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(Grupo entry)
         {
             try
@@ -73,12 +78,13 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpDelete("{entry}")]
-        public async Task<IActionResult> Delete(Guid entry)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                Grupo? found = await dao.Get(entry);
+                Grupo? found = await dao.Get(id);
 
                 if (found == null)
                 {
@@ -86,6 +92,29 @@ namespace KnowledgeBaseForum.API.Controllers
                 }
 
                 found.Status = false;
+                await dao.Update(found);
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Activate(Guid id)
+        {
+            try
+            {
+                Grupo? found = await dao.Get(id);
+
+                if (found == null)
+                {
+                    return NotFound(Constants.ENTITY_NOT_FOUND_IN_DB);
+                }
+
+                found.Status = true;
                 await dao.Update(found);
                 return Ok(true);
             }

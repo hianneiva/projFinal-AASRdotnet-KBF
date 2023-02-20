@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KnowledgeBaseForum.AdminWebApp.Models.UsuarioViewModel>
+﻿@model IEnumerable<UsuarioViewModel>
 
 <div class="col-sm-12">
     <table class="table">
@@ -82,19 +82,19 @@
                     <a asp-action="Edit" asp-route-id="@item.Login" class="btn btn-sm btn-outline-secondary mr-2">
                         Editar
                     </a>
-                        @if (item.Status)
-                        {
-                            <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
-                                Desativar
-                            </button>
-                        }
-                        else
-                        {
-                            <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
-                                Ativar
-                            </button>   
-                        }
-                    </td>
+                    @if (item.Status)
+                    {
+                        <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
+                            Desativar
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
+                            Ativar
+                        </button>   
+                    }
+                </td>
             </tr>
         }
         </tbody>

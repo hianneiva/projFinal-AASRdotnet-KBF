@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    bool isAdmin = this.User.Claims.Any(c => c.Value.Equals("ADMIN"));
+    string userGivenName = this.User.Claims.GetGivenNameFromClaims() ?? "Usuário";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,22 +17,40 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fórum de Base de Conhecimento</a> | &nbsp;
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fórum de Base de Conhecimento</a> 
+                <span class="text-black-50">|&nbsp;</span>
+                <span class="nav-text">Olá, @(userGivenName)</span>
+                <span class="text-black-50">&nbsp;|&nbsp;</span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuários</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Topico" asp-action="Index">Tópicos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Grupo" asp-action="Index">Grupos</a>
-                        </li>
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuários</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Topico" asp-action="Index">Tópicos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Grupo" asp-action="Index">Grupos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            </li>                            
+                        }
                     </ul>
                 </div>
             </div>

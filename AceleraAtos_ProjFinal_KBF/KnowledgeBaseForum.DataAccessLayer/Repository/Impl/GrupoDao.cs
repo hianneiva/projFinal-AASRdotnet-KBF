@@ -36,7 +36,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<Grupo?> Get(Guid id) => await context.Grupos.SingleOrDefaultAsync(a => a.Id.Equals(id));
+        public async Task<Grupo?> Get(Guid id) => await context.Grupos.Include(g => g.UsuarioGrupo!).ThenInclude(ug => ug.Usuario).SingleOrDefaultAsync(a => a.Id.Equals(id));
 
         public async Task<Grupo?> GetDescription(string description) => await context.Grupos.SingleOrDefaultAsync(a => a.Descricao.Equals(description));
 

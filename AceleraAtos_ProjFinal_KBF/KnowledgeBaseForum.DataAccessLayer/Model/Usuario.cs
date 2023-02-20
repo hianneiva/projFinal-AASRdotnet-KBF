@@ -1,5 +1,4 @@
 ﻿using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace KnowledgeBaseForum.DataAccessLayer.Model
 {

@@ -7,7 +7,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.DependencyInjection
 {
     public static class DependencyInjectionHelper
     {
-        public static IServiceCollection AddInfrastructureDb(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection AddInfrastructureDb(this IServiceCollection services, IConfiguration configuration)
         {
             ServiceProvider provider = services.AddDbContext<KbfContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
                                                .BuildServiceProvider();
