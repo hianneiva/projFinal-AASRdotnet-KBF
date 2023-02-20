@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace KnowledgeBaseForum.AdminWebApp.Models
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     public class TopicoViewModel : BaseViewModel
     {

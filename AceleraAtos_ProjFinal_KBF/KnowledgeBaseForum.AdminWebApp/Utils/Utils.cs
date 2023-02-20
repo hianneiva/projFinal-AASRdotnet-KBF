@@ -1,4 +1,7 @@
-﻿namespace KnowledgeBaseForum.AdminWebApp.Utils
+﻿using System.Security.Claims;
+using static KnowledgeBaseForum.AdminWebApp.Utils.Constants;
+
+namespace KnowledgeBaseForum.AdminWebApp.Utils
 {
     /// <summary>
     /// Miscellaneous operations to be used app wide.
@@ -6,19 +9,34 @@
     public static class Utils
     {
         /// <summary>
-        /// Compares two strings and return if they are equal, despite casing.
+        /// Gets the JWT token saved in the cookies.
         /// </summary>
-        /// <param name="sourceA">The first string.</param>
-        /// <param name="sourceB">The second string.</param>
-        /// <returns><c>true</c> if they are equal, <c>false</c> otherwise.</returns>
-        public static bool InvariantEquals(this string sourceA, string sourceB) => sourceA.ToUpperInvariant().Equals(sourceB.ToUpperInvariant());
+        /// <param name="reqCookies">The request Cookie collection.</param>
+        /// <returns>The JWT Token.</returns>
+        public static string? GetTokenFromCookies(this IRequestCookieCollection reqCookies) => reqCookies.ContainsKey(JWT_COOKIE_KEY) ?
+                                                                                               reqCookies[JWT_COOKIE_KEY] :
+                                                                                               null;
 
         /// <summary>
-        /// Compares two strings and return if the first contains the second, disregarding casing.
+        /// Gets the username from the currently authenticated user's claims.
         /// </summary>
-        /// <param name="sourceA">The first string.</param>
-        /// <param name="sourceB">The second string.</param>
-        /// <returns><c>true</c> if the second exists within the first, <c>false</c> otherwise.</returns>
-        public static bool InvariantContains(this string sourceA, string sourceB) => sourceA.ToUpperInvariant().Contains(sourceB.ToUpperInvariant());
+        /// <param name="claims">User's claims.</param>
+        /// <returns>User's username.</returns>
+        public static string? GetUserNameFromClaims(this IEnumerable<Claim> claims)
+        {
+            string username = claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value ?? string.Empty;
+            return username;
+        }
+
+        /// <summary>
+        /// Gets the given name from the currently authenticated user's claims.
+        /// </summary>
+        /// <param name="claims">User's claims.</param>
+        /// <returns>User's given name.</returns>
+        public static string? GetGivenNameFromClaims(this IEnumerable<Claim> claims)
+        {
+            string givenName = claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.GivenName))?.Value ?? string.Empty;
+            return givenName;
+        }
     }
 }

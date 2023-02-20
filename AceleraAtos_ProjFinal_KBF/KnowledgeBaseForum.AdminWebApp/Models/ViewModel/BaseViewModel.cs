@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
-namespace KnowledgeBaseForum.AdminWebApp.Models
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     public abstract class BaseViewModel
     {

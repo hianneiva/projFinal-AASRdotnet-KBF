@@ -88,5 +88,19 @@ namespace KnowledgeBaseForum.API.Controllers
                 return $"Failure: {ex.Message}";
             }
         }
+
+        [HttpDelete("usuarioGrupo/{tagId}")]
+        public async Task<string> DeleteAllUserRelation(Guid tagId)
+        {
+            try
+            {
+                await ugDao.DeleteGroupAssociations(tagId);
+                return "true";
+            }
+            catch (Exception ex)
+            {
+                return $"Failure: {ex.Message}";
+            }
+        }
     }
 }

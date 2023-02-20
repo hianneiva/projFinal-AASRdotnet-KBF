@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.API", "K
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.AdminWebApp", "KnowledgeBaseForum.AdminWebApp\KnowledgeBaseForum.AdminWebApp.csproj", "{4EBB6B89-FBA7-4020-B9EB-39D3E810CA0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.AdminFrontEnd", "KnowledgeBaseForum.AdminFrontEnd\KnowledgeBaseForum.AdminFrontEnd.csproj", "{1C7E1E06-0A9D-441A-B24F-49DF6C001945}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeBaseForum.Commons", "KnowledgeBaseForum.Commons\KnowledgeBaseForum.Commons.csproj", "{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{4EBB6B89-FBA7-4020-B9EB-39D3E810CA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EBB6B89-FBA7-4020-B9EB-39D3E810CA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EBB6B89-FBA7-4020-B9EB-39D3E810CA0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C7E1E06-0A9D-441A-B24F-49DF6C001945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C7E1E06-0A9D-441A-B24F-49DF6C001945}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C7E1E06-0A9D-441A-B24F-49DF6C001945}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C7E1E06-0A9D-441A-B24F-49DF6C001945}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}.Release|Any CPU.ActiveCfg = Release|Any CPU

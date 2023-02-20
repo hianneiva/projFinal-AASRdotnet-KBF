@@ -100,5 +100,28 @@ namespace KnowledgeBaseForum.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Activate(Guid id)
+        {
+            try
+            {
+                Grupo? found = await dao.Get(id);
+
+                if (found == null)
+                {
+                    return NotFound(Constants.ENTITY_NOT_FOUND_IN_DB);
+                }
+
+                found.Status = true;
+                await dao.Update(found);
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

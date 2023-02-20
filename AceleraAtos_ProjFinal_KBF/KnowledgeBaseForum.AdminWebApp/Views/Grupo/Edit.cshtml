@@ -1,0 +1,70 @@
+﻿@model KnowledgeBaseForum.AdminWebApp.Models.ViewModel.GrupoViewModel
+
+@{
+    ViewData["Title"] = "Edição de Grupo";
+    Dictionary<string, string> userData = (Dictionary<string, string>?)ViewData["Users"] ?? new Dictionary<string, string>();
+    string jsUsers = Model.UserLinks?.Count() > 0 ? $"['{string.Join("','", Model.UserLinks.Select(ul => ul.UsuarioId).ToList())}']" : "[]";
+}
+
+<h3>Grupo</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+                <!-- Hidden values -->
+                <input class="form-check-input" asp-for="Status" type="hidden" readonly />
+                <input asp-for="Id" class="form-control" type="hidden" readonly />
+                <input asp-for="DataCriacao" class="form-control" type="hidden" readonly />
+                <input asp-for="DataModificacao" class="form-control" type="hidden" readonly />
+                <input asp-for="UsuarioCriacao" class="form-control" type="hidden" readonly />
+                <input asp-for="UsuarioModificacao" class="form-control" type="hidden" readonly />
+            </div>
+            <br />
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Incluir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in userData)
+                        {
+                            <tr>
+                                <td>
+                                    @(item.Value)
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="user_@(item.Key)" id="user_@(item.Key)" value="@(item.Key)" class="form-check" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary mt-4" />
+                <a asp-action="Index" class="btn btn-secondary mt-4">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        const previousUsers = @Html.Raw(jsUsers);
+
+        $(document).ready(function() {
+            for(let i = 0; i < previousUsers.length; i++) {
+                $(`#user_${previousUsers[i]}`).trigger('click');
+            }
+        });
+    </script>
+}

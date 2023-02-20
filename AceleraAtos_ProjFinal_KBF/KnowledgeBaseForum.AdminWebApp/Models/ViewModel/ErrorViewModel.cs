@@ -1,4 +1,4 @@
-namespace KnowledgeBaseForum.AdminWebApp.Models;
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 
 public class ErrorViewModel
 {

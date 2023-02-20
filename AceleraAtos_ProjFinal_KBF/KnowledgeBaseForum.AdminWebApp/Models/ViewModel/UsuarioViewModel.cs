@@ -1,7 +1,7 @@
 ﻿using KnowledgeBaseForum.AdminWebApp.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace KnowledgeBaseForum.AdminWebApp.Models
+namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
 {
     /// <summary>
     /// Model that will collect the "Usuario" data from the API and display in the front end views.

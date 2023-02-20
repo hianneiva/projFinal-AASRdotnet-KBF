@@ -1,4 +1,5 @@
-﻿using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
+﻿using KnowledgeBaseForum.DataAccessLayer.Model;
+using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association
@@ -27,6 +28,23 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association
                 context.Remove(original);
                 await context.SaveChangesAsync();
             }
+        }
+
+        public async Task DeleteGroupAssociations(Guid id)
+        {
+            IEnumerable<UsuarioGrupo> allFound = await context.AssociationUsuarioGrupo.Where(ug => ug.GrupoId == id).ToListAsync();
+
+            if (allFound == null)
+            {
+                return;
+            }
+
+            foreach (UsuarioGrupo entry in allFound)
+            {
+                context.Remove(entry);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -1,9 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Gerenciamento de Grupos";
+    string? errorMsg = (string?)ViewData["Error"];
 }
 
 <h3>Grupo</h3>
 <br />
+@if (!string.IsNullOrEmpty(errorMsg))
+{
+    <div class="alert" role="alert" id="alertSection" style="display: none;">@(errorMsg)</div>
+}
 <div class="row">
     <div class="form-group col-sm-4">
         @*<label for="countPerPage">N.º de usuários por página</label>
@@ -16,11 +21,12 @@
             </select>*@
     </div>
     <div class="form-group col-sm-4">
-        <label for="userFilter">Filtro (Descrição)</label>
-        <input type="text" class="form-control" name="userFilter" id="userFilter" />
+        <label for="groupFilter">Filtro (Descrição)</label>
+        <input type="text" class="form-control" name="groupFilter" id="groupFilter" />
     </div>
     <div class="form-group col-sm-4">
-        <button role="button" class="btn btn-primary mt-4" style="width: 100px;" id="searchBtn">Buscar</button>
+        <button role="button" class="btn btn-primary mt-4 mr-4" style="width: 100px;" id="searchBtn">Buscar</button>
+        <a asp-action="Create" class="btn btn-secondary mt-4" style="width: 100px;">Criar</a>
     </div>
 </div>
 <hr />
@@ -29,13 +35,13 @@
 @section scripts
 {
     <script>
-        const getUserData = function (){
-            const filter = $('#userFilter').val();
+        const getGroupData = function (){
+            const filter = $('#groupFilter').val();
             const filterDefined = filter !== '' || filter !== null || filter !== undefined;
             const jsonData = {
                 filter: (filterDefined ? filter : null)
             };
-            $.post('@Url.Action("List", "Usuario")', jsonData, function(data, status){
+            $.post('@Url.Action("List", "Grupo")', jsonData, function(data, status){
                 $('#searchResults').html(data);
             });
         };
@@ -43,15 +49,15 @@
         const activationToggle = function(_id, _status)
         {
             const jsonData = { id: _id, status: _status };
-            $.post('@Url.Action("ToggleActivation", "Usuario")', jsonData, function(data, status){
-                $('#userFilter').val('');
-                getUserData();
+            $.post('@Url.Action("ToggleActivation", "Grupo")', jsonData, function(data, status){
+                $('#groupFilter').val('');
+                getGroupData();
             });
         }
 
         $(document).ready(function(){
-            getUserData();
-            $('#searchBtn').click(getUserData);
+            getGroupData();
+            $('#searchBtn').click(getGroupData);
         });
     </script>
 }
