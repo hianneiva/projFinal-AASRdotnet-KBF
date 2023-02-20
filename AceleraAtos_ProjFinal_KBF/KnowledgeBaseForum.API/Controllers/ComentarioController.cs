@@ -10,7 +10,7 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN,NORMAL")]
     public class ComentarioController : Controller
     {
         private readonly ComentarioDao dao;

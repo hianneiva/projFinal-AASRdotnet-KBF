@@ -1,4 +1,6 @@
+using KnowledgeBaseForum.API.Services;
 using KnowledgeBaseForum.API.Utils;
+using KnowledgeBaseForum.Commons.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,9 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 // Add services to the container.
+builder.Services.AddConfig(config).AddScopedDepedencies();
 builder.Services.AddHttpClient();
 builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -39,41 +43,41 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
 builder.Services.AddCors(options => options.AddPolicy(name: Constants.CORS_POLICY_NAME, policy =>
 {
     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
+
 builder.Services.AddInfrastructureDb(config);
-builder.Services.AddAuthentication(opt => {
+
+builder.Services.AddAuthentication(opt =>
+{
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
     .AddJwtBearer(options =>
     {
-        options.SaveToken = true;
         options.RequireHttpsMetadata = true;
+        options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Const.JWT_SECRET])),
+            ValidateAudience = false,
             ValidateLifetime = true,
+            ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = config[Constants.JWT_VALID_ISSUER],
-            ValidAudience = config[Constants.JWT_VALID_AUDIENCE],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Constants.JWT_SECRET]))
+            //ValidAudience = config[Const.JWT_VALID_AUDIENCE],
+            //ValidIssuer = config[Const.JWT_VALID_ISSUER],
+            SaveSigninToken = true
         };
     });
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("Anonymous", policy => policy.AddRequirements(new AllowAnonymousAuthorizationRequirement()));
-//    options.AddPolicy("Default", new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-//                                                                 .RequireAuthenticatedUser()
-//                                                                 .Build());
-//    options.AddPolicy("Admin", new AuthorizationPolicyBuilder().RequireRole(ClaimRoleNames.USER_ROLE_NAMES[2])
-//                                                               .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-//                                                               .RequireAuthenticatedUser()
-//                                                               .Build());
-//});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Const.ROLE_ADMIN, policy => policy.RequireRole(Const.ROLE_ADMIN));
+    options.AddPolicy(Const.ROLE_NORMAL, policy => policy.RequireRole(Const.ROLE_NORMAL));
+});
 
 var app = builder.Build();
 

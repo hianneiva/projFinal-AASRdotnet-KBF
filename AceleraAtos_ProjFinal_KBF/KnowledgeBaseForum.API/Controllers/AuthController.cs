@@ -1,16 +1,14 @@
-﻿using KnowledgeBaseForum.API.JWT;
+﻿using KnowledgeBaseForum.API.Model;
 using KnowledgeBaseForum.API.Utils;
+using KnowledgeBaseForum.Commons.JWT;
+using KnowledgeBaseForum.Commons.JWT.Model;
+using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Security.Claims;
-using KnowledgeBaseForum.DataAccessLayer.Model;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using KnowledgeBaseForum.API.Auth;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
@@ -20,12 +18,14 @@ namespace KnowledgeBaseForum.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UsuarioDao dao;
-        private readonly IConfiguration config;
+        private readonly ITokenService tokenService;
+        private readonly string passwordCypher;
 
-        public AuthController(KbfContext context, IConfiguration config)
+        public AuthController(KbfContext context, ITokenService tokenService, IConfiguration config)
         {
             dao = new UsuarioDao(context);
-            this.config = config;
+            this.tokenService = tokenService;
+            passwordCypher = config[Constants.CYPHER_SECRET];
         }
 
         [HttpPost("login")]
@@ -33,26 +33,27 @@ namespace KnowledgeBaseForum.API.Controllers
         {
             if (loginData == null)
             {
-                return BadRequest(new JwtTokenResponse() { Result = false, Message = "Invalid user request." });
+                return BadRequest(new JwtTokenResponse() { Result = false, Message = "Credenciais inválidas" });
             }
 
             Usuario? loginUser = await dao.Get(loginData.Username);
             string semiDecodedPwd = VerifyPassword(loginData.Password, out bool verified);
 
-            if (loginUser == null || !(loginUser?.Senha?.Equals(semiDecodedPwd)).GetValueOrDefault())
+            if (loginUser != null && !(loginUser?.Senha?.Equals(semiDecodedPwd)).GetValueOrDefault())
             {
-                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Username or password are incorrect." });
+                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Usuário ou senha incorretos" });
             }
             else if (!verified)
             {
-                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Invalid client." });
+                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Cliente inválido" });
             }
             else if (!(loginUser?.Status).GetValueOrDefault())
             {
-                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "User is deactivated." });
+                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Usuário está desativado" });
             }
 
-            string token = GenerateJwtToken(loginUser!);
+            UserContainer container = new() { Email = loginUser!.Email, GivenName = loginUser!.Nome, Profile = loginUser!.Perfil, Username = loginUser!.Login };
+            string token = tokenService.GenerateToken(container, null);
 
             return Ok(new JwtTokenResponse() { Result = true, Token = token });
         }
@@ -63,55 +64,35 @@ namespace KnowledgeBaseForum.API.Controllers
             if (usuario == null || string.IsNullOrEmpty(usuario?.Nome) || string.IsNullOrEmpty(usuario?.Login) || string.IsNullOrEmpty(usuario?.Senha) ||
                 string.IsNullOrEmpty(usuario?.Email))
             {
-                return BadRequest(new { result = false, message = "Invalid user data sent." });
+                return BadRequest(new { result = false, message = "Dados de novo usuário inválidos ou ausentes" });
             }
 
             string semiDecodedPwd = VerifyPassword(usuario.Senha, out bool verified);
 
             if (!verified)
             {
-                return Unauthorized(new { result = false, message = "Invalid client." });
+                return Unauthorized(new { result = false, message = "Cliente inválido" });
             }
 
             usuario.Status = true;
             usuario.Perfil = 1;
             usuario.UsuarioCriacao = usuario.Login;
             usuario.Senha = semiDecodedPwd;
-
             await dao.Add(usuario);
 
-            string token = GenerateJwtToken(usuario!);
+            UserContainer container = new() { Email = usuario.Email, GivenName = usuario.Nome, Profile = usuario.Perfil, Username = usuario.Login };
+            string token = tokenService.GenerateToken(container, null);
 
             return Created(new Uri(Request.GetEncodedUrl()), new JwtTokenResponse() { Result = true, Token = token });
         }
 
         private string VerifyPassword(string password, out bool result)
         {
-            string encodedSecret = Convert.ToBase64String(Encoding.UTF8.GetBytes(config[Constants.CYPHER_SECRET]));
+            string encodedSecret = Convert.ToBase64String(Encoding.UTF8.GetBytes(passwordCypher));
             string[] passwordParts = password.Split('.');
             result = !string.IsNullOrEmpty(passwordParts.Last()) && encodedSecret.Equals(passwordParts.Last());
 
             return passwordParts.First();
-        }
-
-        private string GenerateJwtToken(Usuario usuario)
-        {
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config[Constants.JWT_SECRET]));
-            SigningCredentials credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            JwtSecurityToken tokenData = new JwtSecurityToken(
-                issuer: config[Constants.JWT_VALID_ISSUER],
-                audience: config[Constants.JWT_VALID_AUDIENCE],
-                claims: new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Role, usuario.Perfil < 1 ? ClaimRoleNames.USER_ROLE_NAMES[1] : ClaimRoleNames.USER_ROLE_NAMES[usuario.Perfil]),
-                    new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.GivenName, usuario.Nome),
-                    new Claim(ClaimTypes.Name, usuario.Login)
-                },
-                expires: DateTime.Now.AddDays(7),
-                signingCredentials: credentials
-            );
-            return new JwtSecurityTokenHandler().WriteToken(tokenData);
         }
     }
 }

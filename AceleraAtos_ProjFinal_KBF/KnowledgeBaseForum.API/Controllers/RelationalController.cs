@@ -1,17 +1,13 @@
-﻿using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
-using KnowledgeBaseForum.DataAccessLayer.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl.Association;
-using KnowledgeBaseForum.DataAccessLayer.Model;
-using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN,NORMAL")]
     public class RelationalController : ControllerBase
     {
         private readonly TopicoTagDao ttDao;
@@ -36,7 +32,7 @@ namespace KnowledgeBaseForum.API.Controllers
                 return $"Failure: {ex.Message}";
             }
         }
-        
+
         [HttpDelete("topicoTag")]
         public async Task<string> DeleteTTRelation(Guid tagId, Guid topicId)
         {

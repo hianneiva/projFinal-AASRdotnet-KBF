@@ -10,7 +10,6 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class TagController : Controller
     {
         private readonly TagDao dao;
@@ -21,12 +20,15 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<IEnumerable<Tag>> ReadAll() => await dao.All();
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<Tag?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<IActionResult> Create(Tag entry)
         {
             try
@@ -41,6 +43,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(Tag entry)
         {
             try
@@ -65,6 +68,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

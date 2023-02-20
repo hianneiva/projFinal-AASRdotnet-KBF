@@ -10,9 +10,8 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class GrupoController : Controller
-    {        
+    {
         private readonly GrupoDao dao;
 
         public GrupoController(KbfContext context)
@@ -21,12 +20,15 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<IEnumerable<Grupo>> ReadAll() => await dao.All();
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<Grupo?> Read(Guid id) => await dao.Get(id);
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create(Grupo entry)
         {
             try
@@ -52,6 +54,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(Grupo entry)
         {
             try
@@ -76,6 +79,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

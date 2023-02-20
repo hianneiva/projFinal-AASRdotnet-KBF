@@ -19,19 +19,19 @@
         /// Adds an entry to the table.
         /// </summary>
         /// <param name="entity">The entity to be added.</param>
-        Task Add (T entity);
+        Task Add(T entity);
 
         /// <summary>
         /// Updates an entry in the table.
         /// </summary>
         /// <param name="entity">The entity to be updated.</param>
-        Task Update (T entity);
+        Task Update(T entity);
 
         /// <summary>
         /// Removes an entry from the table.
         /// </summary>
         /// <param name="id">The row Guid.</param>
-        Task Delete (Guid id);
+        Task Delete(Guid id);
 
         /// <summary>
         /// Removes an entry from the table.

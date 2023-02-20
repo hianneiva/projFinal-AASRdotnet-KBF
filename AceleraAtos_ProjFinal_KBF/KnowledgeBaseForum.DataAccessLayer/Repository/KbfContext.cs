@@ -28,7 +28,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
         /// <summary>
         /// Constructor with DB options.
         /// </summary>
-        public KbfContext(DbContextOptions options) : base(options) 
+        public KbfContext(DbContextOptions options) : base(options)
         { }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -119,7 +119,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             grupoBuilder.HasMany(g => g.UsuarioGrupo)?.WithOne(ug => ug.Grupo).HasForeignKey(u => u.GrupoId);
 
             // Association entities
-            EntityTypeBuilder <UsuarioGrupo> ugBuilder = modelBuilder.Entity<UsuarioGrupo>();
+            EntityTypeBuilder<UsuarioGrupo> ugBuilder = modelBuilder.Entity<UsuarioGrupo>();
             ugBuilder.ToTable("TBUsuarioGrupo").HasKey(ug => new { ug.GrupoId, ug.UsuarioId });
             ugBuilder.HasOne(ug => ug.Grupo).WithMany(g => g.UsuarioGrupo).HasForeignKey(ug => ug.GrupoId);
             ugBuilder.HasOne(ug => ug.Usuario).WithMany(u => u.UsuarioGrupo).HasForeignKey(ug => ug.UsuarioId);

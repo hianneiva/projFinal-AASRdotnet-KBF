@@ -3,16 +3,12 @@ using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly UsuarioDao dao;
@@ -23,26 +19,29 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IEnumerable<Usuario>> ReadAll() => await dao.All();
 
         [HttpGet("{login}")]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<Usuario?> Read(string login) => await dao.Get(login);
 
-        [HttpPost]
-        public async Task<IActionResult> Create(Usuario entry)
-        {
-            try
-            {
-                await dao.Add(entry);
-                return Created(new Uri(Request.GetEncodedUrl()), entry);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Create(Usuario entry)
+        //{
+        //    try
+        //    {
+        //        await dao.Add(entry);
+        //        return Created(new Uri(Request.GetEncodedUrl()), entry);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN,NORMAL")]
         public async Task<IActionResult> Update(Usuario entry)
         {
             try
@@ -67,6 +66,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpDelete("{login}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Deactivate(string login)
         {
             try
@@ -89,6 +89,7 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpPut("{login}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Activate(string login)
         {
             try

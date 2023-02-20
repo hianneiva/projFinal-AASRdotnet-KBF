@@ -10,7 +10,7 @@ namespace KnowledgeBaseForum.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN,NORMAL")]
     public class AlertaController : Controller
     {
         private readonly AlertaDao dao;
@@ -30,9 +30,9 @@ namespace KnowledgeBaseForum.API.Controllers
         public async Task<IActionResult> Create(Alerta entry)
         {
             try
-            {                
+            {
                 await dao.Add(entry);
-                return Created(new Uri(Request.GetEncodedUrl()), entry);                
+                return Created(new Uri(Request.GetEncodedUrl()), entry);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿namespace KnowledgeBaseForum.API.JWT
+﻿namespace KnowledgeBaseForum.API.Model
 {
     /// <summary>
     /// Implements the basic model for JWT authentication response.
