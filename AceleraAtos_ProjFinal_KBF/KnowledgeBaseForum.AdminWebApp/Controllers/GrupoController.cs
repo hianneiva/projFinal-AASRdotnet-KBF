@@ -1,20 +1,25 @@
-﻿using KnowledgeBaseForum.AdminWebApp.Models;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Config;
+using KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 using KnowledgeBaseForum.AdminWebApp.Utils;
+using KnowledgeBaseForum.Commons.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Data;
 using static KnowledgeBaseForum.AdminWebApp.Utils.Utils;
 
 namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class GrupoController : Controller
     {
-        private readonly string apiHost;
-        private readonly string apiGrupos;
+        private const string UPDATE_FAILURE_MSG = "Falha na atualização";
+        private readonly ApiOptions options;
         private readonly IHttpClientFactory factory;
 
-        public GrupoController(IConfiguration config, IHttpClientFactory factory)
+        public GrupoController(IConfiguration config, IHttpClientFactory factory, IOptions<ApiOptions> options)
         {
-            apiHost = config[Constants.API_HOST];
-            apiGrupos = config[Constants.API_GRUPOS];
+            this.options = options.Value;
             this.factory = factory;
 
         }
@@ -28,32 +33,94 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         {
             try
             {
-                HttpHelper<IEnumerable<GrupoViewModel>, object> httpGetter = new HttpHelper<IEnumerable<GrupoViewModel>, object>(factory, apiHost);
-                IEnumerable<GrupoViewModel> queried = await httpGetter.Get(apiGrupos) ?? new List<GrupoViewModel>();
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<IEnumerable<GrupoViewModel>, object> httpGetter = new HttpHelper<IEnumerable<GrupoViewModel>, object>(factory, options.ApiHost, token);
+                IEnumerable<GrupoViewModel> queried = await httpGetter.Get(options.ApiGrupo) ?? new List<GrupoViewModel>();
 
-                return PartialView("_ListGroups", queried.Where(g => string.IsNullOrEmpty(filter) || 
-                                                                    g.Descricao.InvariantContains(filter)));                                                    
+                return PartialView("_ListGroups", queried.Where(g => string.IsNullOrEmpty(filter) ||
+                                                                    g.Descricao.InvariantContains(filter)));
             }
-            catch 
+            catch
             {
-
                 throw;
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(string? id)
+        public async Task<IActionResult> Create()
+        {
+            string? token = this.Request.Cookies.GetTokenFromCookies();
+            List<UsuarioViewModel> allUsers = await new HttpHelper<List<UsuarioViewModel>, object>(factory, options.ApiHost, token).Get(options.ApiUsuario) ??
+                                              new List<UsuarioViewModel>();
+            ViewData["Users"] = allUsers.ToDictionary(user => user.Login, user => user.Nome);
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(GrupoViewModel grupo)
         {
             try
             {
-                HttpHelper<GrupoViewModel, object> httpGetter = new HttpHelper<GrupoViewModel, object>(factory, apiHost);
-                GrupoViewModel? grupo = await httpGetter.Get($"{apiGrupos}/{id}");
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<GrupoViewModel, object> httpPoster = new HttpHelper<GrupoViewModel, object>(factory, options.ApiHost, token);
+                grupo.DataCriacao = DateTime.Now;
+                grupo.Status = true;
+                grupo.UsuarioCriacao = this.User.Claims.GetUserNameFromClaims()!;
+                GrupoViewModel? created = await httpPoster.Post(options.ApiGrupo, grupo);
 
-                return View(grupo);
+                if (created == null)
+                {
+                    ViewData["Error"] = "Falha na criação";
+                    return View(grupo);
+                }
+
+                List<string> selectedUsers = this.Request.Form.Where(f => f.Key.Contains("user_")).Select(f => f.Value.ToString()).ToList();
+
+                if (selectedUsers.Count() > 0)
+                {
+                    HttpHelper<string, object> httpRelPoster = new HttpHelper<string, object>(factory, options.ApiHost, token);
+                    List<string?> results = new List<string?>();
+                    bool success = true;
+
+                    foreach (string user in selectedUsers)
+                    {
+                        string? result = await httpRelPoster.Post($"{options.ApiRelationalUsuarioGrupo}?login={user}&groupId={created!.Id}", new { });
+                        success &= ProcessRelationOutput(results, result);
+                    }
+
+                    ViewData["Error"] = results.Where(res => !(res?.InvariantEquals("true")).GetValueOrDefault());
+                }
+
+                return RedirectToAction("Index");
             }
-            catch 
+            catch
             {
+                throw;
+            }
+        }
 
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            try
+            {
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<GrupoViewModel, GrupoViewModel> httpGetter = new HttpHelper<GrupoViewModel, GrupoViewModel>(factory, options.ApiHost, token);
+                GrupoViewModel? original = await httpGetter.Get($"{options.ApiGrupo}/{id}");
+
+                if (original == null)
+                {
+                    ViewData["Error"] = "Grupo não foi encontrado";
+                    RedirectToAction("Index");
+                }
+                
+                List<UsuarioViewModel> allUsers = await new HttpHelper<List<UsuarioViewModel>, object>(factory, options.ApiHost, token).Get(options.ApiUsuario) ??
+                                              new List<UsuarioViewModel>();
+                ViewData["Users"] = allUsers.ToDictionary(user => user.Login, user => user.Nome);
+
+                return View(original);
+            }
+            catch
+            {
                 throw;
             }
         }
@@ -63,15 +130,56 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         {
             try
             {
-                HttpHelper<GrupoViewModel, GrupoViewModel> httpPutter = new HttpHelper<GrupoViewModel, GrupoViewModel>(factory, apiHost);
-                GrupoViewModel? editedGrupo = await httpPutter.Put(apiGrupos, grupo);
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<GrupoViewModel, GrupoViewModel> httpHelper = new HttpHelper<GrupoViewModel, GrupoViewModel>(factory, options.ApiHost, token);
+                grupo.DataModificacao = DateTime.Now;
+                grupo.UsuarioModificacao = this.User.Claims.GetUserNameFromClaims();
+                GrupoViewModel? editedGrupo = await httpHelper.Put(options.ApiGrupo, grupo);
 
+                if (editedGrupo == null)
+                {
+                    throw new Exception(UPDATE_FAILURE_MSG);
+                }
+
+                HttpHelper<string, object> httpRelHelper = new HttpHelper<string, object>(factory, options.ApiHost, token);
+                string? resultDelAll = await httpRelHelper.Delete($"{options.ApiRelationalUsuarioGrupo}/{grupo.Id}");
+
+                if (!(resultDelAll?.Equals("true")).GetValueOrDefault())
+                {
+                    throw new Exception(UPDATE_FAILURE_MSG);
+                }
+
+
+                List<string> selectedUsers = this.Request.Form.Where(f => f.Key.Contains("user_")).Select(f => f.Value.ToString()).ToList();
+
+                if (selectedUsers.Count() > 0)
+                {
+                    HttpHelper<string, object> httpRelPoster = new HttpHelper<string, object>(factory, options.ApiHost, token);
+                    List<string?> results = new List<string?>();
+                    bool success = true;
+
+                    foreach (string user in selectedUsers)
+                    {
+                        string? result = await httpRelPoster.Post($"{options.ApiRelationalUsuarioGrupo}?login={user}&groupId={grupo.Id}", new { });
+                        success &= ProcessRelationOutput(results, result);
+                    }
+
+                    ViewData["Error"] = results.Where(res => !(res?.InvariantEquals("true")).GetValueOrDefault());
+                }
+                
                 return RedirectToAction("Index");
             }
-            catch 
+            catch (Exception ex)
             {
-
-                throw;
+                if (ex.Message.Contains(UPDATE_FAILURE_MSG))
+                {
+                    ViewData["Error"] = ex.Message;
+                    return View(grupo);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
@@ -81,24 +189,31 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 bool result = true;
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, options.ApiHost, token);
+
                 if (status)
                 {
-                    HttpHelper<bool, object> httpPutter = new HttpHelper<bool, object>(factory, apiHost);
-                    result = await httpPutter.Delete($"{apiGrupos}/{id}");
+                    result = await httpHelper.Delete($"{options.ApiGrupo}/{id}");
                 }
                 else
                 {
-                    HttpHelper<bool, object> httpPutter = new HttpHelper<bool, object>(factory, apiHost);
-                    result = await httpPutter.Put($"{apiGrupos}/{id}", new { });
+                    result = await httpHelper.Put($"{options.ApiGrupo}/{id}", new { });
                 }
 
                 return Json(new { result });
             }
-            catch 
+            catch
             {
-
                 throw;
             }
-        }   
+        }
+
+        private bool ProcessRelationOutput(List<string?> list, string? result)
+        {
+            list.Add(result);
+            bool.TryParse(result, out bool resBool);
+            return resBool;
+        }
     }
 }

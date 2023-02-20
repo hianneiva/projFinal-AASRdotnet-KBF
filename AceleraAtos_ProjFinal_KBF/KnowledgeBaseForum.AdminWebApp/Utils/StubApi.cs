@@ -1,4 +1,5 @@
 ﻿using KnowledgeBaseForum.AdminWebApp.Models;
+using KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 
 namespace KnowledgeBaseForum.AdminWebApp.Utils
 {
@@ -31,13 +32,13 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
                 Status = true,
                 TagLinks = new List<TopicoTagLink>()
                 {
-                    new TopicoTagLink() 
+                    new TopicoTagLink()
                     {
                         TopicoId = new Guid("57738f58-5378-46f8-b8b1-7bba80498d90"),
                         TagId = new Guid("e448ec71-b9c0-43e4-9d00-03bea7b91767"),
                         Tag = stubbedTags[0]
                     },
-                    new TopicoTagLink() 
+                    new TopicoTagLink()
                     {
                         TopicoId = new Guid("57738f58-5378-46f8-b8b1-7bba80498d90"),
                         TagId = new Guid("372a30e0-ce68-4e21-a6c6-962befd40fcd"),

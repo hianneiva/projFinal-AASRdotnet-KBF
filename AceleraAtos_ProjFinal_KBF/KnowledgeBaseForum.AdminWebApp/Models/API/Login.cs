@@ -18,7 +18,7 @@
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Login() 
+        public Login()
         { }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
     public class HttpHelper<T, U>
     {
         private const string JSON_MIME_TYPE = "application/json";
-
+        private readonly string? AuthHeader;
         private readonly HttpClient client;
 
         /// <summary>
@@ -21,17 +21,22 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
         /// </summary>
         /// <param name="factory">Dependency injection HTTP client factory.</param>
         /// <param name="baseUrl">The target host base URL address.</param>
-        public HttpHelper(IHttpClientFactory factory, string baseUrl) 
+        public HttpHelper(IHttpClientFactory factory, string baseUrl, string? authHeader = null)
         {
             client = factory.CreateClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(JSON_MIME_TYPE));
+
+            if (!string.IsNullOrEmpty(authHeader))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authHeader);
+            }
         }
 
         /// <summary>
         /// Destructor: also disposes of initialized HTTP client.
         /// </summary>
-        ~HttpHelper() 
+        ~HttpHelper()
         {
             client.Dispose();
         }
@@ -127,7 +132,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
             Exception reqException = new HttpRequestException($"Falha - Código: {code} - Detalhe: {responseContent}");
             reqException.Data.Add("STATUS", code);
             reqException.Data.Add("CONTENT", responseContent);
-            
+
             return reqException;
         }
     }

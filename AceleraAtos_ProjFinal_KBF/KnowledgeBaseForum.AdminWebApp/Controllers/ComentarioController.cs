@@ -1,20 +1,23 @@
-﻿using KnowledgeBaseForum.AdminWebApp.Models;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Config;
+using KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 using KnowledgeBaseForum.AdminWebApp.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class ComentarioController : Controller
     {
-        private readonly string apiHost;
-        private readonly string apiComentario;
+        private readonly ApiOptions options;
         private readonly IHttpClientFactory factory;
 
-        public ComentarioController(IConfiguration config, IHttpClientFactory factory)
+        public ComentarioController(IHttpClientFactory factory, IOptions<ApiOptions> options)
         {
             this.factory = factory;
-            apiHost = config[Constants.API_HOST];
-            apiComentario = config[Constants.API_COMENTARIO];
+            this.options = options.Value;
         }
 
         //public IActionResult Index()
@@ -25,8 +28,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ListforTopic(Guid topicId)
         {
-            HttpHelper<IEnumerable<ComentarioViewModel>, object> httpPoster = new HttpHelper<IEnumerable<ComentarioViewModel>, object>(factory, apiHost);
-            IEnumerable<ComentarioViewModel>? commentsForTopic = await httpPoster.Post($"{apiComentario}/{topicId}", new { });
+                    string? token = this.Request.Cookies.GetTokenFromCookies();
+            HttpHelper<IEnumerable<ComentarioViewModel>, object> httpPoster = new HttpHelper<IEnumerable<ComentarioViewModel>, object>(factory, options.ApiHost, token);
+            IEnumerable<ComentarioViewModel>? commentsForTopic = await httpPoster.Post($"{options.ApiComentario}/{topicId}", new { });
 
             return PartialView("_ListComments", commentsForTopic ?? new List<ComentarioViewModel>());
         }
@@ -34,10 +38,11 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
         [HttpPost]
         public async Task<JsonResult> ToggleStatus(Guid id)
         {
-            try 
+            try
             {
-                HttpHelper<ComentarioViewModel, ComentarioViewModel> httpHelper = new HttpHelper<ComentarioViewModel, ComentarioViewModel>(factory, apiHost);
-                ComentarioViewModel? original = await httpHelper.Get($"{apiComentario}/{id}");
+                string? token = this.Request.Cookies.GetTokenFromCookies();
+                HttpHelper<ComentarioViewModel, ComentarioViewModel> httpHelper = new HttpHelper<ComentarioViewModel, ComentarioViewModel>(factory, options.ApiHost, token);
+                ComentarioViewModel? original = await httpHelper.Get($"{options.ApiComentario}/{id}");
 
                 if (original == null)
                 {
@@ -45,7 +50,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
                 }
 
                 original.Status = !original.Status;
-                ComentarioViewModel? updated = await httpHelper.Put(apiComentario, original);
+                ComentarioViewModel? updated = await httpHelper.Put(options.ApiComentario, original);
 
                 if (updated == null)
                 {
@@ -54,7 +59,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
 
                 return Json(new { result = true });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return Json(new { result = false, message = $"Falha não esperada - Detalhes: {ex.Message}" });
             }

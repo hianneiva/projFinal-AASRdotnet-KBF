@@ -1,28 +1,27 @@
-﻿using KnowledgeBaseForum.AdminWebApp.Models;
+﻿using KnowledgeBaseForum.AdminWebApp.Models.Config;
+using KnowledgeBaseForum.AdminWebApp.Models.ViewModel;
 using KnowledgeBaseForum.AdminWebApp.Utils;
-using Microsoft.AspNetCore.Http;
+using KnowledgeBaseForum.Commons.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
+using System.Data;
 using static KnowledgeBaseForum.AdminWebApp.Utils.StubApi;
 
 namespace KnowledgeBaseForum.AdminWebApp.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class TopicoController : Controller
     {
-        private readonly string apiHost;
-        private readonly string apiRelTopicoTags;
-        private readonly string apiTags;
-        private readonly string apiTopicos;
+        private readonly ApiOptions options;
         private readonly IHttpClientFactory factory;
         private readonly bool stubMode;
 
-        public TopicoController(IConfiguration config, IHttpClientFactory factory)
+        public TopicoController(IConfiguration config, IHttpClientFactory factory, IOptions<ApiOptions> options)
         {
             this.factory = factory;
-            apiHost = config[Constants.API_HOST];
-            apiRelTopicoTags = config[Constants.API_REL_TOPICO_TAG];
-            apiTopicos = config[Constants.API_TOPICO];
-            apiTags = config[Constants.API_TAGS];
+            this.options = options.Value;
             stubMode = bool.Parse(config[Constants.STUB_MODE]);
         }
 
@@ -44,8 +43,9 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
-                    HttpHelper<IEnumerable<TopicoViewModel>, object> httpGetter = new HttpHelper<IEnumerable<TopicoViewModel>, object>(factory, apiHost);
-                    queried = await httpGetter.Get(apiTopicos) ?? new List<TopicoViewModel>();
+                    string? token = this.Request.Cookies.GetTokenFromCookies();
+                    HttpHelper<IEnumerable<TopicoViewModel>, object> httpGetter = new HttpHelper<IEnumerable<TopicoViewModel>, object>(factory, options.ApiHost, token);
+                    queried = await httpGetter.Get(options.ApiTopico) ?? new List<TopicoViewModel>();
                 }
                 catch
                 {
@@ -72,14 +72,15 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
-                    HttpHelper<TopicoViewModel, object> httpGetter = new HttpHelper<TopicoViewModel, object>(factory, apiHost);
-                    original = await httpGetter.Get($"{apiTopicos}/{id}");
-                    IEnumerable<TagViewModel>? tags = await new HttpHelper<IEnumerable<TagViewModel>, object>(factory, apiHost).Get(apiTags);
+                    string? token = this.Request.Cookies.GetTokenFromCookies();
+                    HttpHelper<TopicoViewModel, object> httpGetter = new HttpHelper<TopicoViewModel, object>(factory, options.ApiHost, token);
+                    original = await httpGetter.Get($"{options.ApiTopico}/{id}");
+                    IEnumerable<TagViewModel>? tags = await new HttpHelper<IEnumerable<TagViewModel>, object>(factory, options.ApiHost, token).Get(options.ApiTags);
                     selectListForTags = new SelectList(tags, "Id", "Descricao");
                 }
                 catch
-                { 
-                    throw; 
+                {
+                    throw;
                 }
             }
 
@@ -104,7 +105,8 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
-                    original = await new HttpHelper<TopicoViewModel, object>(factory, apiHost).Get($"{apiTopicos}/{topico.Id}");
+                    string? token = this.Request.Cookies.GetTokenFromCookies();
+                    original = await new HttpHelper<TopicoViewModel, object>(factory, options.ApiHost, token).Get($"{options.ApiTopico}/{topico.Id}");
 
                     if (original == null)
                     {
@@ -113,17 +115,17 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
 
                     bool success = true;
                     List<string?> results = new List<string?>();
-                    HttpHelper<string, object> httpHelper = new HttpHelper<string, object>(factory, apiHost);
+                    HttpHelper<string, object> httpHelper = new HttpHelper<string, object>(factory, options.ApiHost, token);
 
                     foreach (Guid tagId in selectedTags.Where(tag => !(original?.TagLinks?.Select(tl => tl.TagId).Contains(tag)).GetValueOrDefault()))
                     {
-                        string? result = await httpHelper.Post($"{apiRelTopicoTags}?tagId={tagId}&topicId={original?.Id}", new { tagId, topicId = original?.Id });
+                        string? result = await httpHelper.Post($"{options.ApiRelationalTopicoTag}?tagId={tagId}&topicId={original?.Id}", new { tagId, topicId = original?.Id });
                         success &= ProcessRelationOutput(results, result);
                     }
 
                     foreach (Guid tagId in (original?.TagLinks?.Where(tl => !selectedTags.Contains(tl.TagId)).Select(tl => tl.TagId) ?? new Guid[] { }))
                     {
-                        string? result = await httpHelper.Delete($"{apiRelTopicoTags}?tagId={tagId}&topicId={original?.Id}");
+                        string? result = await httpHelper.Delete($"{options.ApiRelationalTopicoTag}?tagId={tagId}&topicId={original?.Id}");
                         success &= ProcessRelationOutput(results, result);
                     }
 
@@ -154,22 +156,24 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             {
                 try
                 {
+                    string? token = this.Request.Cookies.GetTokenFromCookies();
+                    
                     if (status)
                     {
-                        HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, apiHost);
-                        result = await httpHelper.Delete($"{apiTopicos}/{id}");
+                        HttpHelper<bool, object> httpHelper = new HttpHelper<bool, object>(factory, options.ApiHost, token);
+                        result = await httpHelper.Delete($"{options.ApiTopico}/{id}");
                     }
                     else
                     {
-                        HttpHelper<TopicoViewModel, object> httpHelper = new HttpHelper<TopicoViewModel, object>(factory, apiHost);
-                        original = await httpHelper.Get($"{apiTopicos}/{id}");
+                        HttpHelper<TopicoViewModel, object> httpHelper = new HttpHelper<TopicoViewModel, object>(factory, options.ApiHost, token);
+                        original = await httpHelper.Get($"{options.ApiTopico}/{id}");
 
                         if (original != null)
                         {
                             original.Status = true;
-                            result = await httpHelper.Put($"{apiTopicos}/{id}", original) != null;
+                            result = await httpHelper.Put($"{options.ApiTopico}/{id}", original) != null;
                         }
-                        else 
+                        else
                         {
                             result = false;
                         }
