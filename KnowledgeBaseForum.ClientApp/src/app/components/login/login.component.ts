@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { CookieService } from 'ngx-cookie-service';
+import { ApiService } from 'src/app/services/api-service.service';
+import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +18,7 @@ export class LoginComponent {
   public password?: string;
   public username?: string;
 
-  constructor(private api: ApiServiceService) {
+  constructor(private api: ApiService, private cookie: CookieService, private decoder: TokenDecodeService) {
     this.utils = new Utils();
   }
 
@@ -24,6 +27,7 @@ export class LoginComponent {
 
     if (this.alertActive) {
       this.alertMsg = "Login ou senha não são válidos";
+
       setTimeout(() => {
         this.alertActive = false;
         this.alertMsg = '';
@@ -35,6 +39,18 @@ export class LoginComponent {
     this.api.login(this.username!, this.password!).subscribe(response => {
       this.alertActive = !response.result;
       this.alertMsg = !response.result ? '' : response.message!;
+
+      if (response.result) {
+        this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
+        // Test query
+        /*
+        this.api.listTopics(this.cookie.get(environment.cookieToken)).subscribe(res => {
+          if (res !== null || res !== undefined) {
+            console.log("SUCCESS!\n" + res);
+          }
+        });
+         */
+      }
     });
   }
 }

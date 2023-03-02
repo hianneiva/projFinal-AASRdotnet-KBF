@@ -1,6 +1,6 @@
 import { environment } from 'src/environments/environment.development';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
@@ -8,7 +8,7 @@ import { LoginResponse } from '../model/login-response';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiServiceService {
+export class ApiService {
 
   constructor(private http: HttpClient) { }
 
@@ -18,5 +18,10 @@ export class ApiServiceService {
     const jsonContent: LoginRequest = new LoginRequest(username, encodedPwd);
 
     return this.http.post<LoginResponse>(url, jsonContent);
+  }
+
+  public listTopics(token: string): Observable<any> { // TODO: Edit to use actual model
+    const url: string = environment.urlApi + environment.urlTopico;
+    return this.http.get<Object>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 }
