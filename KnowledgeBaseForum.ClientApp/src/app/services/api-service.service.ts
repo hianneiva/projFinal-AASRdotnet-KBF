@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
+import { Usuario } from '../model/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,24 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  // CHAMADAS PARA ENDPOINT AUTH:
+  // Login
   public login(username: string, password: string): Observable<LoginResponse> {
-    const url: string = environment.urlApi + environment.urlLogin;
+    const url: string = environment.urlApi + environment.urlAuthLogin;
     const encodedPwd = `${btoa(password)}.${btoa(environment.cypher)}`;
     const jsonContent: LoginRequest = new LoginRequest(username, encodedPwd);
 
+    return this.http.post<LoginResponse>(url, jsonContent);
+  }
+
+  // SignUp
+  public signup(username: string, password: string, name: string, email: string) {
+    const url: string = environment.urlApi + environment.urlAuthSignUp;
+    let jsonContent: Usuario = new Usuario();
+    jsonContent.email = email;
+    jsonContent.login = username;
+    jsonContent.nome = name;
+    jsonContent.senha = `${btoa(password)}.${btoa(environment.cypher)}`;
     return this.http.post<LoginResponse>(url, jsonContent);
   }
 

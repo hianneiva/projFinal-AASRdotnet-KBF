@@ -24,6 +24,7 @@ export class TokenDecodeService {
     try {
       let tokenData: TokenData = jwtDecode<TokenData>(token);
       tokenData.expirationDatetime = moment(tokenData.ExpectedExpiration!, "YYYY-MM-DD HH:mm:ss.SSSSSSS zzz").toDate();
+      tokenData.result = true;
 
       return tokenData;
     } catch (e) {

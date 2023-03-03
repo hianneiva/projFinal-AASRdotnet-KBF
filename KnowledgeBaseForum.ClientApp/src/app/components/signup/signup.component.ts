@@ -6,27 +6,33 @@ import { Utils } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.css']
 })
-export class LoginComponent {
+export class SignupComponent {
   private utils: Utils;
 
   public alertActive: boolean = false;
   public alertMsg: string = '';
+  public email?: string;
+  public login?: string;
+  public name?: string;
   public password?: string;
-  public username?: string;
+  public passwordRepeat?: string;
 
   constructor(private api: ApiService, private cookie: CookieService, private router: Router) {
     this.utils = new Utils();
   }
 
-  public login(): void {
-    this.alertActive = (this.utils.stringIsNullOrEmpty(this.username) || this.utils.stringIsNullOrEmpty(this.password));
+  public signUp(): void {
+    const missingField: boolean = this.utils.stringIsNullOrEmpty(this.email) || this.utils.stringIsNullOrEmpty(this.login) || this.utils.stringIsNullOrEmpty(this.name) ||
+      this.utils.stringIsNullOrEmpty(this.password) || this.utils.stringIsNullOrEmpty(this.passwordRepeat);
+    const passwordsDoesntMatch = this.password !== this.passwordRepeat;
+    this.alertActive = missingField || passwordsDoesntMatch;
 
     if (this.alertActive) {
-      this.alertMsg = "Login ou senha não são válidos";
+      this.alertMsg = missingField ? "Um dos campos não foram informados" : "As senhas informadas não conferem";
 
       setTimeout(() => {
         this.alertActive = false;
@@ -36,7 +42,7 @@ export class LoginComponent {
       return;
     }
 
-    this.api.login(this.username!, this.password!).subscribe(response => {
+    this.api.signup(this.login!, this.password!, this.name!, this.email!).subscribe(response => {
       this.alertActive = !response.result;
       this.alertMsg = !response.result ? '' : response.message!;
 
