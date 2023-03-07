@@ -13,6 +13,8 @@ import { SignupComponent } from './components/signup/signup.component';
 import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { MarkdownModule } from 'ngx-markdown';
+import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
 
 @NgModule({
   declarations: [
@@ -21,14 +23,16 @@ import { FooterComponent } from './components/footer/footer.component';
     SignupComponent,
     HomeComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    MarkdownEditComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MomentModule
+    MomentModule,
+    MarkdownModule.forRoot()
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]
