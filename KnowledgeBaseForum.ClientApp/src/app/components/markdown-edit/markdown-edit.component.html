@@ -5,7 +5,7 @@
             <textarea class="form-control" [(ngModel)]="markdownContent" rows="24"></textarea>
         </div>
         <div class="col-sm-6"> <!-- Renderer -->
-            <markdown [data]="markdownContent" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard></markdown>
+            <markdown [data]="markdownContent" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard></markdown>
         </div>
     </div>
 </div>
