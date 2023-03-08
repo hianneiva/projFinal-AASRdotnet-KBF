@@ -1,0 +1,53 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="col-sm-12 text-center mb-3">
+            <h3>Cadastro</h3>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-4">
+            <!-- Empty -->
+        </div>
+        <div class="col-sm-4">
+            <div id="alertArea" [ngClass]="{ 'd-block alert alert-danger': alertActive, 'd-none': !alertActive }">
+                {{alertMsg}}
+            </div>
+            <br />
+            <form asp-action="Login">
+                <div class="form-group">
+                    <label for="login" class="control-label">Login</label>
+                    <input name="login" id="login" class="form-control" type="text" [(ngModel)]="login"/>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label for="password" class="control-label">Senha</label>
+                    <input name="password" id="password" class="form-control" type="password" [(ngModel)]="password"/>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label for="passwordRepeat" class="control-label">Confirmar a senha</label>
+                    <input name="passwordRepeat" id="passwordRepeat" class="form-control" type="password" [(ngModel)]="passwordRepeat"/>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label for="name" class="control-label">Nome</label>
+                    <input name="name" id="name" class="form-control" type="text" [(ngModel)]="name"/>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label for="email" class="control-label">E-mail</label>
+                    <input name="email" id="email" class="form-control" type="text" [(ngModel)]="email"/>
+                </div>
+                <br />
+                <div class="text-end">
+                    <a class="btn btn-secondary me-2" (click)="cancelar()">Voltar</a>
+                    <input type="button" class="btn btn-primary" (click)="signUp()" value="Cadastrar" />
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-4">
+            <!-- Empty -->
+        </div>
+    </div>
+</div>

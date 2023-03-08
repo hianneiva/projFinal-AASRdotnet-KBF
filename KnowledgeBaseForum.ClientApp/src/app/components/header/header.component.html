@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand border-bottom text-w">
+    <div class="navbar-brand">
+        <a routerLink="/" class="text-dark text-decoration-none ms-3">
+            <i class="bi bi-house"></i> Início
+        </a>
+    </div>
+    <div class="text-secondary mx-2">|</div>
+    <div class="collapse navbar-collapse text-dark fs-5">
+        <ul class="navbar-nav">
+            <li *ngIf="userData?.result" class="nav-item">
+                <a class="nav-link" routerLink="/topico">
+                    <i class="bi bi-file-earmark-richtext me-1"></i> Tópicos
+                </a>
+            </li>
+            <li *ngIf="userData?.result" class="nav-item">
+                <a class="nav-link" routerLink="/alerta">
+                    <i class="bi bi-bell"></i> Alertas
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ms-auto me-3">
+            <li *ngIf="userData?.result" class="nav-item">
+                <a class="nav-link" routerLink="/usuario">
+                    <i class="bi bi-person"></i> {{userData?.given_name}}
+                </a>
+            </li>
+            <li *ngIf="userData?.result" class="nav-item">
+                <a class="nav-link text-danger" (click)="logoff()" href="#">
+                    <i class="bi bi-x-circle"></i> Sair
+                </a>
+            </li>
+            <li *ngIf="!userData?.result" class="nav-item">
+                <a class="nav-link text-success" routerLink="/login">
+                    <i class="bi bi-person-up"></i> Login
+                </a>
+            </li>
+            <li *ngIf="!userData?.result" class="nav-item">
+                <a class="nav-link text-primary" routerLink="/signup">
+                    <i class="bi bi-person-add"></i> Cadastro
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
