@@ -16,6 +16,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import AlertaComponent from './components/alerta/alerta.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
     HeaderComponent,
     FooterComponent,
     MarkdownEditComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    AlertaComponent
   ],
   imports: [
     BrowserModule,
