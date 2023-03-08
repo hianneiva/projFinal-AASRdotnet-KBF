@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
 import { Usuario } from '../model/usuario';
+import { Alerta } from '../model/alerta';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,12 @@ export class ApiService {
   public listTopics(token: string): Observable<any> { // TODO: Edit to use actual model
     const url: string = environment.urlApi + environment.urlTopico;
     return this.http.get<Object>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // CHAMADAS PARA ENDPOINT ALERTA
+  // Get
+  public getAlertas(token: string, idUser: string): Observable<Alerta[]> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${idUser}`;
+    return this.http.get<Alerta[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 }

@@ -1,0 +1,31 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Alertas</h1>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-12 text-center" *ngIf="alertas.length === 0">
+            <h3>Não há alertas registrados</h3>
+        </div>
+        <div class="col-12" *ngIf="alertas!.length !== 0">
+            <table class="table align middle">
+                <thead>
+                    <tr>
+                        <th>Tópico</th>
+                        <th>Tipo Alerta</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="table-striped">
+                    <tr *ngFor="let entry of alertas">
+                        <td>{{entry.topico!.titulo}}</td>
+                        <td>{{textAlertTypes[entry.modoAlerta]}}</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
