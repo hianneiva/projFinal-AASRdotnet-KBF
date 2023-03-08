@@ -8,6 +8,7 @@ export const environment = {
 
     // API settings
     urlApi: "https://localhost:7294/api/",
+    urlAlerta: "Alerta",
     urlAuthLogin: "Auth/login",
     urlAuthSignUp: "Auth/signup",
     urlTopico: "Topico"

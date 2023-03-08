@@ -23,8 +23,8 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Alerta>> ReadAll() => await dao.All();
 
-        [HttpGet("{id}")]
-        public async Task<Alerta?> Read(Guid id) => await dao.Get(id);
+        [HttpGet("{userId}")]
+        public async Task<IEnumerable<Alerta>?> Read(string userId) => await dao.AllForUser(userId);
 
         [HttpPost]
         public async Task<IActionResult> Create(Alerta entry)
