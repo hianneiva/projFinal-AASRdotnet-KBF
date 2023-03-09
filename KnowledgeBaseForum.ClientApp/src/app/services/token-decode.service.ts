@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import jwtDecode from 'jwt-decode';
-import moment from 'moment';
-import { environment } from 'src/environments/environment.development';
 import { TokenData } from '../model/token-data';
 
 @Injectable({
@@ -23,7 +21,6 @@ export class TokenDecodeService {
 
     try {
       let tokenData: TokenData = jwtDecode<TokenData>(token);
-      tokenData.expirationDatetime = moment(tokenData.ExpectedExpiration!, "YYYY-MM-DD HH:mm:ss.SSSSSSS zzz").toDate();
       tokenData.result = true;
 
       return tokenData;
