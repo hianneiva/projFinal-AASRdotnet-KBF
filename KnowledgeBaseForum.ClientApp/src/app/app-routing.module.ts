@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import AlertaComponent from './components/alerta/alerta.component';
+import { AlertaComponent } from './components/alerta/alerta.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';

@@ -12,7 +12,7 @@ import { Utils } from 'src/app/utils/utils';
   templateUrl: './alerta.component.html',
   styleUrls: ['./alerta.component.css']
 })
-export default class AlertaComponent {
+export class AlertaComponent {
   private utils: Utils;
 
   public textAlertTypes = ["Padrão", "Apenas notificação"];

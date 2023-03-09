@@ -15,7 +15,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
-import AlertaComponent from './components/alerta/alerta.component';
+import { AlertaComponent } from './components/alerta/alerta.component';
 
 @NgModule({
   declarations: [
