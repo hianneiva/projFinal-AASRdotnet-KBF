@@ -40,16 +40,19 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
-        [HttpPut("{entry}")]
-        public async Task<IActionResult> Update(Alerta entry)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id)
         {
             try
             {
+                Alerta? entry = await dao.Get(id);
+
                 if (entry == null)
                 {
                     throw new KeyNotFoundException(Constants.ENTITY_NOT_FOUND_IN_DB);
                 }
 
+                entry.ModoAlerta = entry.ModoAlerta < 1 ? 1 : 0;
                 await dao.Update(entry);
                 return Ok(entry);
             }

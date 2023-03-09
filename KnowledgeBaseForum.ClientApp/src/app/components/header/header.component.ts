@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TokenData } from 'src/app/model/token-data';
 import { TokenDecodeService } from 'src/app/services/token-decode.service';
+import { Utils } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -10,14 +11,16 @@ import { environment } from 'src/environments/environment.development';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+  private utils!: Utils;
   public userData?: TokenData;
 
-  constructor(private cookie: CookieService, private tokenDecoder: TokenDecodeService, private router: Router) { }
+  constructor(private cookie: CookieService, tokenDecoder: TokenDecodeService, private router: Router) {
+    this.utils = new Utils(cookie, tokenDecoder, router);
 
-  ngOnInit(): void {
-    const token: string = this.cookie.get(environment.cookieToken);
-    this.userData = this.tokenDecoder.decodeToken(token);
+    if (this.utils.validateToken()) {
+      this.userData = this.utils.getUserDataFromToken();
+    }
   }
 
   public logoff(): void {

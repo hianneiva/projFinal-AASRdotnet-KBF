@@ -4,6 +4,6 @@ export class TokenData {
     public given_name?: string;
     public role?: string;
     public email?: string;
-    public ExpectedExpiration?: string;
-    public expirationDatetime?: Date;
+    public exp?: number;
+    public nbf?: number;
 }

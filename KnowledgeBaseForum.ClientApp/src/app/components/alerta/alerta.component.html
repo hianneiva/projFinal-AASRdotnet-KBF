@@ -6,6 +6,15 @@
     </div>
     <hr/>
     <div class="row">
+        <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
+            {{successMsg}}
+        </div>
+        <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+            {{errorMsg}}
+        </div>
+        <br />
+    </div>
+    <div class="row">
         <div class="col-12 text-center" *ngIf="alertas.length === 0">
             <h3>Não há alertas registrados</h3>
         </div>
@@ -20,12 +29,41 @@
                 </thead>
                 <tbody class="table-striped">
                     <tr *ngFor="let entry of alertas">
-                        <td>{{entry.topico!.titulo}}</td>
-                        <td>{{textAlertTypes[entry.modoAlerta]}}</td>
-                        <td>-</td>
+                        <td>
+                            {{entry.topico!.titulo}}
+                        </td>
+                        <td>
+                            {{textAlertTypes[entry.modoAlerta]}}
+                        </td>
+                        <td class="text-end">
+                            <button type="button" title="Alterar tipo de alerta" class="btn btn-outline-primary me-2" (click)="alterAlertType(entry.id)">
+                                <i class="bi bi-repeat"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" title="Remover alerta" data-bs-toggle="modal" data-bs-target="#delModal" (click)="setIdToDel(entry.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" id="delModal" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Deseja remover esse alerta?</h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" (click)="setIdToDel(undefined)">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <!--<div class="modal-body"></div>-->
+            <div class="modal-footer">
+                <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" (click)="setIdToDel(undefined)">Não</button>
+                <button class="btn btn-danger" data-bs-dismiss="modal" type="button" (click)="deleteAlert()">Sim</button>
+            </div>
         </div>
     </div>
 </div>
