@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Alerta } from 'src/app/model/alerta';
+import { TokenData } from 'src/app/model/token-data';
 import { ApiService } from 'src/app/services/api-service.service';
 import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-alerta',
@@ -12,7 +13,6 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./alerta.component.css']
 })
 export default class AlertaComponent {
-  private userId!: string;
   private utils: Utils;
 
   public textAlertTypes = ["Padrão", "Apenas notificação"];
@@ -21,15 +21,19 @@ export default class AlertaComponent {
   public successMsg?: string;
   public alertas: Alerta[] = [];
 
-  constructor(private api: ApiService, private cookie: CookieService, private decoder: TokenDecodeService) {
-    this.utils = new Utils();
-    const token: string = this.tokenFromCookie();
-    this.userId = this.decoder.decodeToken(token).name!;
-    this.getAllAlerts(token, this.userId);
+  constructor(private api: ApiService, cookie: CookieService, decoder: TokenDecodeService, router: Router) {
+    this.utils = new Utils(cookie, decoder, router);
+
+    try {
+      this.getAllAlerts();
+    } catch (err) {
+      this.errorMsg = "Falha na recuperação dos alertas";
+      setTimeout(() => this.errorMsg = undefined, 5000);
+    }
   }
 
   public alterAlertType(idToUpdate: string) {
-    const token: string = this.tokenFromCookie();
+    const token: string = this.utils.getJwtToken();
 
     this.api.updateAlertas(token, idToUpdate).subscribe(res => {
       if (res === null || res === undefined) {
@@ -37,7 +41,7 @@ export default class AlertaComponent {
         this.errorMsg = "Falha na atualização do tipo de alerta";
         setTimeout(() => this.errorMsg = undefined, 5000);
       } else {
-        this.getAllAlerts(token, this.userId);
+        this.getAllAlerts();
         this.successMsg = "Alerta alterado com sucesso";
         this.errorMsg = undefined;
         setTimeout(() => this.successMsg = undefined, 5000);
@@ -54,7 +58,7 @@ export default class AlertaComponent {
       return;
     }
 
-    const token: string = this.tokenFromCookie();
+    const token: string = this.utils.getJwtToken();
 
     this.api.deleteAlertas(token, this.idToDel!).subscribe(res => {
       if (res === null || res === undefined) {
@@ -62,7 +66,7 @@ export default class AlertaComponent {
         this.errorMsg = "Falha na remoção do alerta";
         setTimeout(() => this.errorMsg = undefined, 5000);
       } else {
-        this.getAllAlerts(token, this.userId);
+        this.getAllAlerts();
         this.successMsg = "Alerta removido com sucesso";
         this.errorMsg = undefined;
         setTimeout(() => this.successMsg = undefined, 5000);
@@ -70,11 +74,11 @@ export default class AlertaComponent {
     });
   }
 
-  private tokenFromCookie(): string {
-    return this.cookie.get(environment.cookieToken);
-  }
-
-  private getAllAlerts(token: string, userId: string) {
-    this.api.getAlertas(token, userId).subscribe(res => this.alertas = this.utils.arrayFromAny(res));
+  private getAllAlerts() {
+    const token: string = this.utils.getJwtToken();
+    const userData: TokenData = this.utils.getUserDataFromToken();
+    this.api.getAlertas(token, userData.name!).subscribe(res => {
+      this.alertas = this.utils.arrayFromAny(res)
+    });
   }
 }
