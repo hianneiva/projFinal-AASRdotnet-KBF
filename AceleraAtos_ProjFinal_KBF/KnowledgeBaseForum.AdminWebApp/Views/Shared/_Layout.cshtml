@@ -10,45 +10,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Fórum de Base de Conhecimento</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons-1.10.3/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KnowledgeBaseForum.AdminWebApp.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3 shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fórum de Base de Conhecimento</a> 
-                <span class="text-black-50">|&nbsp;</span>
-                <span class="nav-text">Olá, @(userGivenName)</span>
-                <span class="text-black-50">&nbsp;|&nbsp;</span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <a class="navbar-brand text-white me-5" asp-area="" asp-controller="Home" asp-action="Index">Plataforma Administrativa</a> 
+                <span class="nav-text text-white mt-1">Olá@($" {userGivenName}")!</span>
+                <div class="navbar-collapse collapse justify-content-between">
+                    <ul class="navbar-nav ms-auto mt-1">
                         @if (isAdmin)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuários</a>
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Usuario" asp-action="Index">
+                                    <i class="bi bi-people"></i> Usuários
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Topico" asp-action="Index">
+                                    <i class="bi bi-file-earmark-richtext me-1"></i> Tópicos
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Grupo" asp-action="Index">
+                                    <i class="bi bi-diagram-3"></i> Grupos
+                                </a>
+                            </li>
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Tag" asp-action="Index">
+                                    <i class="bi bi-tags"></i> Tags
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Topico" asp-action="Index">Tópicos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Grupo" asp-action="Index">Grupos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Logout">
+                                    <i class="bi bi-person-x"></i> Logout
+                                </a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Login">
+                                    <i class="bi bi-person-up"></i> Login
+                                </a>
                             </li>                            
                         }
                     </ul>
@@ -62,7 +69,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-white bg-dark fixed-bottom py-1 shadow-lg">
         <div class="container">
             &copy; 2023 - Fórum de Base de Conhecimento@* - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
