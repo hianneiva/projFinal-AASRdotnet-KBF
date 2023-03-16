@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand border-bottom text-w">
+<nav class="navbar navbar-expand text-w shadow">
     <div class="navbar-brand">
-        <a routerLink="/" class="text-dark text-decoration-none ms-3">
+        <a routerLink="/" class="text-decoration-none ms-3 text-white">
             <i class="bi bi-house"></i> Início
         </a>
     </div>
-    <div class="text-secondary mx-2">|</div>
-    <div class="collapse navbar-collapse text-dark fs-5">
+    <div class="text-white-50 mx-2">|</div>
+    <div class="collapse navbar-collapse fs-5">
         <ul class="navbar-nav">
             <li *ngIf="userData?.result" class="nav-item">
                 <a class="nav-link" routerLink="/topico">
@@ -25,17 +25,17 @@
                 </a>
             </li>
             <li *ngIf="userData?.result" class="nav-item">
-                <a class="nav-link text-danger" (click)="logoff()" href="#">
+                <a class="nav-link danger-fade" (click)="logoff()" href="#">
                     <i class="bi bi-x-circle"></i> Sair
                 </a>
             </li>
             <li *ngIf="!userData?.result" class="nav-item">
-                <a class="nav-link text-success" routerLink="/login">
+                <a class="nav-link" routerLink="/login">
                     <i class="bi bi-person-up"></i> Login
                 </a>
             </li>
             <li *ngIf="!userData?.result" class="nav-item">
-                <a class="nav-link text-primary" routerLink="/signup">
+                <a class="nav-link" routerLink="/signup">
                     <i class="bi bi-person-add"></i> Cadastro
                 </a>
             </li>

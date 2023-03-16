@@ -1,0 +1,16 @@
+nav {
+    background: rgb(65, 105, 225);
+    /*background: linear-gradient(180deg, rgba(30, 144, 255, 1) 0%, rgba(65, 105, 225, 1) 60%);*/
+}
+
+li>a {
+    color: white;
+}
+
+li>a:hover {
+    color: #B9D9EB;
+}
+
+li>a.danger-fade:hover {
+    color: #F08080;
+}

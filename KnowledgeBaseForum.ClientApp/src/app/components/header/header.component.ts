@@ -16,6 +16,7 @@ export class HeaderComponent {
 
   public logoff(): void {
     this.cookie.delete(environment.cookieToken);
+    this.userData = undefined;
     this.router.navigate(['/'])/*.then(() => { window.location.reload(); })*/;
   }
 }
