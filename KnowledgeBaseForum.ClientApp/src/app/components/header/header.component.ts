@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { TokenData } from 'src/app/model/token-data';
-import { TokenDecodeService } from 'src/app/services/token-decode.service';
-import { Utils } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -12,19 +10,12 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  private utils!: Utils;
-  public userData?: TokenData;
+  @Input() userData?: TokenData;
 
-  constructor(private cookie: CookieService, tokenDecoder: TokenDecodeService, private router: Router) {
-    this.utils = new Utils(cookie, tokenDecoder, router);
-
-    if (this.utils.validateToken()) {
-      this.userData = this.utils.getUserDataFromToken();
-    }
-  }
+  constructor(private cookie: CookieService, private router: Router) { }
 
   public logoff(): void {
     this.cookie.delete(environment.cookieToken);
-    this.router.navigate(['/']).then(() => { window.location.reload(); });
+    this.router.navigate(['/'])/*.then(() => { window.location.reload(); })*/;
   }
 }

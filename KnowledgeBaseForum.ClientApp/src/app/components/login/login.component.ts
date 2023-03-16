@@ -50,7 +50,7 @@ export class LoginComponent {
 
   public cancelar(reload: boolean = false): void {
     if (reload) {
-      this.router.navigate(['/']).then(() => { window.location.reload(); });
+      this.router.navigate(['/'])/*.then(() => { window.location.reload(); })*/;
     }
     else {
       this.router.navigate(['/']);

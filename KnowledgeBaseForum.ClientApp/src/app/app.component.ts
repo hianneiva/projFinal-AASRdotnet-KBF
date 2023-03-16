@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { TokenData } from './model/token-data';
+import { TokenDecodeService } from './services/token-decode.service';
+import { Utils } from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +11,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'KnowledgeBaseForum.ClientApp';
+  title = 'Fórum de Compartilhamento de Conhecimento';
+  user?: TokenData;
+
+  constructor(private cookie: CookieService, private decoder: TokenDecodeService, private _: Router) { }
+
+  updateHeader(_: Event): void {
+    const utils = new Utils(this.cookie, this.decoder, this._);
+    this.user = utils.getUserDataFromToken();
+  }
 }
