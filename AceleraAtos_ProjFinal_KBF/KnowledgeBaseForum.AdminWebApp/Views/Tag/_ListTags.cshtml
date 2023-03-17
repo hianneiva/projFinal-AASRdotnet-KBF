@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<TagViewModel>
 
-<table class="table">
+<table class="table" id="datatable">
     <thead>
         <tr>
             <th>
@@ -45,7 +45,7 @@
                 @*<td>
                     @Html.DisplayFor(modelItem => item.UsuarioModificacao)
                 </td>*@
-                <td>
+                <td style="width: 1%; white-space: nowrap;">
                     <button role="button" class="btn btn-outline-primary" onclick="editTag('@(item.Id)')">Salvar</button>
                     <button role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delModal" onclick="bindDelBehavior('@(item.Id)', '@(item.Descricao)')">Apagar</button>
                 </td>

@@ -52,10 +52,14 @@
             <strong>
                 <label class="control-label col-sm-12">Tags</label>
             </strong>
-            <select class="form-select multiple" id="tags" name="tags" asp-items="@((SelectList?)ViewData["TagSelect"])" multiple></select>
+            <div class="mt-2 mb-1">
+                <select class="form-select multiple" id="tags" name="tags" asp-items="@((SelectList?)ViewData["TagSelect"])" multiple></select>
+            </div>
             <br />
-            <input type="submit" value="Salvar" class="btn btn-primary mr-2" />
-            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+            <div class="float-end">
+                <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+                <input type="submit" value="Salvar" class="btn btn-primary mr-2" />
+            </div>
         </form>
     </div>
 </div>
@@ -119,6 +123,7 @@
         $(document).ready(function () {
             const selectedTags = @Html.Raw(selectedTags);
             $('#tags').val(selectedTags);
+            $('#tags').select2();
             getCommentsForTopic();
         });
     </script>
