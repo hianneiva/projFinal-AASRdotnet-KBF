@@ -54,8 +54,10 @@
             </strong>
             <select class="form-select multiple" id="tags" name="tags" asp-items="@((SelectList?)ViewData["TagSelect"])" multiple></select>
             <br />
-            <input type="submit" value="Salvar" class="btn btn-primary mr-2" />
-            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+            <div class="float-end">
+                <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+                <input type="submit" value="Salvar" class="btn btn-primary mr-2" />
+            </div>
         </form>
     </div>
 </div>

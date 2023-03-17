@@ -17,16 +17,23 @@
         </select>*@
     </div>
     <div class="form-group col-sm-4">
-        <label for="userFilter">Filtro (Nome)</label>
-        <input type="text" class="form-control" name="tagFilter" id="tagFilter" />
+       @* <label for="userFilter">Filtro (Nome)</label>
+        <input type="text" class="form-control" name="tagFilter" id="tagFilter" />*@
     </div>
     <div class="form-group col-sm-4">
-        <button role="button" class="btn btn-primary mt-4 mr-4" style="width: 100px;" id="searchBtn">Buscar</button>
-        <button role="button" class="btn btn-secondary mt-4" style="width: 100px;" data-bs-toggle="modal" data-bs-target="#createModal">Criar</button>
+       @* <button role="button" class="btn btn-primary mt-4 mr-4" style="width: 100px;" id="searchBtn">Buscar</button>*@
+        <button role="button" class="btn btn-secondary mt-4 float-end" style="width: 100px;" data-bs-toggle="modal" data-bs-target="#createModal">Criar</button>
     </div>
 </div>
 <hr />
-<div class="row" id="searchResults"></div>
+<div class="row" id="searchResults">
+    <div class="d-flex justify-content-center align-middle">
+        <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Create -->
 <div class="modal fade" tabindex="-1" role="dialog" id="createModal" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -45,13 +52,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button role="button" class="btn btn-primary" id="saveTag" data-bs-dismiss="modal">Salvar</button>
+            <div class="modal-footer float-end">
                 <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button role="button" class="btn btn-primary" id="saveTag" data-bs-dismiss="modal">Salvar</button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- Modal Delete -->
 <div class="modal fade" tabindex="-1" role="dialog" id="delModal" aria-labelledby="delModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -62,9 +70,9 @@
             <div class="modal-body">
                 <p>Tem certeza que deseja apagar a tag <strong id="tagToDel"></strong>?</p>
             </div>
-            <div class="modal-footer">
-                <button role="button" class="btn btn-danger" id="delTag" data-bs-dismiss="modal">Sim</button>
+            <div class="modal-footer float-end">
                 <button role="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                <button role="button" class="btn btn-danger" id="delTag" data-bs-dismiss="modal">Sim</button>
             </div>
         </div>
     </div>
@@ -81,6 +89,40 @@
             };
             $.post('@Url.Action("List", "Tag")', jsonData, function (data, status) {
                 $('#searchResults').html(data);
+                $('#datatable').DataTable({
+                    paging: true,
+                    processing: true,
+                    columns: [
+                        { orderable: true },
+                        { orderable: true },
+                        { orderable: true },
+                        { orderable: false }
+                    ],
+                    language: {
+                        decimal: ",",
+                        emptyTable: "Não há dados disponíveis",
+                        info: "Com _START_ até _END_ de _TOTAL_ registros",
+                        infoEmpty: "Sem registros",
+                        infoFiltered: "(filtrado com _MAX_ total de registros)",
+                        infoPostFix: "",
+                        thousands: ".",
+                        lengthMenu: "Por página _MENU_",
+                        loadingRecords: "Carregando dados...",
+                        processing: "",
+                        search: "Buscar:",
+                        zeroRecords: "Sem dados relacionados encontrados",
+                        paginate: {
+                            first: "Primeiro",
+                            last: "Último",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        },
+                        aria: {
+                            sortAscending: ": ordem crescente",
+                            sortDescending: ": ordem decrescente"
+                        }
+                    }
+                });
             });
         };
 

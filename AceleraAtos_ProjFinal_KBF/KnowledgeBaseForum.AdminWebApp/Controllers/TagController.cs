@@ -89,10 +89,11 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 string? token = this.Request.Cookies.GetTokenFromCookies();
+                string username = this.User.Claims.First(c => c.Type.Equals(ClaimTypes.Name)).Value;
                 TagViewModel toCreate = new()
                 {
                     Descricao = name,
-                    UsuarioCriacao = this.User.Claims.First(c => c.ValueType.Equals(ClaimTypes.Name)).Value
+                    UsuarioCriacao = username
                 };
                 TagViewModel? created = await new HttpHelper<TagViewModel, object>(factory, options.ApiHost, token).Post(options.ApiTags, toCreate);
 

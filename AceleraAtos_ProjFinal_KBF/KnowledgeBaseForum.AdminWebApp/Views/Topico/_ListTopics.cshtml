@@ -1,78 +1,76 @@
 ﻿@model IEnumerable<TopicoViewModel>
 
-<div class="col-sm-12">
-    <table class="table">
-        <thead>
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoAcesso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TagLinks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataCriacao)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="table-striped table-hover">
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Titulo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TipoAcesso)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Usuario)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TagLinks)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DataCriacao)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoAcesso)
+                </td>
+                <td>
+                    @if (item.Status)
+                    {
+                        <strong class="text-success">Ativo</strong>
+                    }
+                    else
+                    {
+                        <strong class="text-secondary">Inativo</strong>
+                    }
+                </td>
+                <td>
+                    @(item.AuthorName)
+                </td>
+                <td class="text-primary">
+                    @(item.Tags)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataCriacao)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary mr-2">
+                        Editar
+                    </a>
+                    @if (item.Status)
+                    {
+                        <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
+                            Desativar
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
+                            Ativar
+                        </button>
+                    }
+                </td>
             </tr>
-        </thead>
-        <tbody class="table-striped table-hover">
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Titulo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoAcesso)
-                    </td>
-                    <td>
-                        @if (item.Status)
-                        {
-                            <strong class="text-success">Ativo</strong>
-                        }
-                        else
-                        {
-                            <strong class="text-secondary">Inativo</strong>
-                        }
-                    </td>
-                    <td>
-                        @(item.AuthorName)
-                    </td>
-                    <td class="text-primary">
-                        @(item.Tags)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DataCriacao)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary mr-2">
-                            Editar
-                        </a>
-                        @if (item.Status)
-                        {
-                            <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                                Desativar
-                            </button>
-                        }
-                        else
-                        {
-                            <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                                Ativar
-                            </button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
