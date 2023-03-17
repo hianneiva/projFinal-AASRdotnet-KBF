@@ -7,43 +7,87 @@
 
 <h3>Grupo</h3>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Descricao" class="control-label"></label>
                 <input asp-for="Descricao" class="form-control" />
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
-            <br />
-            <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Incluir</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(var item in userData)
-                        {
-                            <tr>
-                                <td>
-                                    @(item.Value)
-                                </td>
-                                <td class="text-center">
-                                    <input type="checkbox" name="user_@(item.Key)" id="user_@(item.Key)" value="@(item.Key)" class="form-check" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Criar" class="btn btn-primary mr-2 mt-4" />
-                <a asp-action="Index" class="btn btn-secondary mt-4">Cancelar</a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <table class="table" id="datatable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Incluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in userData)
+                    {
+                        <tr>
+                            <td class="col-9">
+                                @(item.Value)
+                            </td>
+                            <td class="text-center col-1">
+                                <input type="checkbox" name="user_@(item.Key)" id="user_@(item.Key)" value="@(item.Key)" class="form-check" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="float-end">
+                <a asp-action="Index" class="btn btn-secondary mt-4">Cancelar</a>
+                <input type="submit" value="Criar" class="btn btn-primary mr-2 mt-4" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                paging: true,
+                processing: true,
+                columns: [
+                    { orderable: true },
+                    { orderable: false }
+                ],
+                language: {
+                    decimal: ",",
+                    emptyTable: "Não há dados disponíveis",
+                    info: "Com _START_ até _END_ de _TOTAL_ registros",
+                    infoEmpty: "Sem registros",
+                    infoFiltered: "(filtrado com _MAX_ total de registros)",
+                    infoPostFix: "",
+                    thousands: ".",
+                    lengthMenu: "Por página _MENU_",
+                    loadingRecords: "Carregando dados...",
+                    processing: "",
+                    search: "Buscar:",
+                    zeroRecords: "Sem dados relacionados encontrados",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
+                    },
+                    aria: {
+                        sortAscending: ": ordem crescente",
+                        sortDescending: ": ordem decrescente"
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,102 +1,100 @@
 ﻿@model IEnumerable<UsuarioViewModel>
 
-<div class="col-sm-12">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nome)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Login)
-                </th>
-                @*<th>
-                    @Html.DisplayNameFor(model => model.Senha)
-                </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Perfil)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DataCriacao)
-                </th>
-                @*<th>
-                    @Html.DisplayNameFor(model => model.DataModificacao)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UsuarioCriacao)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UsuarioModificacao)
-                </th>*@
-                <th></th>
-            </tr>
-        </thead>
-        <tbody class="table-striped table-hover">
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Login)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Senha)
-                </td>*@
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.Status)*@
-                    @if(item.Status)
-                    {
-                        <strong class="text-success">Ativo</strong>
-                    }
-                    else
-                    {
-                        <strong class="text-secondary">Inativo</strong>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Perfil)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DataCriacao)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.DataModificacao)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UsuarioCriacao)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UsuarioModificacao)
-                </td>*@
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Login" class="btn btn-sm btn-outline-secondary mr-2">
-                        Editar
-                    </a>
-                    @if (item.Status)
-                    {
-                        <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
-                            Desativar
-                        </button>
-                    }
-                    else
-                    {
-                        <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
-                            Ativar
-                        </button>   
-                    }
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+<table class="table" id="datatable" style="width: 100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Login)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Senha)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Perfil)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataCriacao)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.DataModificacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioCriacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioModificacao)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="table-striped table-hover">
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Login)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Senha)
+            </td>*@
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Status)*@
+                @if(item.Status)
+                {
+                    <strong class="text-success">Ativo</strong>
+                }
+                else
+                {
+                    <strong class="text-secondary">Inativo</strong>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Perfil)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataCriacao)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.DataModificacao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioCriacao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioModificacao)
+            </td>*@
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Login" class="btn btn-sm btn-outline-secondary mr-2">
+                    Editar
+                </a>
+                @if (item.Status)
+                {
+                    <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
+                        Desativar
+                    </button>
+                }
+                else
+                {
+                    <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Login)', @(item.Status.ToString().ToLower()))">
+                        Ativar
+                    </button>   
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -14,7 +14,7 @@
                 {{alertMsg}}
             </div>
             <br />
-            <form asp-action="Login">
+            <form (keyup.enter)="login()">
                 <div class="form-group">
                     <label for="login" class="control-label">Login</label>
                     <input name="login" id="login" class="form-control" type="text" [(ngModel)]="username"/>

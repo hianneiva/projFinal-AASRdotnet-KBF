@@ -86,7 +86,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             }
         }
 
-        [HttpPost("/Logout")]
+        [HttpGet("/Logout")]
         public async Task<IActionResult> Logout()
         {
             this.Response.Cookies.Delete(JWT_COOKIE_KEY);
