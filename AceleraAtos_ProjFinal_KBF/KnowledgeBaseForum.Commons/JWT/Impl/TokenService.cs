@@ -14,9 +14,6 @@ namespace KnowledgeBaseForum.Commons.JWT.Impl
     /// <typeparam name="T">Class used in token generation.</typeparam>
     public class TokenService : ITokenService
     {
-        private const string DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.fffffff zzz";
-        private const string JWT_CUSTOM_EXP_NAME = "ExpectedExpiration";
-
         /// <summary>
         /// Options for JWT operations.
         /// </summary>
@@ -73,34 +70,12 @@ namespace KnowledgeBaseForum.Commons.JWT.Impl
             }
 
             DateTime expirationDateTime = DateTime.Now.AddMinutes(Options.Expires > 0 ? Options.Expires : 480);
-            List<Claim> tokenClaims;
-            DateTime? toExpire = claims != null ?
-                                 DateTime.ParseExact(claims!.First(c => c.Type.Equals(JWT_CUSTOM_EXP_NAME)).Value, DATETIME_FORMAT, CultureInfo.InvariantCulture) :
-                                 null;
-
-            if (toExpire.HasValue)
-            {
-                if (toExpire.GetValueOrDefault().AddMinutes(10) >= DateTime.Now)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    tokenClaims = new(claims!);
-                    tokenClaims.RemoveAll(c => c.Type.Equals(JWT_CUSTOM_EXP_NAME));
-                    tokenClaims.Add(new Claim(JWT_CUSTOM_EXP_NAME, expirationDateTime.ToString(DATETIME_FORMAT)));
-                }
-            }
-            else
-            {
-                tokenClaims = new() {
-                    new Claim(ClaimTypes.Name, user!.Username),
-                    new Claim(ClaimTypes.GivenName, user!.GivenName),
-                    new Claim(ClaimTypes.Role, user!.Profile == 1 ? "NORMAL" : "ADMIN"),
-                    new Claim(ClaimTypes.Email, user!.Email),
-                    new Claim(JWT_CUSTOM_EXP_NAME, expirationDateTime.ToString(DATETIME_FORMAT))
-                };
-            }
+            List<Claim> tokenClaims = new() {
+                new Claim(ClaimTypes.Name, user!.Username),
+                new Claim(ClaimTypes.GivenName, user!.GivenName),
+                new Claim(ClaimTypes.Role, user!.Profile == 1 ? "NORMAL" : "ADMIN"),
+                new Claim(ClaimTypes.Email, user!.Email),
+            };
 
             JwtSecurityTokenHandler handler = new();
             byte[] key = Encoding.UTF8.GetBytes(Options.Secret);

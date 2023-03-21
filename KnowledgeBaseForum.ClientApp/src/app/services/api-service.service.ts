@@ -46,4 +46,16 @@ export class ApiService {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${idUser}`;
     return this.http.get<Alerta[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
+
+  // Put
+  public updateAlertas(token: string, id: string): Observable<Alerta> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
+    return this.http.put<Alerta>(url, {}, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Delete
+  public deleteAlertas(token: string, id: string): Observable<Alerta> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
+    return this.http.delete<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
 }

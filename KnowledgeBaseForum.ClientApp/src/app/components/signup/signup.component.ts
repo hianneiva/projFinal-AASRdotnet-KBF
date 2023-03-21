@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from 'src/app/services/api-service.service';
+import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment.development';
 
@@ -21,8 +22,8 @@ export class SignupComponent {
   public password?: string;
   public passwordRepeat?: string;
 
-  constructor(private api: ApiService, private cookie: CookieService, private router: Router) {
-    this.utils = new Utils();
+  constructor(private api: ApiService, private cookie: CookieService, private router: Router, _: TokenDecodeService) {
+    this.utils = new Utils(cookie, _, router);
   }
 
   public signUp(): void {
