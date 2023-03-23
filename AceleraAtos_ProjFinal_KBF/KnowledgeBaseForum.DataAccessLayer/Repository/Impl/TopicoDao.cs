@@ -1,5 +1,6 @@
 ﻿using KnowledgeBaseForum.DataAccessLayer.Model;
 using Microsoft.EntityFrameworkCore;
+using static KnowledgeBaseForum.Commons.Utils.InvariantComparison;
 
 namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 {
@@ -18,25 +19,28 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Topico>> All() => await context.Topicos.Include(t => t.TopicoTag!)
-                                                                             .ThenInclude(tt => tt.Tag)
-                                                                             .ToListAsync();
+        public async Task<IEnumerable<Topico>> All() => await context.Topicos.Include(t => t.TopicoTag!).ThenInclude(tt => tt.Tag).ToListAsync();
 
-        public async Task Delete(Guid id)
+        public async Task<IEnumerable<Topico>> Search(string? filter, string? author, IEnumerable<string> tags)
         {
-            Topico? entry = await context.Topicos.SingleOrDefaultAsync(tpc => tpc.Id.Equals(id));
+            bool filterDefined = !string.IsNullOrEmpty(filter);
+            bool authorDefined = !string.IsNullOrEmpty(author);
 
-            if (entry != null)
-            {
-                await Delete(entry);
-            }
+            List<Topico> found = await context.Topicos.Include(t => t.Usuario!)
+                                        .Include(t => t.TopicoTag!).ThenInclude(tt => tt.Tag)
+                                        .Where(t => t.Status)
+                                        .ToListAsync();
+
+            return found.Where(t => t.Status &&
+                                    (!filterDefined || (filterDefined && t.Titulo.InvariantContains(filter!))) &&
+                                    (!authorDefined || (authorDefined && t.Usuario!.Nome.InvariantContains(author!))) &&
+                                    (!tags.Any() || tags.Any(tag => t.TopicoTag!.Select(tt => tt.Tag!.Descricao).Contains(tag))));
         }
 
-        public async Task Delete(Topico entity)
-        {
-            context.Topicos.Remove(entity);
-            await context.SaveChangesAsync();
-        }
+        public async Task<IEnumerable<Topico>> FromAuthor(string login) => await context.Topicos.Include(t => t.Usuario!)
+                                                                                                .Include(t => t.TopicoTag!).ThenInclude(tt => tt.Tag)
+                                                                                                .Where(t => t.UsuarioCriacao.Equals(login))
+                                                                                                .ToListAsync();
 
         public async Task<Topico?> Get(Guid id) => await context.Topicos.Include(tpc => tpc.Comentarios!).ThenInclude(c => c.Usuario)
                                                                         .Include(tpc => tpc.Usuario)
@@ -63,6 +67,22 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             {
                 throw new KeyNotFoundException("Could not find the entity in the database.");
             }
+        }
+
+        public async Task Delete(Guid id)
+        {
+            Topico? entry = await context.Topicos.SingleOrDefaultAsync(tpc => tpc.Id.Equals(id));
+
+            if (entry != null)
+            {
+                await Delete(entry);
+            }
+        }
+
+        public async Task Delete(Topico entity)
+        {
+            context.Topicos.Remove(entity);
+            await context.SaveChangesAsync();
         }
     }
 }
