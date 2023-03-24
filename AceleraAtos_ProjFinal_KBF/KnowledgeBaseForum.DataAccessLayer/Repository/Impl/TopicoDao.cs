@@ -26,6 +26,11 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             bool filterDefined = !string.IsNullOrEmpty(filter);
             bool authorDefined = !string.IsNullOrEmpty(author);
 
+            if (!filterDefined && !authorDefined && !tags.Any())
+            {
+                return new List<Topico>();
+            }
+
             List<Topico> found = await context.Topicos.Include(t => t.Usuario!)
                                         .Include(t => t.TopicoTag!).ThenInclude(tt => tt.Tag)
                                         .Where(t => t.Status)

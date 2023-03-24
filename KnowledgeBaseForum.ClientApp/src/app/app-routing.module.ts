@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { TopicComponent } from './components/topic/topic.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -12,6 +13,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'alerta', component: AlertaComponent, canActivate: [AuthGuard] },
+  { path: 'topico', component: TopicComponent, canActivate: [AuthGuard] },
+  //  { path: 'topico/:id', component: TopicViewComponent, canActivate: [AuthGuard] },
   { path: 'testMark', component: MarkdownEditComponent }
 ];
 

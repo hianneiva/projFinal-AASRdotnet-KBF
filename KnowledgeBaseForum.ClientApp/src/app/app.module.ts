@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CookieService } from 'ngx-cookie-service';
 import { MomentModule } from 'ngx-moment';
 import { MarkdownModule } from 'ngx-markdown';
@@ -17,6 +18,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { TopicComponent } from './components/topic/topic.component';
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import { SignupComponent } from './components/signup/signup.component';
     HeaderComponent,
     FooterComponent,
     MarkdownEditComponent,
-    AlertaComponent
+    AlertaComponent,
+    TopicComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import { SignupComponent } from './components/signup/signup.component';
     HttpClientModule,
     FormsModule,
     MomentModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    NgSelectModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]
