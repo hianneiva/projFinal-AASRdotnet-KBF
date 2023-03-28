@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TopicoComponent } from './components/topico/topico.component';
+import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
+import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
 import { AlertaComponent } from './components/alerta/alerta.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
@@ -12,7 +15,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'alerta', component: AlertaComponent, canActivate: [AuthGuard] },
-  { path: 'testMark', component: MarkdownEditComponent }
+  { path: 'testMark', component: MarkdownEditComponent },
+  { path: 'topico', component: TopicoComponent },
+  { path: 'topico-novo', component: TopicoNovoComponent },
+  { path: 'topico-alterar', component: TopicoAlterarComponent },
+  { path: 'topico-alterar/:id', component: TopicoAlterarComponent }
 ];
 
 @NgModule({

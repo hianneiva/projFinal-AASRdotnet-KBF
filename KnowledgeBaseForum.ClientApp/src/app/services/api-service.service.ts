@@ -6,6 +6,7 @@ import { LoginRequest } from '../model/login-request';
 import { LoginResponse } from '../model/login-response';
 import { Usuario } from '../model/usuario';
 import { Alerta } from '../model/alerta';
+import { Topico } from '../model/topico';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +36,35 @@ export class ApiService {
     return this.http.post<LoginResponse>(url, jsonContent);
   }
 
-  public listTopics(token: string): Observable<any> { // TODO: Edit to use actual model
+  // Topicos
+  // GET
+  public listTopics(token: string): Observable<Topico> { // TODO: Edit to use actual model
     const url: string = environment.urlApi + environment.urlTopico;
-    return this.http.get<Object>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // GET by ID
+  public getTopic(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${id}`;
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post
+  public createTopic(token: string, topico: Topico): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}`;
+    return this.http.post<Topico>(url, topico, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Put
+  public modifyTopic(token: string, topico: Topico): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${topico.id}`;
+    return this.http.put<Topico>(url, topico, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Delete
+  public deleteTopic(token: string, id: string): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${id}`;
+    return this.http.delete<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // CHAMADAS PARA ENDPOINT ALERTA
