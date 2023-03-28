@@ -58,4 +58,10 @@ export class ApiService {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
     return this.http.delete<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
+
+   // Usuário Atual
+   public usuarioAtual(token: string, userName: string): Observable<Usuario> {
+    const url: string = `${environment.urlApi}${environment.urlUsuario}/${userName}`;
+    return this.http.get<Usuario>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
 }

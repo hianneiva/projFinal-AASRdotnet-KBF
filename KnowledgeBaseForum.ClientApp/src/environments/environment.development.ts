@@ -11,5 +11,7 @@ export const environment = {
     urlAlerta: "Alerta",
     urlAuthLogin: "Auth/login",
     urlAuthSignUp: "Auth/signup",
-    urlTopico: "Topico"
+    urlTopico: "Topico",
+    urlUsuario: "Usuario"
+
 };
