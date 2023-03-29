@@ -14,14 +14,14 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class TopicoListarComponent {
   private utils: Utils;
-  
+
   public textAlertTypes = ["Padrão", "Apenas notificação"];
   public idToDel?: string;
   public errorMsg?: string;
   public successMsg?: string;
   public topicos: Topico[] = [];
 
-  constructor(private api: ApiService, cookie: CookieService, decoder: TokenDecodeService, private router: Router){
+  constructor(private api: ApiService, cookie: CookieService, decoder: TokenDecodeService, private router: Router) {
     this.utils = new Utils(cookie, decoder, router);
 
     try {
@@ -56,15 +56,16 @@ export class TopicoListarComponent {
       }
     });
   }
-  
+
   private getAllTopicos() {
     const token: string = this.utils.getJwtToken();
-    this.api.listTopics(token).subscribe(res => {
+    const id: string = this.utils.getUserDataFromToken().name!;
+    this.api.listAuthorTopics(token, id).subscribe(res => {
       this.topicos = this.utils.arrayFromAny(res)
     });
   }
 
-  public alterarTopico(id?: string){
-    this.router.navigate([`topico-alterar/${id}`]);
+  public alterarTopico(id?: string) {
+    this.router.navigate([`/topico/topico-alterar/${id}`]);
   }
 }

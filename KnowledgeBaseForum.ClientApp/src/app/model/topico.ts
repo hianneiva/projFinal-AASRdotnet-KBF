@@ -1,5 +1,7 @@
 import { BaseEntity } from "./base-entity";
 import { Comentario } from "./comentario";
+import { TopicoTag } from "./topico-tag";
+import { Usuario } from "./usuario";
 
 export class Topico extends BaseEntity {
     public titulo!: string;
@@ -8,5 +10,6 @@ export class Topico extends BaseEntity {
     public status!: boolean;
     public usuarioId!: string;
     public comentarios?: Comentario[];
-    // TopicoTag (Relacional)
+    public topicoTag?: TopicoTag[];
+    public usuario!: Usuario;
 }

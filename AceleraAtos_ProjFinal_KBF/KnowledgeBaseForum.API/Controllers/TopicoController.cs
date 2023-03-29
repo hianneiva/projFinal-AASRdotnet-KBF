@@ -1,4 +1,5 @@
-﻿using KnowledgeBaseForum.API.Utils;
+﻿using KnowledgeBaseForum.API.Model;
+using KnowledgeBaseForum.API.Utils;
 using KnowledgeBaseForum.DataAccessLayer.Model;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
@@ -25,6 +26,14 @@ namespace KnowledgeBaseForum.API.Controllers
 
         [HttpGet("{topico}")]
         public async Task<Topico?> Read(Guid topico) => await dao.Get(topico);
+
+        [HttpPost("search")]
+        public async Task<IEnumerable<Topico>> Search(TopicoSearchRequest searchParams) => await dao.Search(searchParams.Filter,
+                                                                                                            searchParams.Author,
+                                                                                                            searchParams.Tags ?? new List<string>());
+
+        [HttpGet("fromAuthor")]
+        public async Task<IEnumerable<Topico>> FromAuthor(string login) => await dao.FromAuthor(login);
 
         [HttpPost]
         public async Task<IActionResult> Create(Topico entry)
