@@ -1,0 +1,57 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="col-sm-12 text-start">
+            <a class="btn btn-success me-2" routerLink="topico-novo">Novo Tópico</a>
+            <a class="btn btn-primary" routerLink="topico-usuario">Tópicos Criados</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-4">
+            <label class="form-label">Nome</label>
+            <input class="form-control" type="text" [(ngModel)]="filter" />
+        </div>
+        <div class="col-sm-4">
+            <label class="form-label">Autor</label>
+            <input class="form-control" type="text" [(ngModel)]="author" />
+        </div>
+        <div class="col-sm-4">
+            <label class="form-label">Tags</label>
+            <ng-select [multiple]="true" [(ngModel)]="tags">
+                <ng-option *ngFor="let tag of tagsToSelect" [value]="tag.descricao">{{tag.descricao}}</ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-end">
+            <button class="btn btn-primary mt-2" role="button" (click)="search()">Buscar</button>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-12" *ngIf="!searchHasResults">
+            <div class="card">
+                <div class="card-body text-center mt-1">
+                    <h3 class="text-secondary fw-semibold">Não foram encontrados tópicos</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12" *ngIf="topics.length > 0">
+            <div class="card" *ngFor="let item of topics">
+                <div class="card-header">
+                    <a class="fs-4 text-decoration-none text-primary fw-semibold stretched-link" routerLink="topico/{{item.id}}">{{item.titulo}}</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <strong>Autor:</strong> {{item.usuario.nome}}
+                        </div>
+                        <div class="col-sm-6 text-end">
+                            <span class="badge bg-primary ms-2" *ngFor="let tt of item.topicoTag">{{tt.tag.descricao}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -30,6 +30,7 @@
               "./node_modules/prismjs/themes/prism-okaidia.css",
               "./node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "./node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
+              "./node_modules/@ng-select/ng-select/themes/default.theme.css",
               "src/styles.css"
             ],
             "scripts": [

@@ -7,6 +7,7 @@ import { LoginResponse } from '../model/login-response';
 import { Usuario } from '../model/usuario';
 import { Alerta } from '../model/alerta';
 import { Topico } from '../model/topico';
+import { Tag } from '../model/tag';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,23 @@ export class ApiService {
     return this.http.delete<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
+  // Search
+  public searchTopics(token: string, tags: string[], filter?: string | null, author?: string | null): Observable<Topico[]> {
+    const url = `${environment.urlApi}${environment.urlTopico}/${environment.urlTopicoSearch}`;
+    const jsonData = {
+      filter: filter,
+      author: author,
+      tags: tags
+    }
+    return this.http.post<Topico[]>(url, jsonData, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Author only
+  public listAuthorTopics(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${environment.urlTopicoAutor}?login=${id}`;
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
   // CHAMADAS PARA ENDPOINT ALERTA
   // Get
   public getAlertas(token: string, idUser: string): Observable<Alerta[]> {
@@ -86,8 +104,14 @@ export class ApiService {
     return this.http.delete<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
-   // Usuário Atual
-   public usuarioAtual(token: string, userName: string): Observable<Usuario> {
+  // CHAMADAS PARA ENDPOINT TAGS
+  public getTags(token: string): Observable<Tag[]> {
+    const url: string = environment.urlApi + environment.urlTag;
+    return this.http.get<Tag[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Usuário Atual
+  public usuarioAtual(token: string, userName: string): Observable<Usuario> {
     const url: string = `${environment.urlApi}${environment.urlUsuario}/${userName}`;
     return this.http.get<Usuario>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }

@@ -13,7 +13,7 @@ import { Utils } from 'src/app/utils/utils';
   templateUrl: './topico-alterar.component.html',
   styleUrls: ['./topico-alterar.component.css']
 })
-export class TopicoAlterarComponent {  
+export class TopicoAlterarComponent {
 
   private utils: Utils;
   private id: string = '';
@@ -34,22 +34,22 @@ export class TopicoAlterarComponent {
       this.errorMsg = "Falha na recuperação dos topicos";
       setTimeout(() => this.errorMsg = undefined, 5000);
     }
-  }  
+  }
 
   private getTopic() {
-    this.api.getTopic(this.utils.getJwtToken(),this.id).subscribe(res => {
+    this.api.getTopic(this.utils.getJwtToken(), this.id).subscribe(res => {
       this.topico = this.utils.arrayFromAny(res)
     });
   }
 
-  public alterarTopico(topico:Topico):void{
-    
+  public alterarTopico(topico: Topico): void {
+
     if (this.utils.stringIsNullOrEmpty(topico.titulo) || this.utils.stringIsNullOrEmpty(topico.conteudo)) {
       return;
     }
-    
-    const usuario: TokenData = this.utils.getUserDataFromToken();     
-    
+
+    const usuario: TokenData = this.utils.getUserDataFromToken();
+
     topico.status = true;
     topico.usuarioModificacao = usuario.given_name!;
     topico.dataModificacao = new Date();
@@ -65,6 +65,7 @@ export class TopicoAlterarComponent {
         this.successMsg = "Topico atualizado com sucesso";
         this.errorMsg = undefined;
         setTimeout(() => this.successMsg = undefined, 5000);
+        this.cancelar();
       }
     });
   }
@@ -74,12 +75,11 @@ export class TopicoAlterarComponent {
       this.router.navigate(['/'])/*.then(() => { window.location.reload(); })*/;
     }
     else {
-      this.router.navigate(['topico']);
+      this.router.navigate(['/topico/topico-usuario']);
     }
   }
 
   public updateMarkdown() {
     this.markdown.reload();
   }
-
 }
