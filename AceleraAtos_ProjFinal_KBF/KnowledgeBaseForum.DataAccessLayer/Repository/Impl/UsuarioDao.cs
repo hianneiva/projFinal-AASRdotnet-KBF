@@ -44,7 +44,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             await context.SaveChangesAsync();
         }
 
-        public async Task<Usuario?> Get(string id) => await context.Usuarios.SingleOrDefaultAsync(usr => usr.Login.ToUpper().Equals(id.ToUpper()));
+        public async Task<Usuario?> Get(string id) => await context.Usuarios.SingleOrDefaultAsync(usr => usr.Login.ToUpper().Equals(id));
 
         public async Task Update(Usuario entity)
         {

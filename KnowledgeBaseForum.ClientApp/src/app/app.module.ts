@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CookieService } from 'ngx-cookie-service';
 import { MomentModule } from 'ngx-moment';
 import { MarkdownModule } from 'ngx-markdown';
@@ -22,6 +23,7 @@ import { TopicoComponent } from './components/topico/topico.component';
 import { TopicoListarComponent } from './components/topico-listar/topico-listar.component';
 import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
 import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
+import { TopicComponent } from './components/topic/topic.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,8 @@ import { TopicoAlterarComponent } from './components/topico-alterar/topico-alter
     HeaderComponent,
     FooterComponent,
     MarkdownEditComponent,
+    AlertaComponent,
+    TopicComponent,
     UsuarioComponent,
     AlertaComponent,
     TopicoNovoComponent,
@@ -45,7 +49,8 @@ import { TopicoAlterarComponent } from './components/topico-alterar/topico-alter
     HttpClientModule,
     FormsModule,
     MomentModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    NgSelectModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]
