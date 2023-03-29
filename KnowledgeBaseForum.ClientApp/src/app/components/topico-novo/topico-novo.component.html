@@ -1,0 +1,40 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
+            {{successMsg}}
+        </div>
+        <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+            {{errorMsg}}
+        </div>
+        <br />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Titulo</label>
+        <input name="titulo" id="titulo" class="form-control" type="text" [(ngModel)]="topico.titulo" />
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6"> <!-- Editor -->
+            <label class="form-label">Editor</label>
+            <textarea class="form-control" [(ngModel)]="topico.conteudo" rows="24"></textarea>
+        </div>
+        <div class="col-sm-6"> <!-- Renderer -->
+            <markdown [data]="topico.conteudo" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers
+                lineHighlight emoji clipboard></markdown>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <select class="form-select" [(ngModel)]="topico.tipoAcesso">
+            <option selected>Tipo de Acesso</option>
+            <option value="0">Em edição</option>
+            <option value="1">Finalizado</option>
+        </select>
+    </div>
+    <br />
+    <div class="text-end">
+        <a class="btn btn-secondary me-2" (click)="cancelar()">Voltar</a>
+        <input type="button" class="btn btn-primary" (click)="cadastrarTopico(topico)" value="Cadastar" />
+    </div>
+</div>

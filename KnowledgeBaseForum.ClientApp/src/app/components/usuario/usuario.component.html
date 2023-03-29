@@ -1,0 +1,48 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="col-sm-12 text-center mb-3">
+            <h3>Usuário</h3>
+        </div>
+    </div>
+    <hr />
+<div class="form-control-lg" *ngFor="let u of usuario"> 
+  <div class="container text-center">
+  <div class="row justify-content-center">
+        <div class="col-4 input-group-text justify-content-center">
+          <label>Nome: {{u.nome}}</label>
+        </div>
+        <div class="col-4 input-group-text justify-content-center">
+          <label>E-mail: {{u.email}}</label> 
+        </div>
+        <div class="col-4 input-group-text justify-content-center">
+          <label>Login: {{u.login}}</label> 
+        </div>
+  </div>
+  </div>
+      <br/>
+  <div class="container text-center">
+    <div class="input-group mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Senha:</span>
+                  <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+    </div>
+    <div class="input-group mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">Confirmar Senha:</span>
+                  <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+    </div>
+  </div>
+</div>
+    <div class="container text-center">
+      <div class="row">
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    <div class="col">
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+

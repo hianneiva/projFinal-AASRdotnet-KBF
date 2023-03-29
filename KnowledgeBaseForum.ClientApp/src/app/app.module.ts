@@ -18,12 +18,18 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { MarkdownEditComponent } from './components/markdown-edit/markdown-edit.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { UsuarioComponent } from './components/usuario/usuario.component';
+import { TopicoComponent } from './components/topico/topico.component';
+import { TopicoListarComponent } from './components/topico-listar/topico-listar.component';
+import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
+import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
 import { TopicComponent } from './components/topic/topic.component';
-
 
 @NgModule({
   declarations: [
     AppComponent,
+    TopicoComponent,
+    TopicoListarComponent,
     LoginComponent,
     SignupComponent,
     HomeComponent,
@@ -31,7 +37,11 @@ import { TopicComponent } from './components/topic/topic.component';
     FooterComponent,
     MarkdownEditComponent,
     AlertaComponent,
-    TopicComponent
+    TopicComponent,
+    UsuarioComponent,
+    AlertaComponent,
+    TopicoNovoComponent,
+    TopicoAlterarComponent
   ],
   imports: [
     BrowserModule,

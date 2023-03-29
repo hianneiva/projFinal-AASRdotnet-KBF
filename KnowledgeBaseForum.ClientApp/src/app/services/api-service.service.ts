@@ -37,11 +37,35 @@ export class ApiService {
     return this.http.post<LoginResponse>(url, jsonContent);
   }
 
-  // CHAMADAS PARA ENDPOINT TÓPICO
-  // List
-  public listTopics(token: string): Observable<any> { // TODO: Edit to use actual model
+  // Topicos
+  // GET
+  public listTopics(token: string): Observable<Topico> { // TODO: Edit to use actual model
     const url: string = environment.urlApi + environment.urlTopico;
-    return this.http.get<Object>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // GET by ID
+  public getTopic(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${id}`;
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post
+  public createTopic(token: string, topico: Topico): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}`;
+    return this.http.post<Topico>(url, topico, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Put
+  public modifyTopic(token: string, topico: Topico): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${topico.id}`;
+    return this.http.put<Topico>(url, topico, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Delete
+  public deleteTopic(token: string, id: string): Observable<Topico> {
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${id}`;
+    return this.http.delete<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // Search
@@ -78,5 +102,11 @@ export class ApiService {
   public getTags(token: string): Observable<Tag[]> {
     const url: string = environment.urlApi + environment.urlTag;
     return this.http.get<Tag[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Usuário Atual
+  public usuarioAtual(token: string, userName: string): Observable<Usuario> {
+    const url: string = `${environment.urlApi}${environment.urlUsuario}/${userName}`;
+    return this.http.get<Usuario>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 }

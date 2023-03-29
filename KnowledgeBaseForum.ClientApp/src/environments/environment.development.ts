@@ -13,5 +13,6 @@ export const environment = {
     urlAuthSignUp: "Auth/signup",
     urlTag: "Tag",
     urlTopico: "Topico",
-    urlTopicoSearch: "search"
+    urlTopicoSearch: "search",
+    urlUsuario: "Usuario"
 };
