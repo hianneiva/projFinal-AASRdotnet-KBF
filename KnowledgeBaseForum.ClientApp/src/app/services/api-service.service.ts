@@ -79,6 +79,12 @@ export class ApiService {
     return this.http.post<Topico[]>(url, jsonData, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
+  // Author only
+  public listAuthorTopics(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+    const url: string = `${environment.urlApi}${environment.urlTopico}/${environment.urlTopicoAutor}?login=${id}`;
+    return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
   // CHAMADAS PARA ENDPOINT ALERTA
   // Get
   public getAlertas(token: string, idUser: string): Observable<Alerta[]> {

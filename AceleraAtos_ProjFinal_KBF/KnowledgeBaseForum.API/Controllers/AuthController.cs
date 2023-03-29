@@ -36,10 +36,14 @@ namespace KnowledgeBaseForum.API.Controllers
                 return BadRequest(new JwtTokenResponse() { Result = false, Message = "Credenciais inválidas" });
             }
 
-            Usuario? loginUser = await dao.Get(loginData.Username);
+            Usuario? loginUser = await dao.Get(loginData.Username.ToUpper());
             string semiDecodedPwd = VerifyPassword(loginData.Password, out bool verified);
 
-            if (loginUser != null && !(loginUser?.Senha?.Equals(semiDecodedPwd)).GetValueOrDefault())
+            if (loginUser == null)
+            {
+                return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Usuário não encontrado" });
+            }
+            else if (loginUser != null && !(loginUser?.Senha?.Equals(semiDecodedPwd)).GetValueOrDefault())
             {
                 return Unauthorized(new JwtTokenResponse() { Result = false, Message = "Usuário ou senha incorretos" });
             }

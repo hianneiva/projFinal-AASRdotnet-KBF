@@ -1,71 +1,79 @@
 <div class="default-spacing">
   <div class="row">
+    <div class="col-sm-12 text-end">
+      <a class="btn btn-secondary me-2" routerLink="/topico">Voltar</a>
+    </div>
+  </div>
+  <div class="row">
     <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
-        {{successMsg}}
+      {{successMsg}}
     </div>
     <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
-        {{errorMsg}}
+      {{errorMsg}}
     </div>
     <br />
   </div>
   <div class="row">
     <div class="col-12 text-center" *ngIf="topicos.length === 0">
-        <h3>Não há topicos registrados</h3>
+      <h3>Não há topicos registrados</h3>
     </div>
     <div class="col-12" *ngIf="topicos!.length !== 0">
       <table class="table align middle">
-    <thead>
-      <tr>
-        <th>Titulo</th>
-        <th>Autor</th>
-        <th>Data Criação</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody class="table-striped">
-      <tr *ngFor="let entry of topicos">
-        <td>
-            {{entry.titulo}}
-        </td>
-        <td>
-            {{entry.usuarioCriacao}}
-        </td>
-        <td>
-          {{entry.dataCriacao}}
-        </td>
-        <td>
-            {{entry.status ? 'Ativo' : 'Inativo'}}
-        </td>
-        <td class="text-end">
-          <button type="button" title="Alterar topico" class="btn btn-outline-primary me-2" (click)="alterarTopico(entry.id)">
-            <i class="bi bi-pen"></i>
-          </button>
-          <button type="button" class="btn btn-outline-danger" title="Remover Topico" data-bs-toggle="modal" data-bs-target="#delModal" (click)="setIdToDel(entry.id)">
-              <i class="bi bi-trash"></i>
-          </button>
-      </td>
-      </tr>      
-    </tbody>
-  </table> 
-</div>
-</div>
+        <thead>
+          <tr>
+            <th>Titulo</th>
+            <th>Autor</th>
+            <th>Data Criação</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody class="table-striped">
+          <tr *ngFor="let entry of topicos">
+            <td>
+              {{entry.titulo}}
+            </td>
+            <td>
+              {{entry.usuarioCriacao}}
+            </td>
+            <td>
+              {{entry.dataCriacao}}
+            </td>
+            <td>
+              {{entry.status ? 'Ativo' : 'Inativo'}}
+            </td>
+            <td class="text-end">
+              <button type="button" title="Alterar topico" class="btn btn-outline-primary me-2"
+                (click)="alterarTopico(entry.id)">
+                <i class="bi bi-pen"></i>
+              </button>
+              <button type="button" class="btn btn-outline-danger" title="Remover Topico" data-bs-toggle="modal"
+                data-bs-target="#delModal" (click)="setIdToDel(entry.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div class="modal" tabindex="-1" id="delModal" aria-labelledby="modalTitle" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="modalTitle">Deseja remover este Topico?</h5>
-              <button type="button" class="btn" data-bs-dismiss="modal" (click)="setIdToDel(undefined)">
-                  <i class="bi bi-x"></i>
-              </button>
-          </div>
-          <!--<div class="modal-body"></div>-->
-          <div class="modal-footer">
-              <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" (click)="setIdToDel(undefined)">Não</button>
-              <button class="btn btn-danger" data-bs-dismiss="modal" type="button" (click)="deleteTopico()">Sim</button>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Deseja remover este Topico?</h5>
+        <button type="button" class="btn" data-bs-dismiss="modal" (click)="setIdToDel(undefined)">
+          <i class="bi bi-x"></i>
+        </button>
       </div>
+      <!--<div class="modal-body"></div>-->
+      <div class="modal-footer">
+        <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button"
+          (click)="setIdToDel(undefined)">Não</button>
+        <button class="btn btn-danger" data-bs-dismiss="modal" type="button" (click)="deleteTopico()">Sim</button>
+      </div>
+    </div>
   </div>
 </div>
