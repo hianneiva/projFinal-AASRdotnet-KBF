@@ -16,7 +16,7 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class UsuarioComponent {
   
-public usuario! : Usuario [];
+public usuario! : Usuario;
 private utils! : Utils;
   
  constructor(private api: ApiService, private cookie: CookieService, decoder: TokenDecodeService, router: Router ){
@@ -28,7 +28,7 @@ private utils! : Utils;
   const token: string = this.utils.getJwtToken();
   const userData: TokenData = this.utils.getUserDataFromToken();
   this.api.usuarioAtual(token, userData.name!).subscribe(res => {
-    this.usuario = this.utils.arrayFromAny(res)
+    this.usuario = res;
   });
  }
 
