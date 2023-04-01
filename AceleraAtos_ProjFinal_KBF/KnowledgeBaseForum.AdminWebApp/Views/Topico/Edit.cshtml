@@ -95,7 +95,7 @@
                 </h2>
                 <div id="contentCollapse" class="accordion-collapse collapse" aria-labelledby="contentHeader" @*data-bs-parent="#topicAccordion"*@>
                     <div class="accordion-body">
-                        @(Model.Conteudo)
+                        @Html.Raw(Model.ConteudoMarkdown())
                     </div>
                 </div>
             </div>

@@ -64,13 +64,13 @@
                     @if (item.Status)
                     {
                         <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                            Desativar
+                            <i class="bi bi-x-circle"></i> Desativar
                         </button>
                     }
                     else
                     {
                         <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                            Ativar
+                            <i class="bi bi-check-circle"></i> Ativar
                         </button>   
                     }
                 </td>

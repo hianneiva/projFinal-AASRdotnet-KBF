@@ -1,4 +1,5 @@
 ﻿using KnowledgeBaseForum.AdminWebApp.Models.Enum;
+using Markdig;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,7 +14,7 @@ namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
         public string Titulo { get; set; } = null!;
 
         /// <summary>
-        /// Topic content.
+        /// Topic content (raw text).
         /// </summary>
         [Display(Name = "Conteúdo")]
         public string Conteudo { get; set; } = null!;
@@ -61,6 +62,11 @@ namespace KnowledgeBaseForum.AdminWebApp.Models.ViewModel
         /// Returns tag list as string.
         /// </summary>
         public string? Tags => string.Join(", ", TagLinks?.Select(tl => tl.Tag?.Descricao) ?? new string[] { });
+
+        /// <summary>
+        /// Return topic content as HTML rendered from Markdown.
+        /// </summary>
+        public string ConteudoMarkdown() => Markdown.ToHtml(Conteudo);
     }
 
     public class TopicoTagLink

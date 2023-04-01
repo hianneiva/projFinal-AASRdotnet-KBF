@@ -46,8 +46,12 @@
                     @Html.DisplayFor(modelItem => item.UsuarioModificacao)
                 </td>*@
                 <td style="width: 1%; white-space: nowrap;">
-                    <button role="button" class="btn btn-outline-primary" onclick="editTag('@(item.Id)')">Salvar</button>
-                    <button role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delModal" onclick="bindDelBehavior('@(item.Id)', '@(item.Descricao)')">Apagar</button>
+                    <button role="button" class="btn btn-outline-primary" onclick="editTag('@(item.Id)')">
+                        <i class="bi bi-save"></i> Salvar
+                    </button>
+                    <button role="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delModal" onclick="bindDelBehavior('@(item.Id)', '@(item.Descricao)')">
+                        <i class="bi bi-x-circle"></i> Apagar
+                    </button>
                 </td>
             </tr>
         }
