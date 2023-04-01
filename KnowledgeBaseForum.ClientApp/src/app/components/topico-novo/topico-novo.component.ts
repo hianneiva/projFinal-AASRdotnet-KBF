@@ -23,8 +23,9 @@ export class TopicoNovoComponent {
   public successMsg?: string;
   topico: Topico = new Topico();
 
-  constructor(private api: ApiService, private cookie: CookieService, private router: Router, decoder: TokenDecodeService, private markdown: MarkdownService) {
+  constructor(private api: ApiService, cookie: CookieService, private router: Router, decoder: TokenDecodeService, private markdown: MarkdownService) {
     this.utils = new Utils(cookie, decoder, router);
+    this.topico.tipoAcesso = 0;
   }
   
   public cadastrarTopico(topico:Topico):void{
@@ -37,7 +38,7 @@ export class TopicoNovoComponent {
     
     topico.status = true;
     topico.usuarioId = usuario.name!;
-    topico.usuarioCriacao = usuario.given_name!;
+    topico.usuarioCriacao = usuario.name!;
     topico.dataCriacao = new Date();
 
     const token: string = this.utils.getJwtToken();
@@ -50,7 +51,7 @@ export class TopicoNovoComponent {
       } else {
         this.successMsg = "Topico cadastrado com sucesso";
         this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
+        setTimeout(() => this.cancelar(), 2500);
       }
     });
   }

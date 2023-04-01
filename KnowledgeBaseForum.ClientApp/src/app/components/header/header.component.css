@@ -3,11 +3,11 @@ nav {
     /*background: linear-gradient(180deg, rgba(30, 144, 255, 1) 0%, rgba(65, 105, 225, 1) 60%);*/
 }
 
-li>a {
+li>a, .navbar-brand>a {
     color: white;
 }
 
-li>a:hover {
+li>a:hover, .navbar-brand>a:hover {
     color: #B9D9EB;
 }
 

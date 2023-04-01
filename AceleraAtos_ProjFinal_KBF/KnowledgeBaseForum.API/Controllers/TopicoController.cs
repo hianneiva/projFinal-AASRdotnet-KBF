@@ -30,10 +30,15 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpPost("search")]
         public async Task<IEnumerable<Topico>> Search(TopicoSearchRequest searchParams) => await dao.Search(searchParams.Filter,
                                                                                                             searchParams.Author,
-                                                                                                            searchParams.Tags ?? new List<string>());
+                                                                                                            searchParams.Tags ?? new List<string>(),
+                                                                                                            searchParams.Recent,
+                                                                                                            searchParams.Alphabetic);
 
         [HttpGet("fromAuthor")]
         public async Task<IEnumerable<Topico>> FromAuthor(string login) => await dao.FromAuthor(login);
+
+        [HttpGet("recent")]
+        public async Task<IEnumerable<Topico>> Recent() => await dao.Recent();
 
         [HttpPost]
         public async Task<IActionResult> Create(Topico entry)

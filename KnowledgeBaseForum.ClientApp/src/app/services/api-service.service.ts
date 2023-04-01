@@ -16,7 +16,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // CHAMADAS PARA ENDPOINT AUTH:
+  // AUTH
   // Login
   public login(username: string, password: string): Observable<LoginResponse> {
     const url: string = environment.urlApi + environment.urlAuthLogin;
@@ -39,13 +39,13 @@ export class ApiService {
 
   // Topicos
   // GET
-  public listTopics(token: string): Observable<Topico> { // TODO: Edit to use actual model
+  public listTopics(token: string): Observable<Topico> {
     const url: string = environment.urlApi + environment.urlTopico;
     return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // GET by ID
-  public getTopic(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+  public getTopic(token: string, id: string): Observable<Topico> {
     const url: string = `${environment.urlApi}${environment.urlTopico}/${id}`;
     return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
@@ -80,12 +80,18 @@ export class ApiService {
   }
 
   // Author only
-  public listAuthorTopics(token: string, id: string): Observable<Topico> { // TODO: Edit to use actual model
+  public listAuthorTopics(token: string, id: string): Observable<Topico> {
     const url: string = `${environment.urlApi}${environment.urlTopico}/${environment.urlTopicoAutor}?login=${id}`;
     return this.http.get<Topico>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
-  // CHAMADAS PARA ENDPOINT ALERTA
+  // Recent
+  public recentTopics(token: string): Observable<Topico[]> {
+    const url = `${environment.urlApi}${environment.urlTopico}/${environment.urlTopicoRecent}`;
+    return this.http.get<Topico[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // ALERTA
   // Get
   public getAlertas(token: string, idUser: string): Observable<Alerta[]> {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${idUser}`;
@@ -104,7 +110,7 @@ export class ApiService {
     return this.http.delete<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
-  // CHAMADAS PARA ENDPOINT TAGS
+  // TAGS
   public getTags(token: string): Observable<Tag[]> {
     const url: string = environment.urlApi + environment.urlTag;
     return this.http.get<Tag[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });

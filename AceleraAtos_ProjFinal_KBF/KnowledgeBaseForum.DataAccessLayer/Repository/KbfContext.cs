@@ -102,6 +102,7 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository
             alertaBuilder.Property(a => a.UsuarioModificacao).HasMaxLength(20);
             alertaBuilder.Property(a => a.ModoAlerta).IsRequired();
             alertaBuilder.Property(a => a.UsuarioId).HasMaxLength(20).IsRequired();
+            alertaBuilder.Property(a => a.Atualizacao).IsRequired();
             alertaBuilder.HasOne(a => a.Usuario).WithMany(u => u.Alertas).HasForeignKey(a => a.UsuarioId);
             alertaBuilder.Property(a => a.TopicoId).IsRequired();
             alertaBuilder.HasOne(a => a.Topico).WithMany(t => t.Alertas).HasForeignKey(t => t.TopicoId);

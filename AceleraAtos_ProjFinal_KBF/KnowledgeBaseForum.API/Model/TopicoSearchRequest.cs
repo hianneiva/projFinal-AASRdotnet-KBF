@@ -16,5 +16,15 @@
         /// Tags to be considered in the search.
         /// </summary>
         public IEnumerable<string>? Tags { get; set; }
+
+        /// <summary>
+        /// Search results in recent date order.
+        /// </summary>
+        public bool Recent { get; set; }
+
+        /// <summary>
+        /// Search results in alphabetic order.
+        /// </summary>
+        public bool Alphabetic { get; set; }
     }
 }

@@ -20,6 +20,8 @@ export class TopicComponent {
   author?: string;
   tags: string[];
   tagsToSelect: Tag[];
+  recentTopics: boolean;
+  alphabetic: boolean;
 
   constructor(private api: ApiService, cookie: CookieService, decoder: TokenDecodeService, router: Router) {
     this.utils = new Utils(cookie, decoder, router);
@@ -27,6 +29,8 @@ export class TopicComponent {
     this.tags = [];
     this.tagsToSelect = [];
     this.api.getTags(this.utils.getJwtToken()).subscribe(res => this.tagsToSelect = this.utils.arrayFromAny(res));
+    this.recentTopics = true;
+    this.alphabetic = true;
   }
 
   search(): void {

@@ -6,4 +6,5 @@ export class Alerta extends BaseEntity {
     public usuarioId!: string;
     public topicoAlerta!: string;
     public topico?: Topico;
+    public atualizacao?: boolean;
 }

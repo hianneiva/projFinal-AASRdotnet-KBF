@@ -51,7 +51,7 @@ export class TopicoAlterarComponent {
     const usuario: TokenData = this.utils.getUserDataFromToken();
 
     topico.status = true;
-    topico.usuarioModificacao = usuario.given_name!;
+    topico.usuarioModificacao = usuario.name!;
     topico.dataModificacao = new Date();
 
     const token: string = this.utils.getJwtToken();
