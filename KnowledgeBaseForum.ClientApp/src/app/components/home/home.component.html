@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div *ngIf="alertsForUser.length > 0">
-                        <div class="card bg-info text-white mb-2" *ngFor="let alert of alertsForUser">
+                        <div class="card bg-success text-white mb-2" *ngFor="let alert of alertsForUser">
                             <div class="card-title pt-1 fs-5">
                                 <a class="fs-4 text-decoration-none text-light fw-semibold stretched-link" routerLink="topico/{{alert.topico!.id}}">
                                     {{alert.topico!.titulo}}

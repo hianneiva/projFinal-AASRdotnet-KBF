@@ -44,7 +44,7 @@ export class LoginComponent {
 
         if (response.result) {
           this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
-          this.cancelar(true);
+          this.cancelar();
         }
       },
       error => {
