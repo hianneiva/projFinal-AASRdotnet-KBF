@@ -28,6 +28,13 @@ export class HomeComponent {
     this.getRecentTopics();
   }
 
+  public dismissAllAlerts(): void {
+    const token: string = this.utils.getJwtToken();
+    this.api.postAlertasDismiss(token, this.userData.name!).subscribe(() =>{
+      window.location.reload();
+    });
+  }
+
   private getAlertsForUser(): void {
     const token: string = this.utils.getJwtToken();
     this.api.getAlertas(token, this.userData.name!).subscribe(res => {

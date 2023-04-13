@@ -36,10 +36,13 @@
                             {{textAlertTypes[entry.modoAlerta]}}
                         </td>
                         <td class="text-end">
-                            <button type="button" title="Alterar tipo de alerta" class="btn btn-outline-primary me-2" (click)="alterAlertType(entry.id)">
+                            <button type="button" title="Marcar notificação como lida" class="btn btn-info me-2" (click)="readAlert(entry.id)" *ngIf="entry.atualizacao">
+                                <i class="bi bi-bell-slash text-white font-bol"></i>
+                            </button>
+                            <button type="button" title="Alterar tipo de alerta" class="btn btn-primary me-2" (click)="alterAlertType(entry.id)">
                                 <i class="bi bi-repeat"></i>
                             </button>
-                            <button type="button" class="btn btn-outline-danger" title="Remover alerta" data-bs-toggle="modal" data-bs-target="#delModal" (click)="setIdToDel(entry.id)">
+                            <button type="button" class="btn btn-danger" title="Remover alerta" data-bs-toggle="modal" data-bs-target="#delModal" (click)="setIdToDel(entry.id)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>

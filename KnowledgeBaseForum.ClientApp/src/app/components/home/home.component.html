@@ -5,7 +5,19 @@
             <br>
             <div class="row mt-2" *ngIf="userData.result">
                 <div class="col-sm-6">
-                    <strong class="text-center fs-4">Alertas</strong>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <!-- Empty -->
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <strong class="text-center fs-4">Alertas</strong>
+                        </div>
+                        <div class="col-sm-3 text-end">
+                            <button class="btn btn-danger" *ngIf="alertsForUser.length > 0" (click)="dismissAllAlerts()">
+                                <i class="bi bi-bell-slash"></i>
+                            </button>
+                        </div>
+                    </div>
                     <hr />
                     <div class="card bg-secondary text-white" *ngIf="alertsForUser.length == 0">
                         <div class="card-title pt-1 fs-5">

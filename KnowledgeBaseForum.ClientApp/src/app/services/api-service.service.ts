@@ -99,8 +99,8 @@ export class ApiService {
   }
 
   // Put
-  public updateAlertas(token: string, id: string): Observable<Alerta> {
-    const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
+  public updateAlertas(token: string, id: string, toggle: boolean, dismiss: boolean): Observable<Alerta> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}?toggleMode=${toggle}&dismiss=${dismiss}`;
     return this.http.put<Alerta>(url, {}, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
@@ -108,6 +108,12 @@ export class ApiService {
   public deleteAlertas(token: string, id: string): Observable<Alerta> {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
     return this.http.delete<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post - Marca todos os alertas do usuário como lidos
+  public postAlertasDismiss(token: string, id: string): Observable<any> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
+    return this.http.post<any>(url, {}, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // TAGS
