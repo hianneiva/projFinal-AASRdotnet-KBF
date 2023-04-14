@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment.development';
+import { Buffer } from 'buffer';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -20,7 +21,7 @@ export class ApiService {
   // Login
   public login(username: string, password: string): Observable<LoginResponse> {
     const url: string = environment.urlApi + environment.urlAuthLogin;
-    const encodedPwd = `${btoa(password)}.${btoa(environment.cypher)}`;
+    const encodedPwd = `${Buffer.from(password).toString('base64')}.${Buffer.from(environment.cypher).toString('base64')}`;
     const jsonContent: LoginRequest = new LoginRequest(username, encodedPwd);
 
     return this.http.post<LoginResponse>(url, jsonContent);
@@ -33,7 +34,7 @@ export class ApiService {
     jsonContent.email = email;
     jsonContent.login = username;
     jsonContent.nome = name;
-    jsonContent.senha = `${btoa(password)}.${btoa(environment.cypher)}`;
+    jsonContent.senha = `${Buffer.from(password).toString('base64')}.${Buffer.from(environment.cypher).toString('base64')}`;
     return this.http.post<LoginResponse>(url, jsonContent);
   }
 
@@ -122,9 +123,19 @@ export class ApiService {
     return this.http.get<Tag[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
-  // Usuário Atual
+  // USUÁRIO
+  // Get current
   public usuarioAtual(token: string, userName: string): Observable<Usuario> {
     const url: string = `${environment.urlApi}${environment.urlUsuario}/${userName}`;
     return this.http.get<Usuario>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Update fields
+  public putUsuario(token: string, entry: Usuario, password: string): Observable<Usuario> {
+    const url: string = `${environment.urlApi}${environment.urlUsuario}`;
+    const currPwd = `${Buffer.from(password).toString('base64')}.${Buffer.from(environment.cypher).toString('base64')}`;
+    entry.senha = Buffer.from(entry.senha!).toString('base64');
+    const jsonData = {entry: entry, password: currPwd};
+    return this.http.put<Usuario>(url, jsonData, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 }
