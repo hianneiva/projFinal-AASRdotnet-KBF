@@ -35,7 +35,7 @@ export class LoginComponent {
       }, 5000);
 
       return;
-    }
+    }///////////
 
     this.api.login(this.username!, this.password!).subscribe(response => {
       this.alertActive = !response.result;

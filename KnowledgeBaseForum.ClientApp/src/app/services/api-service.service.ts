@@ -115,4 +115,18 @@ export class ApiService {
     const url: string = `${environment.urlApi}${environment.urlUsuario}/${userName}`;
     return this.http.get<Usuario>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
+
+  // Troca de Senha
+  public trocaSenha(token: string, usuario: Usuario): Observable<Usuario> {
+    const url: string = `${environment.urlApi}${environment.urlUsuario}`;
+    return this.http.put<Usuario>(url,usuario,{ headers: new HttpHeaders({ 'Authorization': `Bearer ${token}`})})
+  }
+
+  // Troca de E-Mail
+  public trocaEmail(token: string, usuario: Usuario): Observable<Usuario> {
+    const url: string = `${environment.urlApi}${environment.urlUsuario}`;
+    return this.http.put<Usuario>(url,usuario,{ headers: new HttpHeaders({ 'Authorization': `Bearer ${token}`})})
+  }
+
+
 }

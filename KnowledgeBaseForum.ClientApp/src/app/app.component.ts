@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TokenData } from './model/token-data';
 import { TokenDecodeService } from './services/token-decode.service';
 import { Utils } from './utils/utils';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { Utils } from './utils/utils';
 export class AppComponent {
   title = 'Fórum de Compartilhamento de Conhecimento';
   user?: TokenData;
+  formulario?: FormGroup;
 
   constructor(private cookie: CookieService, private decoder: TokenDecodeService, private _: Router) { }
 

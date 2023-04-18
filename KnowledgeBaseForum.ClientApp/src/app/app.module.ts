@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CookieService } from 'ngx-cookie-service';
@@ -24,6 +24,8 @@ import { TopicoListarComponent } from './components/topico-listar/topico-listar.
 import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
 import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
 import { TopicComponent } from './components/topic/topic.component';
+
+
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { TopicComponent } from './components/topic/topic.component';
     FormsModule,
     MomentModule,
     MarkdownModule.forRoot(),
-    NgSelectModule
+    NgSelectModule,
+    ReactiveFormsModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

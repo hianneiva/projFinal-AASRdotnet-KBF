@@ -5,50 +5,58 @@
         </div>
     </div>
     <hr />  
-
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <!-- Empty -->
     </div>
-        <div class="col-sm-3">
-          <label class="input-group-text">Nome:</label>
-          <input type="text" class="form-control text-center"  aria-label="Sizing example input" 
-                aria-describedby="inputGroup-sizing-default" placeholder="{{usuario.nome}}">
-          <br>
-          <label class="input-group-text">E-mail:</label>
-          <input type="text" class="form-control text-center"  aria-label="Sizing example input" 
-                aria-describedby="inputGroup-sizing-default" value="{{usuario.email}}">
-          <br>
+        <div class="col-sm-4">
           <label class="input-group-text">Login:</label>
           <input type="text" class="form-control text-center"  aria-label="Sizing example input" 
-                aria-describedby="inputGroup-sizing-default" placeholder="{{usuario.login}}">
+                aria-describedby="inputGroup-sizing-default"  value="{{login}}"
+                disabled="" readonly="">
           <br>
-
-          <label class="input-group-text">Senha:</label>
-          <input type="password" class="form-control text-center">
-            <br>
-        <label class="input-group-text">Confirmar Senha:</label>
-          <input type="password" class="form-control text-center" aria-label="Sizing example input" 
-              aria-describedby="inputGroup-sizing-default">
-        </div>
-
-        <div class="col-sm-3">
-          <label class="input-group-text">Data de Criação do Usuario:</label>
+          <label class="input-group-text">Nome:</label>
           <input type="text" class="form-control text-center"  aria-label="Sizing example input" 
-                aria-describedby="inputGroup-sizing-default" placeholder="{{usuario.dataCriacao}}">
+                aria-describedby="inputGroup-sizing-default" value="{{nome}}"
+                disabled="" readonly="">
           <br>
+          <label class="input-group-text">E-mail:</label>
+         <input formControlName="email" type="email" class="form-control text-center"  aria-label="Sizing example input" 
+                aria-describedby="inputGroup-sizing-default" value="{{email}}"> 
         </div>
-  </div>
-  <br>
-      <div class="row">
-        <div class="col">
+            <div class="col-sm-4">
+            <label class="input-group-text">Senha:</label>
+            <input id="senha" type="password" class="form-control text-center" [(ngModel)]="novaSenha" >
+          <br>
+            <label class="input-group-text">Confirmar Senha:</label>
+            <input type="password" class="form-control text-center" [(ngModel)]="confSenha">
+        </div> 
+  <br> 
+        <div class="col-sm-2">
           <!-- Empty -->
       </div>
-      <br>
-      <div class="col-sm-5">
-        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+      <br>  
+      <div class="row text-end">
+      <div class="col-sm-10">
+        <input type="button" class="btn btn-primary" (click)="putAtualUsuario(usuario)" value="Salvar"/>
       </div>
-  </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <!-- Empty -->
+      </div>
+        <div class="col-sm-4">
+          <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
+              {{successMsg}}
+          </div>
+          <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+              {{errorMsg}}
+          </div>
+          <br />
+      </div>
+      </div>
 </div>
 
 
