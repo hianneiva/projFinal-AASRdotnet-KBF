@@ -6,9 +6,6 @@ import { Usuario } from 'src/app/model/usuario';
 import { ApiService } from 'src/app/services/api-service.service';
 import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-
 
 
 
@@ -20,14 +17,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class UsuarioComponent {
 
 
-
 public usuario! : Usuario;
 private utils! : Utils;
 public successMsg? : string;
 public errorMsg? : string;
 public novaSenha? : string;
 public confSenha? : string;
-public email : Usuario["email"];
+public email? : string;
 public nome : Usuario["nome"];
 public login : Usuario["login"];
 
@@ -39,8 +35,6 @@ public login : Usuario["login"];
 
 
  }
-
-
  private getAtualUsuario() {
   const token: string = this.utils.getJwtToken();
   const userData: TokenData = this.utils.getUserDataFromToken();
@@ -57,27 +51,31 @@ public login : Usuario["login"];
   const token: string = this.utils.getJwtToken();
 
 
-  if(this.novaSenha != this.confSenha || this.utils.stringIsNullOrEmpty(this.novaSenha)
-    || this.utils.stringIsNullOrEmpty(this.confSenha) ){
-    this.errorMsg = "Falha ao atualizar cadastro!";
+  if(this.email === this.usuario.email && 
+    this.novaSenha != this.confSenha 
+    || this.utils.stringIsNullOrEmpty(this.novaSenha)
+    || this.utils.stringIsNullOrEmpty(this.confSenha) 
+    || this.utils.stringIsNullOrEmpty(this.email)){
+    this.errorMsg = "Falha ao atualizar cadastro.";
     setTimeout(() => this.errorMsg = undefined, 5000);
     return;
   }
 
   this.usuario.senha = btoa(this.novaSenha!);
+  this.usuario.email = this.email;
 
   this.api.trocaSenha(token,usuario).subscribe(res => {
     if(res === null || res === undefined){
       this.successMsg = undefined;
-      this.errorMsg = "Falha ao alterar a senha";
+      this.errorMsg = "Falha ao alterar o cadastro";
       setTimeout(() => this.errorMsg = undefined, 5000);
     }else{
-      this.successMsg = "Senha alterada com sucesso!";
+      this.successMsg = "Cadastro alterada com sucesso!";
       this.errorMsg = undefined;
       setTimeout(() => this.successMsg = undefined, 5000);  
       this.novaSenha = ""; 
       this.confSenha = "";
-      this.email = usuario.email;
+
 
     
     }
