@@ -26,6 +26,9 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet("{userId}")]
         public async Task<IEnumerable<Alerta>?> Read(string userId) => await dao.AllForUser(userId);
 
+        [HttpGet("{userId}/{topicId}")]
+        public async Task<Alerta?> Read(string userId, Guid topicId) => await dao.SingleForUser(userId, topicId);
+
         [HttpPost]
         public async Task<IActionResult> Create(Alerta entry)
         {

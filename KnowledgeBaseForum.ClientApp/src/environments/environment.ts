@@ -11,6 +11,7 @@ export const environment = {
     urlAlerta: "Alerta",
     urlAuthLogin: "Auth/login",
     urlAuthSignUp: "Auth/signup",
+    urlComentario: 'Comentario',
     urlTag: "Tag",
     urlTopico: "Topico",
     urlTopicoAutor: "fromAuthor",

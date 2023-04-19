@@ -25,7 +25,19 @@ namespace KnowledgeBaseForum.API.Controllers
         public async Task<IEnumerable<Topico>> ReadAll() => await dao.All();
 
         [HttpGet("{topico}")]
-        public async Task<Topico?> Read(Guid topico) => await dao.Get(topico);
+        public async Task<Topico?> Read(Guid topico)
+        {
+            Topico? found = await dao.Get(topico);
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            found!.Comentarios = found!.Comentarios?.Where(c => c.Status).OrderBy(c => c.DataCriacao);
+
+            return found;
+        }
 
         [HttpPost("search")]
         public async Task<IEnumerable<Topico>> Search(TopicoSearchRequest searchParams) => await dao.Search(searchParams.Filter,

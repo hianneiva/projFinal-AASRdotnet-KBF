@@ -27,6 +27,8 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
                                                                                                 .Include(a => a.Topico).ThenInclude(t => t!.TopicoTag)!.ThenInclude(tt => tt!.Tag)
                                                                                                 .ToListAsync();
 
+        public async Task<Alerta?> SingleForUser(string login, Guid topicId) => await context.Alertas.SingleOrDefaultAsync(a => a.UsuarioId.Equals(login) && a.TopicoId == topicId);
+
         public async Task Delete(Guid id)
         {
             Alerta? entry = await context.Alertas.SingleOrDefaultAsync(a => a.Id.Equals(id));

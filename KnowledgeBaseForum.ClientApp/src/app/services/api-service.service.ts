@@ -9,6 +9,7 @@ import { Usuario } from '../model/usuario';
 import { Alerta } from '../model/alerta';
 import { Topico } from '../model/topico';
 import { Tag } from '../model/tag';
+import { Comentario } from '../model/comentario';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,12 @@ export class ApiService {
     return this.http.get<Alerta[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
+  // Get single
+  public getAlerta(token: string, userId: string, topicId: string): Observable<Alerta> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}/${userId}/${topicId}`;
+    return this.http.get<Alerta>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
   // Put
   public updateAlertas(token: string, id: string, toggle: boolean, dismiss: boolean): Observable<Alerta> {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}?toggleMode=${toggle}&dismiss=${dismiss}`;
@@ -115,6 +122,12 @@ export class ApiService {
   public postAlertasDismiss(token: string, id: string): Observable<any> {
     const url: string = `${environment.urlApi}${environment.urlAlerta}/${id}`;
     return this.http.post<any>(url, {}, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post
+  public postAlerta(token: string, alerta: Alerta): Observable<Alerta> {
+    const url: string = `${environment.urlApi}${environment.urlAlerta}`;
+    return this.http.post<Alerta>(url, alerta, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // TAGS
@@ -137,5 +150,36 @@ export class ApiService {
     entry.senha = Buffer.from(entry.senha!).toString('base64');
     const jsonData = {entry: entry, password: currPwd};
     return this.http.put<Usuario>(url, jsonData, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // COMENTÁRIO
+  // Get all
+  public getAllComentarios(token: string, id: string): Observable<Comentario[]> {
+    const url: string = `${environment.urlApi}${environment.urlComentario}?topicId=${id}`;
+    return this.http.get<Comentario[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Get
+  public getComentario(token: string, id: string): Observable<Comentario[]> {
+    const url: string = `${environment.urlApi}${environment.urlComentario}?commentId=${id}`;
+    return this.http.get<Comentario[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post
+  public postComentario(token: string, comentario: Comentario): Observable<Comentario> {
+    const url: string = `${environment.urlApi}${environment.urlComentario}`;
+    return this.http.post<Comentario>(url, comentario, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Put
+  public putComentario(token: string, comentario: Comentario): Observable<Comentario> {
+    const url: string = `${environment.urlApi}${environment.urlComentario}`;
+    return this.http.put<Comentario>(url, comentario, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Delete
+  public deleteComentario(token: string, id: string) {
+    const url: string = `${environment.urlApi}${environment.urlComentario}/${id}`;
+    return this.http.delete(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 }

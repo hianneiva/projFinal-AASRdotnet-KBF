@@ -20,6 +20,12 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
 
         public async Task<IEnumerable<Comentario>> All() => await context.Comentarios.Include(c => c.Usuario).ToListAsync();
 
+        public async Task<IEnumerable<Comentario>> AllTopic(Guid id) => await context.Comentarios.Where(c => c.TopicoId == id && c.Status)
+                                                                                                 .Include(c => c.Usuario)
+                                                                                                 .ToListAsync();
+
+        public async Task<Comentario?> Get(Guid id) => await context.Comentarios.SingleOrDefaultAsync(cmt => cmt.Id.Equals(id));
+
         public async Task Delete(Guid id)
         {
             Comentario? entry = await context.Comentarios.Include(c => c.Usuario).SingleOrDefaultAsync(cmt => cmt.Id.Equals(id));
@@ -35,8 +41,6 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
             context.Comentarios.Remove(entity);
             await context.SaveChangesAsync();
         }
-
-        public async Task<Comentario?> Get(Guid id) => await context.Comentarios.SingleOrDefaultAsync(cmt => cmt.Id.Equals(id));
 
         public async Task Update(Comentario entity)
         {

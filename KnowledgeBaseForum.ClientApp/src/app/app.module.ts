@@ -24,6 +24,7 @@ import { TopicoListarComponent } from './components/topico-listar/topico-listar.
 import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
 import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
 import { TopicComponent } from './components/topic/topic.component';
+import { TopicoLeituraComponent } from './components/topico-leitura/topico-leitura.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { TopicComponent } from './components/topic/topic.component';
     UsuarioComponent,
     AlertaComponent,
     TopicoNovoComponent,
-    TopicoAlterarComponent
+    TopicoAlterarComponent,
+    TopicoLeituraComponent
   ],
   imports: [
     BrowserModule,

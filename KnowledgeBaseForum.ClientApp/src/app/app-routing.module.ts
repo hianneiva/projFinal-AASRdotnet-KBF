@@ -12,6 +12,7 @@ import { TopicComponent } from './components/topic/topic.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { TopicoListarComponent } from './components/topico-listar/topico-listar.component';
+import { TopicoLeituraComponent } from './components/topico-leitura/topico-leitura.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   //{ path: 'testMark', component: MarkdownEditComponent },
   { path: 'usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
   { path: 'topico', component: TopicComponent, canActivate: [AuthGuard] },
+  { path: 'topico/:id', component: TopicoLeituraComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-usuario', component: TopicoListarComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-novo', component: TopicoNovoComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-alterar', component: TopicoAlterarComponent, canActivate: [AuthGuard] },
