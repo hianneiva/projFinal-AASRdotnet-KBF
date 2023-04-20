@@ -131,9 +131,16 @@ export class ApiService {
   }
 
   // TAGS
+  // Get
   public getTags(token: string): Observable<Tag[]> {
     const url: string = environment.urlApi + environment.urlTag;
     return this.http.get<Tag[]>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Post
+  public postTag(token: string, tag: Tag): Observable<Tag[]> {
+    const url: string = environment.urlApi + environment.urlTag;
+    return this.http.post<Tag[]>(url, tag, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
   }
 
   // USUÁRIO
@@ -181,5 +188,18 @@ export class ApiService {
   public deleteComentario(token: string, id: string) {
     const url: string = `${environment.urlApi}${environment.urlComentario}/${id}`;
     return this.http.delete(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });
+  }
+
+  // Relationals - Topic/Tag
+  // Post
+  public postTT(token: string, tagId: string, topicId: string): Observable<boolean> {
+    const url: string = `${environment.urlApi}${environment.urlTopicoTag}?tagId=${tagId}&topicId=${topicId}`;
+    return this.http.post<boolean>(url, {}, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });    
+  }
+
+  // Delete
+  public deleteTT(token: string, tagId: string, topicId: string): Observable<boolean> {
+    const url: string = `${environment.urlApi}${environment.urlTopicoTag}?tagId=${tagId}&topicId=${topicId}`;
+    return this.http.delete<boolean>(url, { headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }) });    
   }
 }

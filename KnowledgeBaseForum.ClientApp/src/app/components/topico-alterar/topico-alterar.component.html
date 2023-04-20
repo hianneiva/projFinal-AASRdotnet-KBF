@@ -1,4 +1,4 @@
-<div class="default-spacing" *ngFor="let entry of topico">
+<div class="default-spacing">
     <div class="row">
         <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
             {{successMsg}}
@@ -9,16 +9,30 @@
         <br />
     </div>
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-5">
             <div class="form-group">
                 <label class="control-label">Titulo</label>
-                <input name="titulo" id="titulo" class="form-control" type="text" [(ngModel)]="entry.titulo" />
+                <input name="titulo" id="titulo" class="form-control" type="text" [(ngModel)]="topico!.titulo" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label class="control-label">Tags</label>
+            <ng-select [multiple]="true" [(ngModel)]="selectedTags">
+                <ng-option *ngFor="let tag of tagsSelect" [value]="tag.id">{{tag.descricao}}</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Nova Tag</label>
+            <div class="text-center">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTag" title="Nova Tag">
+                    <i class="bi bi-bookmark-plus"></i>
+                </button>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
                 <label class="control-label">Estado do tópico</label>
-                <select class="form-select" [(ngModel)]="entry.tipoAcesso">
+                <select class="form-select" [(ngModel)]="topico!.tipoAcesso">
                     <option value="0">Em edição</option>
                     <option value="1">Finalizado</option>
                 </select>
@@ -29,11 +43,11 @@
     <div class="row">
         <div class="col-sm-6"> <!-- Editor -->
             <label class="form-label">Editor</label>
-            <textarea class="form-control" [(ngModel)]="entry.conteudo" rows="22"></textarea>
+            <textarea class="form-control" [(ngModel)]="topico!.conteudo" rows="22"></textarea>
         </div>
         <div class="col-sm-6 border-start"> <!-- Renderer -->
-            <markdown [data]="entry.conteudo" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard>
-                <span class="text-secondary" *ngIf="entry.conteudo == '' || entry.conteudo == undefined || entry.conteudo == null">
+            <markdown [data]="topico!.conteudo" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard>
+                <span class="text-secondary" *ngIf="topico!.conteudo == '' || topico!.conteudo == undefined || topico!.conteudo == null">
                     <em>Escreva seu texto no espaço ao lado.</em>
                 </span>
             </markdown>
@@ -42,6 +56,29 @@
     <br />
     <div class="text-end">
         <a class="btn btn-secondary me-2" (click)="cancelar()">Voltar</a>
-        <input type="button" class="btn btn-primary" (click)="alterarTopico(entry)" value="Salvar" />
+        <input type="button" class="btn btn-primary" (click)="alterarTopico(topico!)" value="Salvar" />
+    </div>
+</div>
+
+<!-- Modal: Tag creation -->
+<div class="modal" tabindex="-1" id="modalTag" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Nova Tag</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="control-label">Nome</label>
+                        <input name="tagName" id="tagName" class="form-control" type="text" [(ngModel)]="tagNameToAdd" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" (click)="cancelTagCreation()">Cancelar</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button" (click)="addTag()">Adicionar</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 ﻿using KnowledgeBaseForum.API.Model;
 using KnowledgeBaseForum.API.Utils;
 using KnowledgeBaseForum.DataAccessLayer.Model;
+using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
 using Microsoft.AspNetCore.Authorization;

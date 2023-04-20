@@ -17,5 +17,6 @@ export const environment = {
     urlTopicoAutor: "fromAuthor",
     urlTopicoRecent: "recent",
     urlTopicoSearch: "search",
+    urlTopicoTag: "Relational/topicoTag",
     urlUsuario: "Usuario"
 };

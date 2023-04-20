@@ -1,6 +1,28 @@
 <div class="default-spacing">
     <div class="row">
-        <div class="col-sm-12 text-end mb-2">
+        <div class="col-sm-12 mb-2">
+            <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
+                {{successMsg}}
+            </div>
+            <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+                {{errorMsg}}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-10">
+            <h1>{{currentTopic?.titulo}}</h1>
+        </div>
+        <div class="col-sm-2 text-end mb-2">
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 0">
+                Estado: <em>WIP</em>
+            </span>
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 1">
+                Estado: <em>Publicado</em>
+            </span>
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 2">
+                Estado: <em>Finalizado</em>
+            </span>
             <button class="btn btn-primary" *ngIf="alertFortopic == null || alertFortopic == undefined" (click)="createAlert()">
                 <i class="bi bi-bell"></i>
             </button>
@@ -8,14 +30,16 @@
                 <i class="bi bi-bell-slash"></i>
             </button>
         </div>
-        <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
-            {{successMsg}}
-        </div>
-        <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
-            {{errorMsg}}
-        </div>
-        <br />
     </div>
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h4>Por {{currentTopic?.usuario?.nome}}</h4>
+        </div>
+        <div class="col-sm-6 text-end">
+            <span class="badge bg-dark ms-2" *ngFor="let tt of currentTopic?.topicoTag">{{tt.tag.descricao}}</span>
+        </div>
+    </div>
+    <hr />
     <div class="row">
         <div class="col-sm-12">
             <markdown [data]="currentTopic?.conteudo" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard></markdown>
