@@ -1,0 +1,99 @@
+<div class="default-spacing">
+    <div class="row">
+        <div class="col-sm-12 mb-2">
+            <div class="alert alert-success" *ngIf="successMsg !== null && successMsg !== undefined">
+                {{successMsg}}
+            </div>
+            <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+                {{errorMsg}}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-10">
+            <h1>{{currentTopic?.titulo}}</h1>
+        </div>
+        <div class="col-sm-2 text-end mb-2">
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 0">
+                Estado: <em>WIP</em>
+            </span>
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 1">
+                Estado: <em>Publicado</em>
+            </span>
+            <span class="me-4" *ngIf="currentTopic?.tipoAcesso == 2">
+                Estado: <em>Finalizado</em>
+            </span>
+            <button class="btn btn-primary" *ngIf="alertFortopic == null || alertFortopic == undefined" (click)="createAlert()">
+                <i class="bi bi-bell"></i>
+            </button>
+            <button class="btn btn-danger" *ngIf="alertFortopic != null || alertFortopic != undefined" (click)="deleteAlert()">
+                <i class="bi bi-bell-slash"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h4>Por {{currentTopic?.usuario?.nome}}</h4>
+        </div>
+        <div class="col-sm-6 text-end">
+            <span class="badge bg-dark ms-2" *ngFor="let tt of currentTopic?.topicoTag">{{tt.tag.descricao}}</span>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-12">
+            <markdown [data]="currentTopic?.conteudo" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard></markdown>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-2">
+            <!-- Empty space -->
+        </div>
+        <div class="col-sm-8">
+            <label for="comment" class="form-group">Comentário</label>
+            <textarea id="comment" name="comment" class="form-control mb-2" [(ngModel)]="comment"></textarea>
+            <div class="text-end">
+                <span *ngIf="!editMode">
+                    <button class="btn btn-primary" (click)="addComment()">Comentar</button>
+                </span>
+                <span *ngIf="editMode">
+                    <button class="btn btn-secondary me-2" (click)="cancelEdit()">Cancelar</button>
+                    <button class="btn btn-primary" (click)="applyEdit()">Alterar</button>
+                </span>
+            </div>
+            <hr />
+            <h5 class="text-muted text-center" *ngIf="currentTopic?.comentarios?.length == 0">
+                Não há comentários para esse tópico
+            </h5>
+            <div class="card bg-info mb-2" *ngFor="let cmt of currentTopic?.comentarios">
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <strong>{{cmt.usuario.nome}}</strong>
+                            </div>
+                            <div class="col-sm-4 text-end">
+                                <span *ngIf="cmt.usuarioId == userId">
+                                    <button class="btn btn-sm btn-transparent me-2" (click)="editComment(cmt.id)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-transparent me-2" (click)="deleteComentario(cmt.id)">
+                                        <i class="bi bi-eraser"></i>
+                                    </button>
+                                </span>
+                                {{formattedDate(cmt.dataCriacao)}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        {{cmt.conteudo}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <!-- Empty space -->
+        </div>
+    </div>
+</div>

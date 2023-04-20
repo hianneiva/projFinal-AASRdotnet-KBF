@@ -3,9 +3,78 @@
         <div class="col-sm-12 text-center align-middle align-items-center justify-content-center">
             <h1>Bem vindo ao Fórum de Compartilhamento de Conhecimento</h1>
             <br>
-            <!--
-                <h2>{{personalizedMessage}}</h2>
-            -->
+            <div class="row mt-2" *ngIf="userData.result">
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <!-- Empty -->
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <strong class="text-center fs-4">Alertas</strong>
+                        </div>
+                        <div class="col-sm-3 text-end">
+                            <button class="btn btn-danger" *ngIf="alertsForUser.length > 0" (click)="dismissAllAlerts()">
+                                <i class="bi bi-bell-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="card bg-secondary text-white" *ngIf="alertsForUser.length == 0">
+                        <div class="card-title pt-1 fs-5">
+                            Não houve atualizações recentes em tópicos acompanhados
+                        </div>
+                    </div>
+                    <div *ngIf="alertsForUser.length > 0">
+                        <div class="card bg-success text-white mb-2" *ngFor="let alert of alertsForUser">
+                            <div class="card-title pt-1 fs-5">
+                                <a class="fs-4 text-decoration-none text-light fw-semibold stretched-link" routerLink="topico/topico-leitura/{{alert.topico!.id}}">
+                                    {{alert.topico!.titulo}}
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <small><strong>Autor:</strong> {{alert.topico!.usuario.nome}}</small>
+                                        </div>
+                                        <div class="col-sm-6 text-end">
+                                            <span class="badge bg-dark ms-2" *ngFor="let tt of alert.topico!.topicoTag">{{tt.tag.descricao}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <strong class="text-center fs-4">Tópicos recentes</strong>
+                    <hr />
+                    <div class="card bg-secondary text-white" *ngIf="newestTopics.length == 0">
+                        <div class="card-title pt-1 fs-5">
+                            Não foram encontrados tópicos recentes
+                        </div>
+                    </div>
+                    <div *ngIf="newestTopics.length > 0">
+                        <div class="card bg-primary text-white mb-2" *ngFor="let topic of newestTopics">
+                            <div class="card-title pt-1 fs-5">
+                                <a class="fs-4 text-decoration-none text-light fw-semibold stretched-link" routerLink="topico/topico-leitura/{{topic!.id}}">
+                                    {{topic!.titulo}}
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <small><strong>Autor:</strong> {{topic.usuario.nome}}</small>
+                                    </div>
+                                    <div class="col-sm-6 text-end">
+                                        <span class="badge bg-dark ms-2" *ngFor="let tt of topic.topicoTag">{{tt.tag.descricao}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

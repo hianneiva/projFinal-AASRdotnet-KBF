@@ -55,18 +55,18 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary mr-2">
-                        Editar
+                        <i class="bi bi-pencil-square"></i> Editar
                     </a>
                     @if (item.Status)
                     {
                         <button id="altActivateBtn" class="btn btn-sm btn-outline-danger" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                            Desativar
+                            <i class="bi bi-x-circle"></i> Desativar
                         </button>
                     }
                     else
                     {
                         <button id="altActivateBtn" class="btn btn-sm btn-outline-success" onclick="activationToggle('@(item.Id)', @(item.Status.ToString().ToLower()))">
-                            Ativar
+                            <i class="bi bi-check-circle"></i> Ativar
                         </button>
                     }
                 </td>

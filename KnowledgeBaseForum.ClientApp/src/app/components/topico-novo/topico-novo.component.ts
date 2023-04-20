@@ -7,6 +7,8 @@ import { ApiService } from 'src/app/services/api-service.service';
 import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
 import { MarkdownService } from 'ngx-markdown';
+import { Tag } from 'src/app/model/tag';
+import { TopicoTag } from 'src/app/model/topico-tag';
 
 @Component({
   selector: 'app-topico-novo',
@@ -14,20 +16,24 @@ import { MarkdownService } from 'ngx-markdown';
   styleUrls: ['./topico-novo.component.css']
 })
 export class TopicoNovoComponent {
-
   private utils: Utils;
-  public markdownContent?: string;
-
   public textAlertTypes = ["Padrão", "Apenas notificação"];
   public errorMsg?: string;
+  public markdownContent?: string;
   public successMsg?: string;
-  topico: Topico = new Topico();
+  public tagNameToAdd?: string;
+  public selectedTags: string[];
+  public tagsSelect?: Tag[];
+  public topico: Topico = new Topico();
 
-  constructor(private api: ApiService, private cookie: CookieService, private router: Router, decoder: TokenDecodeService, private markdown: MarkdownService) {
+  constructor(private api: ApiService, cookie: CookieService, private router: Router, private decoder: TokenDecodeService, private markdown: MarkdownService) {
     this.utils = new Utils(cookie, decoder, router);
+    this.topico.tipoAcesso = 0;
+    this.getTags();
+    this.selectedTags = [];
   }
   
-  public cadastrarTopico(topico:Topico):void{
+  public cadastrarTopico(topico:Topico): void{
     
     if (this.utils.stringIsNullOrEmpty(topico.titulo) || this.utils.stringIsNullOrEmpty(topico.conteudo)) {
       return;
@@ -37,7 +43,7 @@ export class TopicoNovoComponent {
     
     topico.status = true;
     topico.usuarioId = usuario.name!;
-    topico.usuarioCriacao = usuario.given_name!;
+    topico.usuarioCriacao = usuario.name!;
     topico.dataCriacao = new Date();
 
     const token: string = this.utils.getJwtToken();
@@ -50,7 +56,19 @@ export class TopicoNovoComponent {
       } else {
         this.successMsg = "Topico cadastrado com sucesso";
         this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
+        const topicId = res.id;
+
+        for (let i = 0; i < this.selectedTags.length; i++) {
+          this.api.postTT(token, this.selectedTags[i], topicId).subscribe(res => {
+            if(res == true){
+              console.log("Tag registered");
+            } else {
+              console.log("Failure registering tag");
+            }
+          });
+        }
+        
+        setTimeout(() => this.cancelar(), 2500);
       }
     });
   }
@@ -68,4 +86,42 @@ export class TopicoNovoComponent {
     this.markdown.reload();
   }
 
+  public cancelTagCreation(): void {
+    this.tagNameToAdd = undefined;
+  }
+
+  public addTag(): void {
+    if (this.utils.stringIsNullOrEmpty(this.tagNameToAdd)) {
+      this.successMsg = undefined;
+      this.errorMsg = "Nova tag deve ter conteúdo";
+      setTimeout(() => this.errorMsg = undefined, 5000);
+      return;
+    }
+
+    let tag: Tag = new Tag();
+    tag.dataCriacao = new Date();
+    tag.descricao = this.tagNameToAdd!;
+    tag.usuarioCriacao = this.utils.getUserDataFromToken().name!;
+    const token: string = this.utils.getJwtToken();
+    this.api.postTag(token, tag).subscribe(res => {
+      if (res) {
+        this.successMsg = "Tag criada com sucesso";
+        this.errorMsg = undefined;
+        setTimeout(() => this.successMsg = undefined, 5000);
+        this.cancelTagCreation();
+        this.getTags();
+      } else {
+        this.successMsg = undefined;
+        this.errorMsg = "Falha ao criar nova tag";
+        setTimeout(() => this.errorMsg = undefined, 5000);
+      }
+    });
+  }
+
+  private getTags(): void {
+    const token = this.utils.getJwtToken();
+    this.api.getTags(token).subscribe(res => {
+      this.tagsSelect = res;
+    });
+  }
 }

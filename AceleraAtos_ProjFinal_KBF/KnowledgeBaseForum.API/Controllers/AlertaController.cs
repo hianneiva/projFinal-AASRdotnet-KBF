@@ -26,6 +26,9 @@ namespace KnowledgeBaseForum.API.Controllers
         [HttpGet("{userId}")]
         public async Task<IEnumerable<Alerta>?> Read(string userId) => await dao.AllForUser(userId);
 
+        [HttpGet("{userId}/{topicId}")]
+        public async Task<Alerta?> Read(string userId, Guid topicId) => await dao.SingleForUser(userId, topicId);
+
         [HttpPost]
         public async Task<IActionResult> Create(Alerta entry)
         {
@@ -40,8 +43,29 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> DismissForUser(string userId)
+        {
+            try
+            {
+                IEnumerable<Alerta> alerts = await dao.AllForUser(userId);
+
+                foreach (Alerta entry in alerts)
+                {
+                    entry.Atualizacao = false;
+                    await dao.Update(entry);
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id)
+        public async Task<IActionResult> Update(Guid id, bool toggleMode, bool dismiss)
         {
             try
             {
@@ -52,7 +76,13 @@ namespace KnowledgeBaseForum.API.Controllers
                     throw new KeyNotFoundException(Constants.ENTITY_NOT_FOUND_IN_DB);
                 }
 
-                entry.ModoAlerta = entry.ModoAlerta < 1 ? 1 : 0;
+                entry.ModoAlerta = (toggleMode && entry.ModoAlerta < 1) ? 1 : 0;
+
+                if (dismiss)
+                {
+                    entry.Atualizacao = false;
+                }
+
                 await dao.Update(entry);
                 return Ok(entry);
             }

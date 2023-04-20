@@ -1,6 +1,7 @@
 ﻿using KnowledgeBaseForum.API.Model;
 using KnowledgeBaseForum.API.Utils;
 using KnowledgeBaseForum.DataAccessLayer.Model;
+using KnowledgeBaseForum.DataAccessLayer.Model.AssociationModel;
 using KnowledgeBaseForum.DataAccessLayer.Repository;
 using KnowledgeBaseForum.DataAccessLayer.Repository.Impl;
 using Microsoft.AspNetCore.Authorization;
@@ -25,15 +26,32 @@ namespace KnowledgeBaseForum.API.Controllers
         public async Task<IEnumerable<Topico>> ReadAll() => await dao.All();
 
         [HttpGet("{topico}")]
-        public async Task<Topico?> Read(Guid topico) => await dao.Get(topico);
+        public async Task<Topico?> Read(Guid topico)
+        {
+            Topico? found = await dao.Get(topico);
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            found!.Comentarios = found!.Comentarios?.Where(c => c.Status).OrderBy(c => c.DataCriacao);
+
+            return found;
+        }
 
         [HttpPost("search")]
         public async Task<IEnumerable<Topico>> Search(TopicoSearchRequest searchParams) => await dao.Search(searchParams.Filter,
                                                                                                             searchParams.Author,
-                                                                                                            searchParams.Tags ?? new List<string>());
+                                                                                                            searchParams.Tags ?? new List<string>(),
+                                                                                                            searchParams.Recent,
+                                                                                                            searchParams.Alphabetic);
 
         [HttpGet("fromAuthor")]
         public async Task<IEnumerable<Topico>> FromAuthor(string login) => await dao.FromAuthor(login);
+
+        [HttpGet("recent")]
+        public async Task<IEnumerable<Topico>> Recent() => await dao.Recent();
 
         [HttpPost]
         public async Task<IActionResult> Create(Topico entry)

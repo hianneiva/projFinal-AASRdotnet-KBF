@@ -11,9 +11,12 @@ export const environment = {
     urlAlerta: "Alerta",
     urlAuthLogin: "Auth/login",
     urlAuthSignUp: "Auth/signup",
+    urlComentario: 'Comentario',
     urlTag: "Tag",
     urlTopico: "Topico",
-    urlTopicoSearch: "search",
     urlTopicoAutor: "fromAuthor",
+    urlTopicoRecent: "recent",
+    urlTopicoSearch: "search",
+    urlTopicoTag: "Relational/topicoTag",
     urlUsuario: "Usuario"
 };

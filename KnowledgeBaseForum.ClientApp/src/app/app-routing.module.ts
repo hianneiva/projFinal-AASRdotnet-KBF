@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TopicoComponent } from './components/topico/topico.component';
 import { TopicoNovoComponent } from './components/topico-novo/topico-novo.component';
 import { TopicoAlterarComponent } from './components/topico-alterar/topico-alterar.component';
 import { AlertaComponent } from './components/alerta/alerta.component';
@@ -12,6 +11,7 @@ import { TopicComponent } from './components/topic/topic.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UsuarioComponent } from './components/usuario/usuario.component';
 import { TopicoListarComponent } from './components/topico-listar/topico-listar.component';
+import { TopicoLeituraComponent } from './components/topico-leitura/topico-leitura.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +21,7 @@ const routes: Routes = [
   //{ path: 'testMark', component: MarkdownEditComponent },
   { path: 'usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
   { path: 'topico', component: TopicComponent, canActivate: [AuthGuard] },
+  { path: 'topico/topico-leitura/:id', component: TopicoLeituraComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-usuario', component: TopicoListarComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-novo', component: TopicoNovoComponent, canActivate: [AuthGuard] },
   { path: 'topico/topico-alterar', component: TopicoAlterarComponent, canActivate: [AuthGuard] },

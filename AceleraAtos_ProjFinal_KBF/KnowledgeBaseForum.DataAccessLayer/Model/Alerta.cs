@@ -13,6 +13,11 @@
         public string UsuarioId { get; set; } = null!;
 
         /// <summary>
+        /// Whether there is an update or not.
+        /// </summary>
+        public bool Atualizacao { get; set; }
+
+        /// <summary>
         /// Topic Id.
         /// </summary>
         public Guid TopicoId { get; set; }

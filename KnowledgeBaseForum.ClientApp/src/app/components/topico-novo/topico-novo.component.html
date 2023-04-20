@@ -8,10 +8,36 @@
         </div>
         <br />
     </div>
-
-    <div class="form-group">
-        <label class="control-label">Titulo</label>
-        <input name="titulo" id="titulo" class="form-control" type="text" [(ngModel)]="topico.titulo" />
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="form-group">
+                <label class="control-label">Titulo</label>
+                <input name="titulo" id="titulo" class="form-control" type="text" [(ngModel)]="topico.titulo" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label class="control-label">Tags</label>
+            <ng-select [multiple]="true" [(ngModel)]="selectedTags">
+                <ng-option *ngFor="let tag of tagsSelect" [value]="tag.id">{{tag.descricao}}</ng-option>
+            </ng-select>            
+        </div>
+        <div class="col-sm-1">
+            <label class="control-label">Nova Tag</label>
+            <div class="text-center">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTag" title="Nova Tag">
+                    <i class="bi bi-bookmark-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label">Estado do tópico</label>
+                <select class="form-select" [(ngModel)]="topico.tipoAcesso">
+                    <option value="0">Em edição</option>
+                    <option value="1">Finalizado</option>
+                </select>
+            </div>
+        </div>
     </div>
     <br />
     <div class="row">
@@ -19,22 +45,40 @@
             <label class="form-label">Editor</label>
             <textarea class="form-control" [(ngModel)]="topico.conteudo" rows="20"></textarea>
         </div>
-        <div class="col-sm-6"> <!-- Renderer -->
-            <markdown [data]="topico.conteudo" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers
-                lineHighlight emoji clipboard></markdown>
+        <div class="col-sm-6 border-start"> <!-- Renderer -->
+            <markdown [data]="topico.conteudo" (keydown)="updateMarkdown()" ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard>
+                <span class="text-secondary" *ngIf="topico.conteudo == '' || topico.conteudo == undefined || topico.conteudo == null">
+                    <em>Escreva seu texto no espaço ao lado.</em>
+                </span>
+            </markdown>
         </div>
-    </div>
-    <br />
-    <div class="form-group">
-        <select class="form-select" [(ngModel)]="topico.tipoAcesso">
-            <option selected>Tipo de Acesso</option>
-            <option value="0">Em edição</option>
-            <option value="1">Finalizado</option>
-        </select>
     </div>
     <br />
     <div class="text-end">
         <a class="btn btn-secondary me-2" (click)="cancelar()">Voltar</a>
         <input type="button" class="btn btn-primary" (click)="cadastrarTopico(topico)" value="Cadastar" />
+    </div>
+</div>
+
+<!-- Modal: Tag creation -->
+<div class="modal" tabindex="-1" id="modalTag" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Nova Tag</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="control-label">Nome</label>
+                        <input name="tagName" id="tagName" class="form-control" type="text" [(ngModel)]="tagNameToAdd" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary me-2" data-bs-dismiss="modal" type="button" (click)="cancelTagCreation()">Cancelar</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" type="button" (click)="addTag()">Adicionar</button>
+            </div>
+        </div>
     </div>
 </div>

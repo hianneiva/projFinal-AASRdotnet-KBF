@@ -22,7 +22,12 @@ namespace KnowledgeBaseForum.DataAccessLayer.Repository.Impl
         public async Task<IEnumerable<Alerta>> All() => throw new NotImplementedException();
 #pragma warning restore CS1998 // Unused
 
-        public async Task<IEnumerable<Alerta>> AllForUser(string login) => await context.Alertas.Where(a => a.UsuarioId.Equals(login)).Include(a => a.Topico).ToListAsync();
+        public async Task<IEnumerable<Alerta>> AllForUser(string login) => await context.Alertas.Where(a => a.UsuarioId.Equals(login))
+                                                                                                .Include(a => a.Topico).ThenInclude(t => t!.Usuario)
+                                                                                                .Include(a => a.Topico).ThenInclude(t => t!.TopicoTag)!.ThenInclude(tt => tt!.Tag)
+                                                                                                .ToListAsync();
+
+        public async Task<Alerta?> SingleForUser(string login, Guid topicId) => await context.Alertas.SingleOrDefaultAsync(a => a.UsuarioId.Equals(login) && a.TopicoId == topicId);
 
         public async Task Delete(Guid id)
         {

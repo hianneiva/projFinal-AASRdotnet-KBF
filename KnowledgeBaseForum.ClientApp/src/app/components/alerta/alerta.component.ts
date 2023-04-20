@@ -35,7 +35,7 @@ export class AlertaComponent {
   public alterAlertType(idToUpdate: string) {
     const token: string = this.utils.getJwtToken();
 
-    this.api.updateAlertas(token, idToUpdate).subscribe(res => {
+    this.api.updateAlertas(token, idToUpdate, true, false).subscribe(res => {
       if (res === null || res === undefined) {
         this.successMsg = undefined;
         this.errorMsg = "Falha na atualização do tipo de alerta";
@@ -43,6 +43,23 @@ export class AlertaComponent {
       } else {
         this.getAllAlerts();
         this.successMsg = "Alerta alterado com sucesso";
+        this.errorMsg = undefined;
+        setTimeout(() => this.successMsg = undefined, 5000);
+      }
+    });
+  }
+
+  public readAlert(idToUpdate: string) {
+    const token: string = this.utils.getJwtToken();
+
+    this.api.updateAlertas(token, idToUpdate, false, true).subscribe(res => {
+      if (res === null || res === undefined) {
+        this.successMsg = undefined;
+        this.errorMsg = "Falha ao marcar alerta como lido";
+        setTimeout(() => this.errorMsg = undefined, 5000);
+      } else {
+        this.getAllAlerts();
+        this.successMsg = "Alerta lido";
         this.errorMsg = undefined;
         setTimeout(() => this.successMsg = undefined, 5000);
       }

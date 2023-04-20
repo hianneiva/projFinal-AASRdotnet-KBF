@@ -21,10 +21,22 @@ namespace KnowledgeBaseForum.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Comentario>> ReadAll() => await dao.All();
-
-        [HttpGet("{id}")]
-        public async Task<Comentario?> Read(Guid id) => await dao.Get(id);
+        public async Task<IEnumerable<Comentario?>> Read(Guid? commentId, Guid? topicId)
+        {
+            if (commentId == null && topicId == null)
+            {
+                return new List<Comentario>();
+            }
+            else if (topicId != null)
+            {
+                return await dao.AllTopic(topicId.GetValueOrDefault());
+            }
+            else
+            {
+                Comentario? found = await dao.Get(commentId.GetValueOrDefault());
+                return found == null ? new List<Comentario>() : new List<Comentario>() { found! };
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(Comentario entry)

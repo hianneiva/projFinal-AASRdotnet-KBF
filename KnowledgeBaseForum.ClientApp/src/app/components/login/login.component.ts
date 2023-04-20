@@ -37,15 +37,26 @@ export class LoginComponent {
       return;
     }
 
-    this.api.login(this.username!, this.password!).subscribe(response => {
-      this.alertActive = !response.result;
-      this.alertMsg = !response.result ? '' : response.message!;
+    this.api.login(this.username!, this.password!).subscribe(
+      response => {
+        this.alertActive = !response.result;
+        this.alertMsg = !response.result ? '' : response.message!;
 
-      if (response.result) {
-        this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
-        this.cancelar(true);
+        if (response.result) {
+          this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
+          this.cancelar();
+        }
+      },
+      error => {
+        this.alertMsg = error.error.message;
+        this.alertActive = true;
+
+        setTimeout(() => {
+          this.alertActive = false;
+          this.alertMsg = '';
+        }, 5000);
       }
-    });
+    );
   }
 
   public cancelar(reload: boolean = false): void {
