@@ -7,7 +7,7 @@ export const environment = {
     secret: "*F-JaNdRgUkXp2r5u8x/A?D(G+KbPeSh\"",
 
     // API settings
-    urlApi: "https://localhost:7294/api/",
+    urlApi: "http://localhost:8081/api/",
     urlAlerta: "Alerta",
     urlAuthLogin: "Auth/login",
     urlAuthSignUp: "Auth/signup",
