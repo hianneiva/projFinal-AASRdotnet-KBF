@@ -96,6 +96,25 @@ namespace KnowledgeBaseForum.AdminWebApp.Utils
         }
 
         /// <summary>
+        /// Makes a PATCH request to the target host.
+        /// </summary>
+        /// <param name="requestUrl">Complementary URL address (sub-directory).</param>
+        /// <param name="requestContent">The content to be sent in the request.</param>
+        /// <returns>The parsed content as the expected object.</returns>
+        public async Task<T?> Patch(string requestUrl, U requestContent)
+        {
+            HttpContent httpReqContent = PrepareRequestContent(requestContent);
+            HttpResponseMessage response = await client.PatchAsync(requestUrl, httpReqContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await ContextualizedExceptionGenerator(response);
+            }
+
+            return await ParseResponseContext(response);
+        }
+
+        /// <summary>
         /// Makes a DELETE request to the target host.
         /// </summary>
         /// <param name="requestUrl">Complementary URL address (sub-directory).</param>

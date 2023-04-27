@@ -69,8 +69,8 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 string? token = this.Request.Cookies.GetTokenFromCookies();
-                HttpHelper<UsuarioViewModel, UsuarioViewModel> httpPutter = new HttpHelper<UsuarioViewModel, UsuarioViewModel>(factory, options.ApiHost, token);
-                UsuarioViewModel? editedUsuario = await httpPutter.Put(options.ApiUsuario, usuario);
+                HttpHelper<UsuarioViewModel, object> httpHelper = new HttpHelper<UsuarioViewModel, object>(factory, options.ApiHost, token);
+                UsuarioViewModel? editedUsuario = await httpHelper.Patch(options.ApiUsuario, usuario);
 
                 return RedirectToAction("Index");
             }

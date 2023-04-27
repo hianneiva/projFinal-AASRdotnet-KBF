@@ -82,6 +82,37 @@ namespace KnowledgeBaseForum.API.Controllers
             }
         }
 
+        [HttpPatch]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Patch(Usuario payload)
+        {
+            try
+            {
+                Usuario? original = await dao.Get(payload!.Login);
+
+                if (original == null)
+                {
+                    throw new KeyNotFoundException("Usuário não foi encontrado");
+                }
+
+                original.Nome = payload.Nome;
+                original.Email = payload.Email;
+                original.Perfil = payload.Perfil;
+                
+                await dao.Update(original);
+                return Ok(original);
+            }
+            catch (Exception ex)
+            {
+                if (ex is KeyNotFoundException)
+                {
+                    return NotFound(ex.Message);
+                }
+
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{login}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Deactivate(string login)

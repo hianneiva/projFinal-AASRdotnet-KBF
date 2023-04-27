@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.API", "K
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.AdminWebApp", "KnowledgeBaseForum.AdminWebApp\KnowledgeBaseForum.AdminWebApp.csproj", "{4EBB6B89-FBA7-4020-B9EB-39D3E810CA0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeBaseForum.Commons", "KnowledgeBaseForum.Commons\KnowledgeBaseForum.Commons.csproj", "{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowledgeBaseForum.Commons", "KnowledgeBaseForum.Commons\KnowledgeBaseForum.Commons.csproj", "{2C04ABE7-AE6E-4197-AB15-086E8E8B108F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
