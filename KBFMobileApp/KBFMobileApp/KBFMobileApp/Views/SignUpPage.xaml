@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KBFMobileApp.Views.SignUpPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout>
+                <Entry x:Name="LoginInput"
+                   Placeholder="Usuário"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   Margin="0,32,0,16"/>
+                <Entry x:Name="PwdInput"
+                   Placeholder="Senha"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   IsPassword="True"
+                   Margin="0,0,0,16"/>
+                <Entry x:Name="PwdConfirmInput"
+                   Placeholder="Confirme a Senha"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   IsPassword="True"
+                   Margin="0,0,0,16"/>
+                <Entry x:Name="NameInput"
+                   Placeholder="Nome"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   Margin="0,0,0,16"/>
+                <Entry x:Name="EmailInput"
+                   Placeholder="e-mail"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Center"
+                   Margin="0,0,0,16"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.4*" />
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="0.4*" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="CancelBtn"
+                        Text="Cancelar"
+                        BackgroundColor="LightGray"
+                        Clicked="CancelBtn_Clicked"
+                        Margin="8,0,0,0"
+                        Grid.Row="0"
+                        Grid.Column="0" />
+                    <ActivityIndicator x:Name="ApiIndicator"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       IsRunning="False" />
+                    <Button x:Name="SignUpBtn"
+                        Text="Cadastrar"
+                        BackgroundColor="CornflowerBlue"
+                        TextColor="White"
+                        Margin="0,0,8,0"
+                        Clicked="SignUpBtn_Clicked"
+                        Grid.Row="0"
+                        Grid.Column="2"/>
+                </Grid>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
