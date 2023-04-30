@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Cadastro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Cadastro</ion-title>
+    </ion-toolbar>
+  </ion-header>
+</ion-content>
+
+<div id="container">
+  <ion-list>
+    <ion-item>
+      <ion-input placeholder="Login" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Senha" type="password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Confirme a senha" type="password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Nome" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="E-mail" type="email"></ion-input>
+    </ion-item>
+  </ion-list>
+  <br />
+  <ion-button expand="block">Cadastrar</ion-button>
+  <br />
+  <ion-button expand="block" color="medium" [routerLink]="['/']">Cancelar</ion-button>
+</div>

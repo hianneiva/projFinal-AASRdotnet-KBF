@@ -1,0 +1,7 @@
+{
+  "name": "KBFMobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
