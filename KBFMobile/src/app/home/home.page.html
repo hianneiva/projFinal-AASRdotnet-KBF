@@ -23,7 +23,7 @@
     <br />
     <ion-button expand="block" (click)="login()">Login</ion-button>
     <br />
-    <ion-button expand="block" color="success" [routerLink]="['/signup']">Cadastro</ion-button>
+    <ion-button expand="block" color="secondary" [routerLink]="['/signup']">Cadastro</ion-button>
   </div>
 </ion-content>
 
@@ -31,5 +31,6 @@
            subHeader="Falha"
            message={{loginFailure}}
            [isOpen]="loginFailure !== '' && loginFailure !== null && loginFailure !== undefined"
-           [buttons]="['OK']">
+           [buttons]="['OK']"
+           (didDismiss)="loginFailure = undefined">
 </ion-alert>

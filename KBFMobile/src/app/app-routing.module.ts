@@ -21,6 +21,26 @@ const routes: Routes = [
     loadChildren: () => import('./main/main.module').then( m => m.MainPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'topico-leitura/:id',
+    loadChildren: () => import('./topico-leitura/topico-leitura.module').then( m => m.TopicoLeituraPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'topico-busca',
+    loadChildren: () => import('./topico-busca/topico-busca.module').then( m => m.TopicoBuscaPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'alerta',
+    loadChildren: () => import('./alerta/alerta.module').then( m => m.AlertaPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'usuario',
+    loadChildren: () => import('./ususario/ususario.module').then( m => m.UsusarioPageModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

@@ -68,4 +68,9 @@ export class UtilsService {
 
     return true;
   }
+
+  public logoff() : void {
+    this.cookie.delete(environment.cookieToken);
+    this.router.navigate(['/']).then(() => window.location.reload());
+  }
 }

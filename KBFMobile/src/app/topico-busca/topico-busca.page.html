@@ -1,0 +1,91 @@
+<!-- Page menu -->
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-menu-toggle>
+      <ion-item button [routerLink]="['/main']">
+        <ion-icon name="home-outline" class="ion-padding-end"></ion-icon> Início
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle>
+      <ion-item button [routerLink]="['/topico-busca']">
+        <ion-icon name="newspaper-outline" class="ion-padding-end"></ion-icon> Tópicos
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle>
+      <ion-item button [routerLink]="['/alerta']">
+        <ion-icon name="notifications-outline" class="ion-padding-end"></ion-icon> Alertas
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle>
+      <ion-item button [routerLink]="['/usuario']">
+        <ion-icon name="person-outline" class="ion-padding-end"></ion-icon> Usuário
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-item button (click)="logoff()">
+      <ion-icon name="power-outline" class="ion-padding-end"></ion-icon> Sair
+    </ion-item>
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Busca</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="ion-padding">
+      <ion-input [(ngModel)]="topicName" placeholder="Tópico"></ion-input>
+      <ion-input [(ngModel)]="authorName" placeholder="Autor"></ion-input>
+      <ion-select [(ngModel)]="tagsSelected" aria-label="Tags" placeholder="Selecione tags buscadas" [multiple]="true">
+        <ion-select-option *ngFor="let tag of tagsOptions" [value]="tag">{{tag}}</ion-select-option>
+      </ion-select>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <small class="ion-margin-end">Mais recentes</small>
+            <ion-toggle [(ngModel)]="recent"></ion-toggle>
+          </ion-col>
+          <ion-col class="ion-text-end">
+            <small class="ion-margin-end">Ordem alfabética</small>
+            <ion-toggle [(ngModel)]="abOrdered"></ion-toggle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <ion-button expand="block" (click)="search()">Buscar</ion-button>
+    <hr />
+    <div class="ion-padding">
+      <em *ngIf="found !== null && found !== undefined && found!.length === 0">Não foram encontrados tópicos</em>
+      <ion-card  color="success" [routerLink]="['/topico-leitura/', entry.id]" *ngFor="let entry of found">
+        <ion-card-header>
+          <ion-card-title>
+            {{entry.titulo}}
+          </ion-card-title>
+          <ion-card-subtitle>
+            Por: {{entry.usuario!.nome}} - {{parseDate(entry.dataCriacao!)}}
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <small>{{extractTags(entry.topicoTag!)}}</small>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-content>
+</div>
+
+<ion-alert header="Tópico"
+           subHeader=""
+           message={{failure}}
+           [isOpen]="failure !== '' && failure !== null && failure !== undefined"
+           [buttons]="['OK']"
+           (didDismiss)="failure = undefined">
+</ion-alert>
