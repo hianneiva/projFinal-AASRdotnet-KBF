@@ -530,3 +530,19 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+### ApacheCordova ###
+# Apache Cordova generated files and directories
+KBFMobile/bin/*
+!KBFMobile/plugins
+!KBFMobile/plugins/android.json
+!KBFMobile/plugins/fetch.json
+KBFMobile/plugins/*
+KBFMobile/platforms/*
+KBFMobile/resources/*
+KBFMobile/www/*
+
+KBFMobile/node_modules/*
+KBFMobile/www/index.js/*
+KBFMobile/js/**/*.js
+KBFMobile/js/**/*.js.map
