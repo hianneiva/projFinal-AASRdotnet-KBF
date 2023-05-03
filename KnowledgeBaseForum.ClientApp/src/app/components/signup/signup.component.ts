@@ -27,8 +27,11 @@ export class SignupComponent {
   }
 
   public signUp(): void {
-    const missingField: boolean = this.utils.stringIsNullOrEmpty(this.email) || this.utils.stringIsNullOrEmpty(this.login) || this.utils.stringIsNullOrEmpty(this.name) ||
-      this.utils.stringIsNullOrEmpty(this.password) || this.utils.stringIsNullOrEmpty(this.passwordRepeat);
+    const missingField: boolean = this.utils.stringIsNullOrEmpty(this.email) ||
+                                  this.utils.stringIsNullOrEmpty(this.login) ||
+                                  this.utils.stringIsNullOrEmpty(this.name) ||
+                                  this.utils.stringIsNullOrEmpty(this.password) ||
+                                  this.utils.stringIsNullOrEmpty(this.passwordRepeat);
     const passwordsDoesntMatch = this.password !== this.passwordRepeat;
     this.alertActive = missingField || passwordsDoesntMatch;
 
@@ -43,13 +46,20 @@ export class SignupComponent {
       return;
     }
 
-    this.api.signup(this.login!, this.password!, this.name!, this.email!).subscribe(response => {
-      this.alertActive = !response.result;
-      this.alertMsg = !response.result ? '' : response.message!;
+    this.api.signup(this.login!, this.password!, this.name!, this.email!).subscribe({
+      next: (response) => {
+        this.alertActive = !response.result;
+        this.alertMsg = !response.result ? '' : response.message!;
 
-      if (response.result) {
-        this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
-        this.cancelar(true);
+        if (response.result) {
+          this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
+          this.cancelar(true);
+        }
+      },
+      error: (err) => {
+        this.alertActive = true;
+        this.alertMsg = "Falha não esperada no cadastro: " + err.message;
+
       }
     });
   }

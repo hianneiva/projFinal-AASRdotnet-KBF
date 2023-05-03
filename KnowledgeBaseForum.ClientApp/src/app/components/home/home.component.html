@@ -1,5 +1,11 @@
 <div class="default-spacing">
     <div class="row">
+        <div class="alert alert-danger" *ngIf="errorMsg !== null && errorMsg !== undefined">
+            {{errorMsg}}
+        </div>
+        <br />
+    </div>
+    <div class="row">
         <div class="col-sm-12 text-center align-middle align-items-center justify-content-center">
             <h1>Bem vindo ao Fórum de Compartilhamento de Conhecimento</h1>
             <br>
@@ -27,7 +33,7 @@
                     <div *ngIf="alertsForUser.length > 0">
                         <div class="card bg-success text-white mb-2" *ngFor="let alert of alertsForUser">
                             <div class="card-title pt-1 fs-5">
-                                <a class="fs-4 text-decoration-none text-light fw-semibold stretched-link" routerLink="topico/topico-leitura/{{alert.topico!.id}}">
+                                <a class="fs-4 text-decoration-none text-light fw-semibold stretched-link" (click)="readAndRouteToTopic(alert.id, alert.topico!.id)">
                                     {{alert.topico!.titulo}}
                                 </a>
                             </div>

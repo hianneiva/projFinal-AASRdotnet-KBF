@@ -6,6 +6,7 @@ import { Topico } from 'src/app/model/topico';
 import { ApiService } from 'src/app/services/api-service.service';
 import { TokenDecodeService } from 'src/app/services/token-decode.service';
 import { Utils } from 'src/app/utils/utils';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-topic',
@@ -14,14 +15,16 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class TopicComponent {
   private utils!: Utils;
-  searchHasResults: boolean = true;
-  topics: Topico[];
-  filter?: string;
-  author?: string;
-  tags: string[];
-  tagsToSelect: Tag[];
-  recentTopics: boolean;
-  alphabetic: boolean;
+
+  public searchHasResults: boolean = true;
+  public topics: Topico[];
+  public filter?: string;
+  public author?: string;
+  public tags: string[];
+  public tagsToSelect: Tag[];
+  public recentTopics: boolean;
+  public alphabetic: boolean;
+  public errorMsg?: string;
 
   constructor(private api: ApiService, cookie: CookieService, decoder: TokenDecodeService, router: Router) {
     this.utils = new Utils(cookie, decoder, router);
@@ -33,14 +36,28 @@ export class TopicComponent {
     this.alphabetic = true;
   }
 
-  search(): void {
+  public search(): void {
     const token: string = this.utils.getJwtToken();
     this.author = this.author == '' ? undefined : this.author;
     this.filter = this.filter == '' ? undefined : this.filter;
 
-    this.api.searchTopics(token, this.tags, this.filter, this.author).subscribe(res => {
-      this.topics = res;
-      this.searchHasResults = this.topics.length > 0;
+    this.api.searchTopics(token, this.tags, this.filter, this.author).subscribe({
+      next: (res) => {
+        this.topics = res;
+        this.searchHasResults = this.topics.length > 0;
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar dados da busca");
+        
+        if (!environment.production) {
+          console.log(err.message);
+        }
+      }
     });
+  }
+
+  private showMsg(msg: string) {
+    this.errorMsg = msg;
+    setTimeout(() => this.errorMsg = undefined, 5000);
   }
 }

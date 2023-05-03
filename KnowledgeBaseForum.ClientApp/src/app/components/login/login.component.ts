@@ -37,8 +37,8 @@ export class LoginComponent {
       return;
     }
 
-    this.api.login(this.username!, this.password!).subscribe(
-      response => {
+    this.api.login(this.username!, this.password!).subscribe({
+      next: (response) => {
         this.alertActive = !response.result;
         this.alertMsg = !response.result ? '' : response.message!;
 
@@ -47,8 +47,8 @@ export class LoginComponent {
           this.cancelar();
         }
       },
-      error => {
-        this.alertMsg = error.error.message;
+      error: (error) => {
+        this.alertMsg = "Falha não esperada no login: " + error.message;
         this.alertActive = true;
 
         setTimeout(() => {
@@ -56,7 +56,7 @@ export class LoginComponent {
           this.alertMsg = '';
         }, 5000);
       }
-    );
+    });
   }
 
   public cancelar(reload: boolean = false): void {

@@ -35,16 +35,17 @@ export class AlertaComponent {
   public alterAlertType(idToUpdate: string) {
     const token: string = this.utils.getJwtToken();
 
-    this.api.updateAlertas(token, idToUpdate, true, false).subscribe(res => {
-      if (res === null || res === undefined) {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha na atualização do tipo de alerta";
-        setTimeout(() => this.errorMsg = undefined, 5000);
-      } else {
-        this.getAllAlerts();
-        this.successMsg = "Alerta alterado com sucesso";
-        this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
+    this.api.updateAlertas(token, idToUpdate, true, false).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.showMsg("Falha na atualização do tipo de alerta", false);
+        } else {
+          this.getAllAlerts();
+          this.showMsg("Alerta alterado com sucesso", false);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada: " + err.message, false);
       }
     });
   }
@@ -52,16 +53,17 @@ export class AlertaComponent {
   public readAlert(idToUpdate: string) {
     const token: string = this.utils.getJwtToken();
 
-    this.api.updateAlertas(token, idToUpdate, false, true).subscribe(res => {
-      if (res === null || res === undefined) {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha ao marcar alerta como lido";
-        setTimeout(() => this.errorMsg = undefined, 5000);
-      } else {
-        this.getAllAlerts();
-        this.successMsg = "Alerta lido";
-        this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
+    this.api.updateAlertas(token, idToUpdate, false, true).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.showMsg("Falha ao marcar alerta como lido", false);
+        } else {
+          this.getAllAlerts();
+          this.showMsg("Alerta lido", true);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada: " + err.message, false);
       }
     });
   }
@@ -77,16 +79,17 @@ export class AlertaComponent {
 
     const token: string = this.utils.getJwtToken();
 
-    this.api.deleteAlertas(token, this.idToDel!).subscribe(res => {
-      if (res === null || res === undefined) {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha na remoção do alerta";
-        setTimeout(() => this.errorMsg = undefined, 5000);
-      } else {
-        this.getAllAlerts();
-        this.successMsg = "Alerta removido com sucesso";
-        this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
+    this.api.deleteAlertas(token, this.idToDel!).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.showMsg("Falha na remoção do alerta", false);
+        } else {
+          this.getAllAlerts();
+          this.showMsg("Alerta removido com sucesso", true);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada: " + err.message, false);
       }
     });
   }
@@ -97,5 +100,17 @@ export class AlertaComponent {
     this.api.getAlertas(token, userData.name!).subscribe(res => {
       this.alertas = this.utils.arrayFromAny(res)
     });
+  }
+
+  private showMsg(msg: string, success: boolean) {
+    if (success) {
+      this.successMsg = msg;
+      this.errorMsg = undefined;
+      setTimeout(() => this.successMsg = undefined, 5000);
+    } else {
+      this.successMsg = undefined;
+      this.errorMsg = msg;
+      setTimeout(() => this.errorMsg = undefined, 5000);
+    }
   }
 }
