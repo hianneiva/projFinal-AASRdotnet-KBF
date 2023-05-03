@@ -50,11 +50,6 @@ export class MainPage implements OnInit {
     });
   }
 
-  public logoff(): void {
-    this.userData = undefined;
-    this.utils.logoff();
-  }
-
   public parseDate(date: Date): string {
     return moment(date).format("DD/MM/YYYY");
   }

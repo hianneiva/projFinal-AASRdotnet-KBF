@@ -55,8 +55,8 @@ export class SignupPage implements OnInit {
           this.loginFailure = response.message;
         }
       },
-      error: () => {
-        this.loginFailure = "Houve uma falha no cadastro";
+      error: (err) => {
+        this.loginFailure = "Houve uma falha no cadastro: " + err.message;
       }
     });
   }

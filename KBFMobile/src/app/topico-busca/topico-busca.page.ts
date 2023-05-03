@@ -41,15 +41,10 @@ export class TopicoBuscaPage implements OnInit {
           return t.descricao;
         });
       },
-      error: () => {
-        this.failure = "Não foi possível recuperar as tags para busca"
+      error: (err) => {
+        this.failure = "Não foi possível recuperar as tags para busca: " + err.message;
       }
     });
-  }
-
-  public logoff(): void {
-    this.userData = undefined;
-    this.utils.logoff();
   }
   
   public parseDate(date: Date): string {
@@ -71,8 +66,8 @@ export class TopicoBuscaPage implements OnInit {
       next: (res) => {
         this.found = this.utils.arrayFromAny(res);
       },
-      error: () => {
-        this.failure = "Falha ao obter resultado da busca";
+      error: (err) => {
+        this.failure = "Falha ao obter resultado da busca: " + err.message;
       }
     });
   }

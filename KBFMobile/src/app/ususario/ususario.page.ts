@@ -33,10 +33,6 @@ export class UsusarioPage implements OnInit {
     this.getCurrentUser();
   }
 
-  public logoff(): void {
-    this.utils.logoff();
-  }
-
   public updateUser() {
     if (this.utils.stringIsNullOrEmpty(this.currentPwd)) {
       this.failure = "Senha atual não informada.";
@@ -60,8 +56,8 @@ export class UsusarioPage implements OnInit {
           this.currentPwd = undefined;
         }
       },
-      error: () => {
-        this.failure = "Falha ao atualizar os dados do usuário";
+      error: (err) => {
+        this.failure = "Falha ao atualizar os dados do usuário: " + err.message;
       }
     });
   }
@@ -82,8 +78,8 @@ export class UsusarioPage implements OnInit {
           this.email = this.user.email;
         }
       },
-      error: () => {
-        this.failure = "Não foi possível recuperar os dados do usuário";
+      error: (err) => {
+        this.failure = "Não foi possível recuperar os dados do usuário:" + err.message;
       }
     });
   }

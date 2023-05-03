@@ -27,8 +27,8 @@ export class HomePage {
   }
 
   public login(): void {
-    this.api.login(this.username!, this.password!).subscribe(
-      response => {
+    this.api.login(this.username!, this.password!).subscribe({
+      next: (response) => {
         if (response.result) {
           this.cookie.set(environment.cookieToken, response.token!, { expires: 0.3, secure: true, sameSite: 'Lax' });
           this.router.navigate(['/main']);
@@ -37,10 +37,10 @@ export class HomePage {
           this.loginFailure = response.message;
         }
       },
-      error => {
-        this.loginFailure = "Não foi possível concluir o login";
+      error: (error) => {
+        this.loginFailure = "Não foi possível concluir o login: " + error.message;
       }
-    );
+    });
   }
 
   public showAlert(): boolean {

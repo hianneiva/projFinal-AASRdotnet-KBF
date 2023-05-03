@@ -76,15 +76,10 @@ export class TopicoLeituraPage implements OnInit {
         this.parsedContent = marked(this.topic!.conteudo!);
         this.getAlertForTopic();
       },
-      error: () => {
-        this.failure = "Falha ao recuperar dados do tópico";
+      error: (err) => {
+        this.failure = "Falha ao recuperar dados do tópico: " + err.message;
       }
     });
-  }
-
-  public logoff(): void {
-    this.userData = undefined;
-    this.utils.logoff();
   }
 
   public extractTags(): string[] {
@@ -137,8 +132,8 @@ export class TopicoLeituraPage implements OnInit {
             this.failure = "Falha ao criar o comentário";
           }
         },
-        error: () => {
-          this.failure = "Falha ao criar o comentário";
+        error: (err) => {
+          this.failure = "Falha ao criar o comentário: " + err.message;
         }
       });
     } else {
@@ -153,8 +148,8 @@ export class TopicoLeituraPage implements OnInit {
             this.failure = "Falha ao criar o comentário";
           }
         },
-        error: () => {
-          this.failure = "Falha ao atualizar o comentário";
+        error: (err) => {
+          this.failure = "Falha ao atualizar o comentário: " + err.message;
         }
       });
     }
@@ -181,8 +176,8 @@ export class TopicoLeituraPage implements OnInit {
           this.failure = "Falha ao remover comentário";
         }
       },
-      error: () => {
-        this.failure = "Falha ao remover comentário";
+      error: (err) => {
+        this.failure = "Falha ao remover comentário: " + err.message;
       }
     });
   }
@@ -207,8 +202,8 @@ export class TopicoLeituraPage implements OnInit {
             this.getAlertForTopic();
           }
         },
-        error: () => {
-          this.failure = "Falha ao criar alerta";
+        error: (err) => {
+          this.failure = "Falha ao criar alerta: " + err.message;
         }
       });
     } else {
@@ -220,8 +215,8 @@ export class TopicoLeituraPage implements OnInit {
             this.alert = undefined;
           }
         },
-        error: () => {
-          this.failure = "Falha ao apagar alerta";
+        error: (err) => {
+          this.failure = "Falha ao apagar alerta: " + err.message;
         }
       });
     }
@@ -234,8 +229,8 @@ export class TopicoLeituraPage implements OnInit {
       next: (res) => {
         this.alert = res;
       },
-      error: () => {
-        this.failure = "Falha ao recuperar dados de alerta para o tópico";
+      error: (err) => {
+        this.failure = "Falha ao recuperar dados de alerta para o tópico: " + err.message;
       }
     });
   }
@@ -245,8 +240,8 @@ export class TopicoLeituraPage implements OnInit {
       next: res => {
         this.topic!.comentarios = this.utils.arrayFromAny(res);
       },
-      error: () => {
-        this.failure = "Falha ao recuperar comentários do tópico";
+      error: (err) => {
+        this.failure = "Falha ao recuperar comentários do tópico: " + err.message;
       }
     });
   }

@@ -43,11 +43,6 @@ export class AlertaPage implements OnInit {
   ngOnInit() {
     this.getAllAlerts();
   }
-
-  public logoff(): void {
-    this.userData = undefined;
-    this.utils.logoff();
-  }
   
   public toggleAlert(idToUpdate: string) {
     const token: string = this.utils.getJwtToken();
@@ -60,8 +55,8 @@ export class AlertaPage implements OnInit {
           this.getAllAlerts();
         }
       },
-      error: () => {
-        this.failure = "Falha ao recuperar dados de alertas pós-atualização";
+      error: (err) => {
+        this.failure = "Falha ao recuperar dados de alertas pós-atualização: " + err.message;
       }
     });
   }
@@ -85,8 +80,8 @@ export class AlertaPage implements OnInit {
           this.getAllAlerts();
         }
       },
-      error: () => {
-        this.failure = "Falha ao recuperar dados de alertas pós-deleção";
+      error: (err) => {
+        this.failure = "Falha ao recuperar dados de alertas pós-deleção: " + err.message;
       }
     });
   }
@@ -97,8 +92,8 @@ export class AlertaPage implements OnInit {
       next:  (res) => {
         this.alerts = this.utils.arrayFromAny(res)
       },
-      error: () => {
-        this.failure = "Não foi possível pegar os alertas para tópicos inscritos"
+      error: (err) => {
+        this.failure = "Não foi possível pegar os alertas para tópicos inscritos: " + err.message;
       }
     });
   }
