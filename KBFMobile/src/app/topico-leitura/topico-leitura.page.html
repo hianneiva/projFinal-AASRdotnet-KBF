@@ -41,7 +41,7 @@
       </ion-row>
     </ion-grid>
     <hr />
-    <div [innerHTML]="parsedContent" markdown ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard></div>
+    <div [innerHTML]="parsedContent" markdown ngPreserveWhitespaces lineNumbers lineHighlight emoji clipboard class="ion-padding"></div>
     <hr />
     <div>
       <ion-textarea [(ngModel)]="comment" placeholder={{commentPlaceholder}} class="ion-margin-bottom"></ion-textarea>
@@ -49,10 +49,10 @@
       <ion-button expand="block" (click)="cancelEdit()" *ngIf="editMode" color="medium">Cancelar</ion-button>
     </div>
     <br />
-    <div *ngIf="topic!.comentarios === null || topic!.comentarios === undefined || topic!.comentarios!.length === 0">
+    <div *ngIf="topic!.comentarios === null || topic!.comentarios === undefined || topic!.comentarios!.length === 0" class="ion-padding">
       <em>Não há comentários para esse tópico</em>
     </div>
-    <ion-card *ngFor="let comment of topic!.comentarios" color="medium">
+    <ion-card *ngFor="let comment of topic!.comentarios" color="medium" class="ion-padding">
       <ion-card-header>
         <ion-card-subtitle>
           <strong>{{comment.usuario!.nome}} - {{parseDate(comment.dataCriacao)}}</strong>

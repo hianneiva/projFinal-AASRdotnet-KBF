@@ -27,9 +27,11 @@
           <ion-icon name="person-outline" class="ion-padding-end"></ion-icon> Usuário
         </ion-item>
       </ion-menu-toggle>
-      <ion-item button (click)="logoff()">
-        <ion-icon name="power-outline" class="ion-padding-end"></ion-icon> Sair
-      </ion-item>
+      <ion-menu-toggle>
+        <ion-item button (click)="logoff()">
+          <ion-icon name="power-outline" class="ion-padding-end"></ion-icon> Sair
+        </ion-item>
+      </ion-menu-toggle>
     </ion-content>
   </ion-menu>
   <div div class="ion-page" id="main-content">
