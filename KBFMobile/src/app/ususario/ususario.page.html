@@ -1,0 +1,29 @@
+<!-- Page content -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{name}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-input [value]="name" [readonly]="true" label="Nome" labelPlacement="stacked"></ion-input>
+    <ion-input [value]="username" [readonly]="true" label="Login" labelPlacement="stacked"></ion-input>
+    <ion-input [value]="formattedDate" [readonly]="true" label="Criação" labelPlacement="stacked"></ion-input>
+    <ion-input [(ngModel)]="email" label="E-mail" labelPlacement="stacked" type="email"></ion-input>
+    <ion-input [(ngModel)]="updatePwd" label="Nova senha" labelPlacement="stacked" type="password"></ion-input>
+    <ion-input [(ngModel)]="confirmPwd" label="Confirme a nova senha" labelPlacement="stacked" type="password"></ion-input>
+    <ion-input [(ngModel)]="currentPwd" label="Senha atual" labelPlacement="stacked" type="password"></ion-input>
+    <ion-button expand="block" (click)="updateUser()" class="ion-margin-top">Salvar</ion-button>
+  </ion-content>
+</div>
+
+<ion-alert header="Usuário"
+           subHeader="Atualização"
+           message="{{failure}}"
+           [isOpen]="failure !== '' && failure !== null && failure !== undefined"
+           [buttons]="['OK']"
+           (didDismiss)="failure = undefined">
+</ion-alert>

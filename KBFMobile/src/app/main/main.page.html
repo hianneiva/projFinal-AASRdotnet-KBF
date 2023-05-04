@@ -1,0 +1,53 @@
+<!-- Page content -->
+<div class="ion-page">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Olá, {{userData!.given_name}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <strong>Tópicos recentemente atualizados</strong>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button (click)="dismissAllAlerts()" *ngIf="alertsForUser !== null && alertsForUser !== undefined && alertsForUser!.length > 0" color="danger">
+            <ion-icon name="notifications-off-outline"></ion-icon>
+          </ion-button>
+          <ion-button [disabled]="true" *ngIf="alertsForUser === null || alertsForUser === undefined || alertsForUser!.length === 0" color="danger">
+            <ion-icon name="notifications-off-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <hr />
+    <div *ngIf="alertsForUser === null || alertsForUser === undefined || alertsForUser!.length === 0">
+      <em>Não foram encontrados tópicos inscritos atualizados recentemente</em>
+    </div>
+    <ion-card *ngFor="let entry of alertsForUser" color="success" [routerLink]="['/topico-leitura/', entry.topico!.id]">
+      <ion-card-header>
+        <ion-card-title>
+          {{entry.topico!.titulo}}
+        </ion-card-title>
+        <ion-card-subtitle>
+          Por: {{entry.topico!.usuario!.nome}}, última atualização: {{parseDate(entry.topico!.dataModificacao!)}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <small>{{extractTags(entry.topico!.topicoTag!)}}</small>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</div>
+
+<ion-alert header="Login"
+           subHeader="Falha"
+           message={{failure}}
+           [isOpen]="failure !== '' && failure !== null && failure !== undefined"
+           [buttons]="['OK']"
+           (didDismiss)="failure = undefined">
+</ion-alert>

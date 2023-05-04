@@ -42,7 +42,8 @@ export class TopicoLeituraComponent {
   }
 
   public formattedDate(date: Date): string {
-    return moment(date).format('DD/MM/YYYY HH:mm:ss');
+    const tzOffset = new Date().getTimezoneOffset();
+    return moment(date).zone(tzOffset).format('DD/MM/YYYY HH:mm:ss');
   }
 
   public addComment(): void {
@@ -60,19 +61,31 @@ export class TopicoLeituraComponent {
     commentToAdd.usuarioId = this.userId;
     const token: string = this.utils.getJwtToken();
 
-    this.api.postComentario(token, commentToAdd).subscribe(res => {
-      if (res) {
-        this.comment = undefined;
-        this.getComentarios(token);
+    this.api.postComentario(token, commentToAdd).subscribe({
+      next: (res) => {
+        if (res) {
+          this.comment = undefined;
+          this.getComentarios(token);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada ao se criar comentároi: " + err.message, false);
       }
     });
   }
 
   public deleteComentario(id: string): void {
     const token: string = this.utils.getJwtToken();
-    this.api.deleteComentario(token, id).subscribe(res => {
-      if(res) {
-        this.getComentarios(token);
+    this.api.deleteComentario(token, id).subscribe({
+      next: (res) => {
+        if(res) {
+          this.getComentarios(token);
+        } else {
+          this.showMsg("Comentário não foi encontrado para deleção", false);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada ao se remover comentário: " + err.message, false);
       }
     });
   }
@@ -84,32 +97,46 @@ export class TopicoLeituraComponent {
 
   public editComment(id: string): void {
     const token: string = this.utils.getJwtToken();
-    this.api.getComentario(token, id).subscribe(res => {
-      this.commentToEdit = res[0];
-      this.comment = res[0].conteudo;
-      this.editMode = true;
+    this.api.getComentario(token, id).subscribe({
+      next: (res) => {
+        this.commentToEdit = res[0];
+        this.comment = res[0].conteudo;
+        this.editMode = true;
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar dados do comentáiro a se esidtar: " + err.message, false);
+      }
     });
   }
 
   public applyEdit(): void {
     const token: string = this.utils.getJwtToken();
     this.commentToEdit!.conteudo = this.comment!;
-    this.api.putComentario(token, this.commentToEdit!).subscribe(res => {
-      if (res) {
-        this.editMode = false;
-        this.comment = undefined;
-        this.getComentarios(token);
+    this.api.putComentario(token, this.commentToEdit!).subscribe({
+      next: (res) => {
+        if (res) {
+          this.editMode = false;
+          this.comment = undefined;
+          this.getComentarios(token);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada ao se editar comentário: " + err.message, false);
       }
     });
   }
 
   public deleteAlert(): void {
     const token: string = this.utils.getJwtToken();
-    this.api.deleteAlertas(token, this.alertFortopic!.id).subscribe(res => {
-      if (res) {
-        this.successMsg = "Alerta removido";
-        setTimeout(() => { this.successMsg = undefined; }, 5000);
-        this.alertFortopic = undefined;
+    this.api.deleteAlertas(token, this.alertFortopic!.id).subscribe({
+      next: (res) => {
+        if (res) {
+          this.showMsg("Alerta removido", true);
+          this.alertFortopic = undefined;
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada ao se remover o alerta: " + err.message, false);
       }
     });
   }
@@ -123,11 +150,16 @@ export class TopicoLeituraComponent {
     alert.topicoId = this.id;
     alert.usuarioCriacao = userId;
     alert.usuarioId = userId;
-    this.api.postAlerta(token, alert).subscribe(res => {
-      if (res) {
-        this.successMsg = "Alerta criado";
-        setTimeout(() => { this.successMsg = undefined; }, 5000);
-        this.alertFortopic = res;
+
+    this.api.postAlerta(token, alert).subscribe({
+      next: (res) => {
+        if (res) {
+          this.alertFortopic = res;
+          this.showMsg("Alerta criado", true);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada ao recuperar alerta relativo ao tópico: " + err.message, false);
       }
     });
   }
@@ -135,21 +167,48 @@ export class TopicoLeituraComponent {
   private getAlertForTopic(): void {
     const token: string = this.utils.getJwtToken();
     const userId: string = this.utils.getUserDataFromToken().name!;
-    this.api.getAlerta(token, userId, this.id).subscribe(res => {
-      this.alertFortopic = res;
+    this.api.getAlerta(token, userId, this.id).subscribe({
+      next: (res) => {
+        this.alertFortopic = res;
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar dados de alerta para o tópico: " + err.message, false);
+      }
     });
   }
 
   private getComentarios(token: string): void {
-    this.api.getAllComentarios(token, this.id).subscribe(res => {
-      this.currentTopic!.comentarios = this.utils.arrayFromAny(res);
+    this.api.getAllComentarios(token, this.id).subscribe({
+      next: (res) => {
+        this.currentTopic!.comentarios = this.utils.arrayFromAny(res);
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar comentários para o tópico: " + err.message, false);
+      }
     });
   }
 
   private getTopic(): void {
-    this.api.getTopic(this.utils.getJwtToken(), this.id).subscribe(res => {
-      this.currentTopic = res;
-      this.getAlertForTopic();
+    this.api.getTopic(this.utils.getJwtToken(), this.id).subscribe({
+      next: (res) => {
+        this.currentTopic = res;
+        this.getAlertForTopic();
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar dados do tópico: " + err.message, false);
+      }
     });
+  }
+
+  private showMsg(msg: string, success: boolean) {
+    if (success) {
+      this.successMsg = msg;
+      this.errorMsg = undefined;
+      setTimeout(() => this.successMsg = undefined, 5000);
+    } else {
+      this.successMsg = undefined;
+      this.errorMsg = msg;
+      setTimeout(() => this.errorMsg = undefined, 5000);
+    }
   }
 }

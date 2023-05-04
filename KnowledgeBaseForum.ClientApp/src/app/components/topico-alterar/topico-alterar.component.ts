@@ -41,59 +41,63 @@ export class TopicoAlterarComponent {
   }
 
   private getTopic() {
-    this.api.getTopic(this.utils.getJwtToken(), this.id).subscribe(res => {
-      this.topico = res;
-      this.selectedTags = res.topicoTag?.map(tt => tt.tagId);
+    this.api.getTopic(this.utils.getJwtToken(), this.id).subscribe({
+      next: (res) => {
+        this.topico = res;
+        this.selectedTags = res.topicoTag?.map(tt => tt.tagId);
+      },
+      error: (err) => {
+        this.showMsg("Falha ao recuperar dados do tópico: " + err.message, false);
+      }
     });
   }
 
   public alterarTopico(topico: Topico): void {
-
     if (this.utils.stringIsNullOrEmpty(topico.titulo) || this.utils.stringIsNullOrEmpty(topico.conteudo)) {
       return;
     }
 
     const usuario: TokenData = this.utils.getUserDataFromToken();
-
     topico.status = true;
     topico.usuarioModificacao = usuario.name!;
     topico.dataModificacao = new Date();
-
     const token: string = this.utils.getJwtToken();
 
-    this.api.modifyTopic(token, topico).subscribe(res => {
-      if (res === null || res === undefined) {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha ao atualizar novo topico";
-        setTimeout(() => this.errorMsg = undefined, 5000);
-      } else {
-        this.successMsg = "Topico atualizado com sucesso";
-        this.errorMsg = undefined;
-        const currentTags = this.topico!.topicoTag?.map(tt => tt.tagId);
-        const toAdd = this.selectedTags?.filter(t => !currentTags?.includes(t));
-        const toRemove = currentTags?.filter(t => !this.selectedTags?.includes(t));
+    this.api.modifyTopic(token, topico).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.showMsg("Falha ao atualizar novo topico", false);
+        } else {
+          this.showMsg("Topico atualizado com sucesso", true);
+          const currentTags = this.topico!.topicoTag?.map(tt => tt.tagId);
+          const toAdd = this.selectedTags?.filter(t => !currentTags?.includes(t));
+          const toRemove = currentTags?.filter(t => !this.selectedTags?.includes(t));
 
-        for (let i = 0; i < toRemove!.length; i++) {
-          this.api.deleteTT(token, toRemove![i], this.topico!.id).subscribe(res => {
-            if(res == true){
-              console.log("Tag removed");
-            } else {
-              console.log("Failure removing tag");
-            }
-          });
-        }
-        
-        for (let j = 0; j < toAdd!.length; j++) {
-          this.api.postTT(token, toAdd![j], this.topico!.id).subscribe(res => {
-            if(res == true){
-              console.log("Tag registered");
-            } else {
-              console.log("Failure registering tag");
-            }
-          });
-        }
+          for (let i = 0; i < toRemove!.length; i++) {
+            this.api.deleteTT(token, toRemove![i], this.topico!.id).subscribe(res => {
+              if(res == true){
+                console.log("Tag removed");
+              } else {
+                console.log("Failure removing tag");
+              }
+            });
+          }
+          
+          for (let j = 0; j < toAdd!.length; j++) {
+            this.api.postTT(token, toAdd![j], this.topico!.id).subscribe(res => {
+              if(res == true){
+                console.log("Tag registered");
+              } else {
+                console.log("Failure registering tag");
+              }
+            });
+          }
 
-        setTimeout(() => { this.cancelar(); }, 5000);
+          setTimeout(() => { this.cancelar(); }, 5000);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada na atualização de tópico: " + err.message, false);
       }
     });
   }
@@ -128,25 +132,44 @@ export class TopicoAlterarComponent {
     tag.descricao = this.tagNameToAdd!;
     tag.usuarioCriacao = this.utils.getUserDataFromToken().name!;
     const token: string = this.utils.getJwtToken();
-    this.api.postTag(token, tag).subscribe(res => {
-      if (res) {
-        this.successMsg = "Tag criada com sucesso";
-        this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
-        this.cancelTagCreation();
-        this.getTags();
-      } else {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha ao criar nova tag";
-        setTimeout(() => this.errorMsg = undefined, 5000);
+
+    this.api.postTag(token, tag).subscribe({
+      next: (res) => {
+        if (res) {
+          this.showMsg("Tag criada com sucesso", true);
+          this.cancelTagCreation();
+          this.getTags();
+        } else {
+          this.showMsg("Falha ao criar nova tag", false);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada na criação de tags: "+ err.message, false);
       }
     });
   }
 
   private getTags(): void {
     const token = this.utils.getJwtToken();
-    this.api.getTags(token).subscribe(res => {
-      this.tagsSelect = res;
+    this.api.getTags(token).subscribe({
+      next: (res) => {
+        this.tagsSelect = res;
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada na recuperação de tags: " + err.message, false);
+      }
     });
+  }
+
+  private showMsg(msg: string, success: boolean) {
+    if (success) {
+      this.successMsg = msg;
+      this.errorMsg = undefined;
+      setTimeout(() => this.successMsg = undefined, 5000);
+    } else {
+      this.successMsg = undefined;
+      this.errorMsg = msg;
+      setTimeout(() => this.errorMsg = undefined, 5000);
+    }
   }
 }

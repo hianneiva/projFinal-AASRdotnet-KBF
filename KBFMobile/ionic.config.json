@@ -1,0 +1,10 @@
+{
+  "name": "KBFMobile",
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
+  "type": "angular"
+}

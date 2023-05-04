@@ -40,35 +40,38 @@ export class TopicoNovoComponent {
     }
     
     const usuario: TokenData = this.utils.getUserDataFromToken(); 
-    
     topico.status = true;
     topico.usuarioId = usuario.name!;
     topico.usuarioCriacao = usuario.name!;
     topico.dataCriacao = new Date();
-
     const token: string = this.utils.getJwtToken();
     
-    this.api.createTopic(token, topico).subscribe(res => {
-      if (res === null || res === undefined) {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha ao cadastrar novo topico";
-        setTimeout(() => this.errorMsg = undefined, 5000);
-      } else {
-        this.successMsg = "Topico cadastrado com sucesso";
-        this.errorMsg = undefined;
-        const topicId = res.id;
+    this.api.createTopic(token, topico).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.showMsg("Falha ao cadastrar novo topico", false);
+        } else {
+          
+          this.showMsg("Topico cadastrado com sucesso", true);
+          const topicId = res.id;
 
-        for (let i = 0; i < this.selectedTags.length; i++) {
-          this.api.postTT(token, this.selectedTags[i], topicId).subscribe(res => {
-            if(res == true){
-              console.log("Tag registered");
-            } else {
-              console.log("Failure registering tag");
-            }
-          });
+          for (let i = 0; i < this.selectedTags.length; i++) {
+            this.api.postTT(token, this.selectedTags[i], topicId).subscribe({
+              next: (res) => {
+                if(res == true){
+                  console.log("Tag registered");
+                } else {
+                  console.log("Failure registering tag");
+                }
+              },
+              error: (err) => {
+                console.log("Unexpected failure registering tag: " + err.message);
+              }
+            });
+          }
+          
+          setTimeout(() => this.cancelar(), 2500);
         }
-        
-        setTimeout(() => this.cancelar(), 2500);
       }
     });
   }
@@ -103,17 +106,18 @@ export class TopicoNovoComponent {
     tag.descricao = this.tagNameToAdd!;
     tag.usuarioCriacao = this.utils.getUserDataFromToken().name!;
     const token: string = this.utils.getJwtToken();
-    this.api.postTag(token, tag).subscribe(res => {
-      if (res) {
-        this.successMsg = "Tag criada com sucesso";
-        this.errorMsg = undefined;
-        setTimeout(() => this.successMsg = undefined, 5000);
-        this.cancelTagCreation();
-        this.getTags();
-      } else {
-        this.successMsg = undefined;
-        this.errorMsg = "Falha ao criar nova tag";
-        setTimeout(() => this.errorMsg = undefined, 5000);
+    this.api.postTag(token, tag).subscribe({
+      next: (res) => {
+        if (res) {
+          this.showMsg("Tag criada com sucesso", true);
+          this.cancelTagCreation();
+          this.getTags();
+        } else {
+          this.showMsg("Falha ao criar nova tag", false);
+        }
+      },
+      error: (err) => {
+        this.showMsg("Falha não esperada na criação de tópicos: " + err.message, false);
       }
     });
   }
@@ -123,5 +127,17 @@ export class TopicoNovoComponent {
     this.api.getTags(token).subscribe(res => {
       this.tagsSelect = res;
     });
+  }
+
+  private showMsg(msg: string, success: boolean) {
+    if (success) {
+      this.successMsg = msg;
+      this.errorMsg = undefined;
+      setTimeout(() => this.successMsg = undefined, 5000);
+    } else {
+      this.successMsg = undefined;
+      this.errorMsg = msg;
+      setTimeout(() => this.errorMsg = undefined, 5000);
+    }
   }
 }

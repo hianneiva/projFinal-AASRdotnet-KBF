@@ -41,8 +41,13 @@ export class UsuarioComponent {
     }
 
     this.usuario!.senha = this.pwdToChange;
-    this.api.putUsuario(token, this.usuario, this.currentPwd).subscribe(
-      res => {
+    this.api.putUsuario(token, this.usuario, this.currentPwd).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.displayErrMsg("Falha ao atualizar dados de usuário");
+          return;
+        }
+
         this.usuario = res;
         this.currentPwd = '';
         this.pwdToChange = '';
@@ -50,18 +55,26 @@ export class UsuarioComponent {
         this.successMsg = "Dados atualizados com sucesso";
         setTimeout(() => { this.successMsg = undefined }, 5000);
       },
-      err => {
-        this.displayErrMsg(err ?? "Falha ao atualizar dados de usuário");
+      error: (err) => {
+        this.displayErrMsg(err.message ?? "Falha ao atualizar dados de usuário");
       }
-    );
+    });
   }
 
   private getAtualUsuario() {
     const token: string = this.utils.getJwtToken();
     const userData: TokenData = this.utils.getUserDataFromToken();
-    this.api.usuarioAtual(token, userData.name!).subscribe(res => {
-      this.usuario = res;
-      this.creationDate = moment(this.usuario!.dataCriacao!).toDate().toLocaleDateString(window.navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' });
+    this.api.usuarioAtual(token, userData.name!).subscribe({
+      next: (res)  => {
+        this.usuario = res;
+        const tzOffset = new Date().getTimezoneOffset();
+        this.creationDate = moment(this.usuario!.dataCriacao!).zone(tzOffset)
+                                                              .toDate()
+                                                              .toLocaleDateString(window.navigator.language, { day: '2-digit', month: '2-digit', year: 'numeric' });
+      },
+      error: (err) => {
+        this.displayErrMsg(err.message ?? "Falha ao recuperar dados de usuário");
+      }
     });
   }
 

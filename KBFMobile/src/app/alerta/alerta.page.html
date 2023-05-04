@@ -1,0 +1,58 @@
+<!-- Page content -->
+<div class="ion-page">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Alertas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <!-- Change to ion-card -->
+    <div *ngIf="alerts === null || alerts === undefined || alerts.length === 0">
+      <em>Não foram encontrados alertas</em>
+    </div>
+    <ion-card  *ngFor="let entry of alerts">
+      <ion-card-header>
+        <ion-card-title>
+          <h5>{{entry.topico!.titulo}}</h5>
+        </ion-card-title>
+        <ion-card-subtitle>
+          Modo alerta: {{alertTypeDictionary[entry.modoAlerta!]}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row  class="ion-align-items-center">
+            <ion-col>
+              <ion-toggle [checked]="entry.modoAlerta < 1" (ionChange)="toggleAlert(entry.id)">
+                <small>Alterar modo alerta</small>
+              </ion-toggle>
+            </ion-col>
+            <ion-col class="ion-text-end" size="auto">
+              <ion-button color="danger" (click)="prepDelete(entry.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</div>
+
+<ion-alert header="Login"
+           subHeader="Falha"
+           message={{failure}}
+           [isOpen]="failure !== '' && failure !== null && failure !== undefined"
+           [buttons]="['OK']"
+           (didDismiss)="failure = undefined">
+</ion-alert>
+
+<ion-alert header="Alerta"
+           subHeader="Remover"
+           message="Tem certeza que deseja remover o alerta?"
+           [isOpen]="alertIdToDel !== null && alertIdToDel !== undefined && alertIdToDel !== ''"
+           [buttons]="deleteAlertBtns">
+</ion-alert>

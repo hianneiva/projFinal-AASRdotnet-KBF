@@ -41,16 +41,17 @@ namespace KnowledgeBaseForum.AdminWebApp.Controllers
             try
             {
                 string? token = this.Request.Cookies.GetTokenFromCookies();
-                HttpHelper<ComentarioViewModel, ComentarioViewModel> httpHelper = new HttpHelper<ComentarioViewModel, ComentarioViewModel>(factory, options.ApiHost, token);
-                ComentarioViewModel? original = await httpHelper.Get($"{options.ApiComentario}/{id}");
+                HttpHelper<ComentarioViewModel[], ComentarioViewModel> httpGetter = new HttpHelper<ComentarioViewModel[], ComentarioViewModel>(factory, options.ApiHost, token);
+                ComentarioViewModel[]? original = await httpGetter.Get($"{options.ApiComentario}?commentId={id}");
 
-                if (original == null)
+                if (original?.Count() == 0)
                 {
                     return Json(new { result = false, message = $"Comentário não encontrado" });
                 }
 
-                original.Status = !original.Status;
-                ComentarioViewModel? updated = await httpHelper.Put(options.ApiComentario, original);
+                original![0].Status = !original[0].Status;
+                HttpHelper<ComentarioViewModel, ComentarioViewModel> httpPutter = new HttpHelper<ComentarioViewModel, ComentarioViewModel>(factory, options.ApiHost, token);
+                ComentarioViewModel? updated = await httpPutter.Put(options.ApiComentario, original[0]);
 
                 if (updated == null)
                 {
